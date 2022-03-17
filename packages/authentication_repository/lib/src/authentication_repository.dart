@@ -176,22 +176,22 @@ class AuthenticationRepository {
   @visibleForTesting
   static const userCacheKey = '__user_cache_key__';
 
-  /// Stream of [User] which will emit the current user when
+  /// Stream of [UserAuth] which will emit the current user when
   /// the authentication state changes.
   ///
-  /// Emits [User.empty] if the user is not authenticated.
-  Stream<User> get user {
+  /// Emits [UserAuth.empty] if the user is not authenticated.
+  Stream<UserAuth> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      final user = firebaseUser == null ? User.empty : firebaseUser.toUser;
+      final user = firebaseUser == null ? UserAuth.empty : firebaseUser.toUser;
       _cache.write(key: userCacheKey, value: user);
       return user;
     });
   }
 
   /// Returns the current cached user.
-  /// Defaults to [User.empty] if there is no cached user.
-  User get currentUser {
-    return _cache.read<User>(key: userCacheKey) ?? User.empty;
+  /// Defaults to [UserAuth.empty] if there is no cached user.
+  UserAuth get currentUser {
+    return _cache.read<UserAuth>(key: userCacheKey) ?? UserAuth.empty;
   }
 
   /// Creates a new user with the provided [email] and [password].
@@ -259,7 +259,7 @@ class AuthenticationRepository {
   }
 
   /// Signs out the current user which will emit
-  /// [User.empty] from the [user] Stream.
+  /// [UserAuth.empty] from the [user] Stream.
   ///
   /// Throws a [LogOutFailure] if an exception occurs.
   Future<void> logOut() async {
@@ -275,7 +275,7 @@ class AuthenticationRepository {
 }
 
 extension on firebase_auth.User {
-  User get toUser {
-    return User(id: uid, email: email, name: displayName, photo: photoURL);
+  UserAuth get toUser {
+    return UserAuth(id: uid, email: email, name: displayName, photo: photoURL);
   }
 }

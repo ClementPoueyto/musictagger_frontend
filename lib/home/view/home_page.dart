@@ -9,7 +9,7 @@ import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
-
+import 'package:user_repository/user_repository.dart';
 import '../widgets/avatar.dart';
 
 class HomePage extends StatelessWidget {
@@ -73,9 +73,12 @@ class HomePage extends StatelessWidget {
 
       final code = Uri.parse(result).queryParameters['code'];
       final tokens = await SpotifyAuthApi.getAuthTokens(code!, redirect);
+
       print(tokens.refreshToken);
       print(tokens.accessToken);
-
+      UserRepository userRepository = new UserRepository();
+      SpotifyUser spotifyUser = new SpotifyUser(tokens.accessToken, tokens.refreshToken);
+      userRepository.updateSpotifyUser(spotifyUser);
     } on Exception catch (e) {
       print(e);
       rethrow;

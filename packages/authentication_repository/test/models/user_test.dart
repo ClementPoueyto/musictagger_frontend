@@ -9,26 +9,26 @@ void main() {
 
     test('uses value equality', () {
       expect(
-        User(email: email, id: id),
-        equals(User(email: email, id: id)),
+        UserAuth(email: email, id: id),
+        equals(UserAuth(email: email, id: id)),
       );
     });
 
     test('isEmpty returns true for empty user', () {
-      expect(User.empty.isEmpty, isTrue);
+      expect(UserAuth.empty.isEmpty, isTrue);
     });
 
     test('isEmpty returns false for non-empty user', () {
-      final user = User(email: email, id: id);
+      final user = UserAuth(email: email, id: id);
       expect(user.isEmpty, isFalse);
     });
 
     test('isNotEmpty returns false for empty user', () {
-      expect(User.empty.isNotEmpty, isFalse);
+      expect(UserAuth.empty.isNotEmpty, isFalse);
     });
 
     test('isNotEmpty returns true for non-empty user', () {
-      final user = User(email: email, id: id);
+      final user = UserAuth(email: email, id: id);
       expect(user.isNotEmpty, isTrue);
     });
   });
