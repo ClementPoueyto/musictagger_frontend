@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:user_repository/user_repository.dart';
 import 'app/app.dart';
 import 'app/bloc_observer.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 
 Future<void> main() async {
@@ -26,8 +27,11 @@ Future<void> main() async {
           measurementId: "G-J5N1VVBTLF"
       ),
       );
+      WidgetsFlutterBinding.ensureInitialized();
+      setPathUrlStrategy();
       final authenticationRepository = AuthenticationRepository();
       await authenticationRepository.user.first;
+
       runApp(App(authenticationRepository: authenticationRepository,userRepository: UserRepository()));
     },
     blocObserver: AppBlocObserver(),

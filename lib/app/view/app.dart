@@ -6,8 +6,14 @@ import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/theme.dart';
 import 'package:user_repository/src/user_repository.dart';
 
+import '../router/root_router_delegate.dart';
+import '../router/router_cubit.dart';
+
 class App extends StatelessWidget {
-  const App({
+
+  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
+  App({
     Key? key,
     required AuthenticationRepository authenticationRepository, required UserRepository userRepository,
   })  : _authenticationRepository = authenticationRepository, _userRepository = userRepository,
@@ -20,15 +26,20 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
       value: [_authenticationRepository,_userRepository],
-      child: BlocProvider(
+      child: MultiBlocProvider ( providers : [
+        BlocProvider(
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
           userRepository: _userRepository,
-        ),
+        ),),
+        BlocProvider(
+          create: (context) => RouterCubit(),
+        ),],
         child: const AppView(),
       ),
     );
   }
+
 }
 
 class AppView extends StatelessWidget {
@@ -45,3 +56,5 @@ class AppView extends StatelessWidget {
     );
   }
 }
+
+

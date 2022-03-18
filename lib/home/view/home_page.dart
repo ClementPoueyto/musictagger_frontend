@@ -10,18 +10,39 @@ import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
 import 'package:user_repository/user_repository.dart';
-import '../widgets/avatar.dart';
+import '../../app/router/root_router_delegate.dart';
+import '../../app/router/root_router_parser.dart';
+import '../../app/router/router_cubit.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
-  static Page page() => const MaterialPage<void>(child: HomePage());
+  HomePage({Key? key}) : super(key: key);
+
+  static Page page() => MaterialPage<void>(child: HomePage());
+
+  Widget get _router => BlocBuilder<RouterCubit, RouterState>(
+    builder: (context, state) => MaterialApp.router(
+      theme: ThemeData.from(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.blue,
+        ).copyWith(secondary: Colors.yellow),
+      ),
+      routerDelegate: RootRouterDelegate(
+        navigatorKey,
+        context.read<RouterCubit>(),
+      ),
+      routeInformationParser: const RootRouterParser(),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final user = context.select((AppBloc bloc) => bloc.state.user);
-    return Scaffold(
+    print("TTTTTEEEEEEEEEESSSSSSSSSTTTTTTTT");
+    print(user);
+    return _router;/*Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         actions: <Widget>[
@@ -50,7 +71,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-    );
+    );*/
   }
 
 

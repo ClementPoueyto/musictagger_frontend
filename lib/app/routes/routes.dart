@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/app/router/main_screen.dart';
 import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/login/login.dart';
 
