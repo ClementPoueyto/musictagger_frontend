@@ -6,8 +6,15 @@ import 'package:music_tagger/login/login.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  static Page page() => const MaterialPage<void>(child: LoginPage());
+  static const String routeName = '/login';
+  static Page page() => MaterialPage<void>(child: LoginPage());
 
+  static Route route() {
+    return MaterialPageRoute<dynamic>(
+      settings: RouteSettings(name: routeName),
+      builder: (context) => LoginPage(),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

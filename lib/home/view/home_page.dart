@@ -7,12 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
 import 'package:user_repository/user_repository.dart';
-import '../../app/router/root_router_delegate.dart';
-import '../../app/router/root_router_parser.dart';
-import '../../app/router/router_cubit.dart';
+
+import '../widgets/avatar.dart';
+
 
 class HomePage extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
@@ -20,39 +21,22 @@ class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   static Page page() => MaterialPage<void>(child: HomePage());
+  static const String routeName = '/';
 
-  Widget get _router => BlocBuilder<RouterCubit, RouterState>(
-    builder: (context, state) => MaterialApp.router(
-      theme: ThemeData.from(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.blue,
-        ).copyWith(secondary: Colors.yellow),
-      ),
-      routerDelegate: RootRouterDelegate(
-        navigatorKey,
-        context.read<RouterCubit>(),
-      ),
-      routeInformationParser: const RootRouterParser(),
-    ),
-  );
+  static Route route() {
+    return MaterialPageRoute<dynamic>(
+      settings: RouteSettings(name: routeName),
+      builder: (context) => HomePage(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final user = context.select((AppBloc bloc) => bloc.state.user);
-    print("TTTTTEEEEEEEEEESSSSSSSSSTTTTTTTT");
-    print(user);
-    return _router;/*Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-        actions: <Widget>[
-          IconButton(
-            key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () => context.read<AppBloc>().add(AppLogoutRequested()),
-          )
-        ],
-      ),
+    return Scaffold(
+      appBar: CustomAppBar(title:"Home", function: () => context.read<AppBloc>().add(AppLogoutRequested()),),
+      bottomNavigationBar: const BottomAppBar(),
       body: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(
@@ -71,7 +55,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-    );*/
+    );
   }
 
 

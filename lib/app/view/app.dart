@@ -3,43 +3,34 @@ import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/screens/screens.dart';
 import 'package:music_tagger/theme.dart';
-import 'package:user_repository/src/user_repository.dart';
 
-import '../router/root_router_delegate.dart';
-import '../router/router_cubit.dart';
+import '../../config/app_router.dart';
+import '../../home/view/home_page.dart';
+import '../../login/view/login_page.dart';
 
 class App extends StatelessWidget {
-
-  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
-
-  App({
+  const App({
     Key? key,
-    required AuthenticationRepository authenticationRepository, required UserRepository userRepository,
-  })  : _authenticationRepository = authenticationRepository, _userRepository = userRepository,
+    required AuthenticationRepository authenticationRepository,
+  })  : _authenticationRepository = authenticationRepository,
         super(key: key);
 
   final AuthenticationRepository _authenticationRepository;
-  final UserRepository _userRepository;
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
-      value: [_authenticationRepository,_userRepository],
-      child: MultiBlocProvider ( providers : [
-        BlocProvider(
+      value: [_authenticationRepository],
+      child: BlocProvider(
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
-          userRepository: _userRepository,
-        ),),
-        BlocProvider(
-          create: (context) => RouterCubit(),
-        ),],
+        ),
         child: const AppView(),
       ),
     );
   }
-
 }
 
 class AppView extends StatelessWidget {
@@ -53,8 +44,17 @@ class AppView extends StatelessWidget {
         state: context.select((AppBloc bloc) => bloc.state.status),
         onGeneratePages: onGenerateAppViewPages,
       ),
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      initialRoute: ProfileScreen.routeName,
     );
   }
+
+  List<Page> onGenerateAppViewPages(AppStatus state, List<Page<dynamic>> pages) {
+    switch (state) {
+      case AppStatus.authenticated:
+        return [HomePage.page()];
+      case AppStatus.unauthenticated:
+        return [LoginPage.page()];
+    }
+  }
 }
-
-
