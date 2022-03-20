@@ -27,7 +27,7 @@ class App extends StatelessWidget {
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
         ),
-        child: const AppView(),
+        child: const AppView()
       ),
     );
   }
@@ -40,15 +40,12 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: theme,
-      home: FlowBuilder<AppStatus>(
-        state: context.select((AppBloc bloc) => bloc.state.status),
-        onGeneratePages: onGenerateAppViewPages,
-      ),
       onGenerateRoute: AppRouter.onGenerateRoute,
-      initialRoute: ProfileScreen.routeName,
-    );
-  }
+      initialRoute: SplashPage.routeName,
 
+    );
+
+  }
   List<Page> onGenerateAppViewPages(AppStatus state, List<Page<dynamic>> pages) {
     switch (state) {
       case AppStatus.authenticated:

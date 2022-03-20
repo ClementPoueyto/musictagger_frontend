@@ -1,12 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:music_tagger/home/home.dart';
-import 'package:music_tagger/login/view/login_page.dart';
+import 'package:music_tagger/login/login.dart';
+import 'package:music_tagger/screens/screens.dart';
+import 'package:music_tagger/sign_up/view/sign_up_page.dart';
 
 import '../app/bloc/app_bloc.dart';
 import '../screens/profile/profile_screen.dart';
-import '../screens/user/user_screen.dart';
 
 
 class AppRouter {
@@ -16,14 +16,15 @@ class AppRouter {
 
       switch (settings.name) {
         case '/':
-          return HomePage.route();
+          return SplashPage.route();
         case HomePage.routeName:
           return HomePage.route();
-        case UsersScreen.routeName:
-          return UsersScreen.route(user: settings.arguments as User);
         case ProfileScreen.routeName:
           return ProfileScreen.route();
-
+        case LoginPage.routeName:
+          return LoginPage.route();
+        case SignUpPage.routeName:
+          return SignUpPage.route();
         default:
           return _errorRoute();
       }

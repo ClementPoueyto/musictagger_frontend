@@ -8,6 +8,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/home/home.dart';
+import 'package:music_tagger/login/login.dart';
+import 'package:music_tagger/login/view/view.dart';
+import 'package:music_tagger/screens/screens.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
 import 'package:user_repository/user_repository.dart';
@@ -21,7 +24,7 @@ class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   static Page page() => MaterialPage<void>(child: HomePage());
-  static const String routeName = '/';
+  static const String routeName = '/home';
 
   static Route route() {
     return MaterialPageRoute<dynamic>(
@@ -35,7 +38,9 @@ class HomePage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final user = context.select((AppBloc bloc) => bloc.state.user);
     return Scaffold(
-      appBar: CustomAppBar(title:"Home", function: () => context.read<AppBloc>().add(AppLogoutRequested()),),
+      appBar: CustomAppBar(title:"Home", function: () async => {
+        await Navigator.of(context).pushReplacementNamed(LoginPage.routeName),
+        context.read<AppBloc>().add(AppLogoutRequested())}),
       bottomNavigationBar: const BottomAppBar(),
       body: Align(
         alignment: const Alignment(0, -1 / 3),

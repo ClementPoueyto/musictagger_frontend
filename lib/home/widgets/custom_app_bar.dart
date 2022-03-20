@@ -15,6 +15,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Home'),
+      automaticallyImplyLeading: false,
       actions: <Widget>[
         IconButton(
           key: const Key('homePage_logout_iconButton'),

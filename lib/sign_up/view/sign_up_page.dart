@@ -6,8 +6,13 @@ import 'package:music_tagger/sign_up/sign_up.dart';
 class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
+  static const String routeName = '/signup';
+
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const SignUpPage());
+    return MaterialPageRoute<dynamic>(
+      settings: RouteSettings(name: routeName),
+      builder: (context) => SignUpPage(),
+    );
   }
 
   @override

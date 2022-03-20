@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
 
+import '../../home/view/home_page.dart';
+import '../../screens/splash/splash.dart';
 import '../../sign_up/view/sign_up_page.dart';
 import '../cubit/login_cubit.dart';
 
@@ -103,18 +105,23 @@ class _LoginButton extends StatelessWidget {
         return state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
-          key: const Key('loginForm_continue_raisedButton'),
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            primary: const Color(0xFFFFD600),
-          ),
-          onPressed: state.status.isValidated
-              ? () => context.read<LoginCubit>().logInWithCredentials()
-              : null,
-          child: const Text('LOGIN'),
-        );
+                key: const Key('loginForm_continue_raisedButton'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  primary: const Color(0xFFFFD600),
+                ),
+                onPressed: state.status.isValidated
+                    ? () async => {
+                          await context
+                              .read<LoginCubit>()
+                              .logInWithCredentials(context),
+
+                        }
+                    : null,
+                child: const Text('LOGIN'),
+              );
       },
     );
   }
@@ -124,20 +131,27 @@ class _GoogleLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ElevatedButton.icon(
-      key: const Key('loginForm_googleLogin_raisedButton'),
-      label: const Text(
-        'SIGN IN WITH GOOGLE',
-        style: TextStyle(color: Colors.white),
-      ),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        primary: theme.colorScheme.secondary,
-      ),
-      icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
-      onPressed: () => context.read<LoginCubit>().logInWithGoogle(),
+    return BlocBuilder<LoginCubit, LoginState>(
+        builder: (context, state) {
+          return ElevatedButton.icon(
+                  key: const Key('loginForm_googleLogin_raisedButton'),
+                  label: const Text(
+                    'SIGN IN WITH GOOGLE',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    primary: theme.colorScheme.secondary,
+                  ),
+                  icon:
+                      const Icon(FontAwesomeIcons.google, color: Colors.white),
+                  onPressed: () async => {
+                    await context.read<LoginCubit>().logInWithGoogle(context),
+
+                  },
+                );}
     );
   }
 }
@@ -148,7 +162,7 @@ class _SignUpButton extends StatelessWidget {
     final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount_flatButton'),
-      onPressed: () => Navigator.of(context).push<void>(SignUpPage.route()),
+      onPressed: () => Navigator.of(context).pushNamed(SignUpPage.routeName),
       child: Text(
         'CREATE ACCOUNT',
         style: TextStyle(color: theme.primaryColor),
