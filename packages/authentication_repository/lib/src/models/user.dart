@@ -12,6 +12,7 @@ class UserAuth extends Equatable {
     this.email,
     this.name,
     this.photo,
+    this.refreshToken,
   });
 
   /// The current user's email address.
@@ -26,6 +27,9 @@ class UserAuth extends Equatable {
   /// Url for the current user's photo.
   final String? photo;
 
+  /// JWT Token firebase user
+  final String ? refreshToken;
+
   /// Empty user which represents an unauthenticated user.
   static const empty = UserAuth(id: '');
 
@@ -36,5 +40,5 @@ class UserAuth extends Equatable {
   bool get isNotEmpty => this != UserAuth.empty;
 
   @override
-  List<Object?> get props => [email, id, name, photo];
+  List<Object?> get props => [email, id, name, photo, refreshToken];
 }

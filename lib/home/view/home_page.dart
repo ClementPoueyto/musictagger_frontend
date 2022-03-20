@@ -10,7 +10,6 @@ import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/login/login.dart';
 import 'package:music_tagger/login/view/view.dart';
-import 'package:music_tagger/screens/screens.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
 import 'package:user_repository/user_repository.dart';
@@ -37,6 +36,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final user = context.select((AppBloc bloc) => bloc.state.user);
+    print(user);
     return Scaffold(
       appBar: CustomAppBar(title:"Home", function: () async => {
         await Navigator.of(context).pushReplacementNamed(LoginPage.routeName),
@@ -54,8 +54,9 @@ class HomePage extends StatelessWidget {
             Text(user.name ?? '', style: textTheme.headline5),
             ElevatedButton(
                 child: const Text('spotify auth'),
-                onPressed: () {
-                  authenticate(Theme.of(context).platform==TargetPlatform.android?dotenv.env['REDIRECT_URL_MOBILE'].toString():dotenv.env['REDIRECT_URL_WEB'].toString());}
+                onPressed: () =>{
+                  authenticate(Theme.of(context).platform==TargetPlatform.android?dotenv.env['REDIRECT_URL_MOBILE'].toString():dotenv.env['REDIRECT_URL_WEB'].toString(),
+                Theme.of(context).platform==TargetPlatform.android?dotenv.env['CALLBACK_URL_MOBILE'].toString():dotenv.env['CALLBACK_URL_WEB'].toString())}
             ),
           ],
         ),
@@ -66,15 +67,14 @@ class HomePage extends StatelessWidget {
 
 
 
-  Future<void> authenticate(String redirect) async {
+  Future<void> authenticate(String redirect, String callback) async {
     final state = _getRandomString(6);
     String clientId = dotenv.env['CLIENT_ID']!;
     String clientSecret = dotenv.env['CLIENT_SECRET']!;
     try {
-      print( dotenv.env["CALLBACK_URL"]);
       final result = await FlutterWebAuth.authenticate(
         url: APIPath.requestAuthorization(clientId, redirect, state),
-        callbackUrlScheme: dotenv.env["CALLBACK_URL"]!,
+        callbackUrlScheme: callback,
       );
       print(result);
       // Validate state from response
