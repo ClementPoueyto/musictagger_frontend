@@ -14,7 +14,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text('Home'),
+      title:  Text(title),
       automaticallyImplyLeading: false,
       actions: <Widget>[
         IconButton(

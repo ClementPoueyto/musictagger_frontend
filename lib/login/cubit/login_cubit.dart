@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,8 +44,8 @@ class LoginCubit extends Cubit<LoginState> {
         password: state.password.value,
       );
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
-      Navigator.pushReplacementNamed(
-          context, HomePage.routeName);
+      AutoRouter.of(context).replaceNamed( HomePage.routeName);
+
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(
         state.copyWith(
@@ -62,7 +63,7 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       await _authenticationRepository.logInWithGoogle();
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
-      Navigator.pushReplacementNamed(context, HomePage.routeName);
+      await AutoRouter.of(context).replaceNamed( HomePage.routeName);
 
     } on LogInWithGoogleFailure catch (e) {
       emit(

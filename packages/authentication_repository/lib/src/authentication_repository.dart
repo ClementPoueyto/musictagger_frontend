@@ -268,7 +268,8 @@ class AuthenticationRepository {
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
-    } catch (_) {
+    } catch (e) {
+      print(e);
       throw LogOutFailure();
     }
   }

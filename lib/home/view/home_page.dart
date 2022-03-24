@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/home/home.dart';
-import 'package:music_tagger/login/login.dart';
-import 'package:music_tagger/login/view/view.dart';
+import 'package:music_tagger/home/widgets/custom_bottom_app_bar.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
 import 'package:user_repository/user_repository.dart';
@@ -38,10 +38,9 @@ class HomePage extends StatelessWidget {
     final user = context.select((AppBloc bloc) => bloc.state.user);
     print(user);
     return Scaffold(
-      appBar: CustomAppBar(title:"Home", function: () async => {
-        await Navigator.of(context).pushReplacementNamed(LoginPage.routeName),
-        context.read<AppBloc>().add(AppLogoutRequested())}),
-      bottomNavigationBar: const BottomAppBar(),
+      /*appBar: CustomAppBar(title:"Home", function: () async => {
+        await AutoRouter.of(context).pushNamed("/login"),
+        context.read<AppBloc>().add(AppLogoutRequested())}),*/
       body: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(

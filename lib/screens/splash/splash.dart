@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,10 +23,10 @@ class SplashPage extends StatelessWidget {
         listener: (context, state) {
           if (state.status==AppStatus.unauthenticated) {
             print('submission failure');
-            Navigator.of(context).pushReplacementNamed('/login');
+            AutoRouter.of(context).pushNamed('/login');
           } else if (state.status==AppStatus.authenticated) {
             print('success');
-            Navigator.of(context).pushReplacementNamed('/home');
+            AutoRouter.of(context).pushNamed('/home');
           }
         },
         builder: (context, state) => Scaffold(

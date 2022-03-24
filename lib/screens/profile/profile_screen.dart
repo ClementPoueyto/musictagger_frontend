@@ -1,7 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:math';
+import 'dart:io';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_web_auth/flutter_web_auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/home/home.dart';
+import 'package:music_tagger/login/login.dart';
+import 'package:music_tagger/login/view/view.dart';
+import 'package:music_tagger/router/routes.gr.dart';
+import 'package:music_tagger/spotify/api_path.dart';
+import 'package:music_tagger/spotify/spotify_auth_api.dart';
+import 'package:user_repository/user_repository.dart';
 
-import '../../home/widgets/custom_app_bar.dart';
 
 
 class ProfileScreen extends StatelessWidget {
@@ -16,99 +28,71 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final user = context.select((AppBloc bloc) => bloc.state.user);
+    print(user);
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'PROFILE', function: (){},
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: 10),
-          Stack(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height / 4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(3, 3),
-                      blurRadius: 3,
-                      spreadRadius: 3,
-                    ),
-                  ],
-
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height / 4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).primaryColor.withOpacity(0.1),
-                      Theme.of(context).primaryColor.withOpacity(0.9),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 40.0),
-
-                  ),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TitleWithIcon(title: 'Biography', icon: Icons.edit),
-
-                TitleWithIcon(title: 'Pictures', icon: Icons.edit),
-                SizedBox(
-                  height: 125,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Container(
-                            height: 125,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(
-                                  color: Theme.of(context).primaryColor),
-
-                            ),
-                          ),
-                        );
-                      }),
-                ),
-                TitleWithIcon(title: 'Location', icon: Icons.edit),
-                Text(
-                  'Singapore, 1 Suntec City',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1!
-                      .copyWith(height: 1.5),
-                ),
-                TitleWithIcon(title: 'Interest', icon: Icons.edit),
-
-              ],
+      appBar: CustomAppBar(title:"Profile", function: () async => {
+        AutoRouter.of(context).replace(LoginRouter())
+        ,
+        context.read<AppBloc>().add(AppLogoutRequested())}),
+      body: Align(
+        alignment: const Alignment(0, -1 / 3),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Avatar(photo: user.photo),
+            const SizedBox(height: 4),
+            Text(user.email ?? '', style: textTheme.headline6),
+            const SizedBox(height: 4),
+            Text(user.name ?? '', style: textTheme.headline5),
+            ElevatedButton(
+                child: const Text('spotify auth'),
+                onPressed: () => {
+                  authenticate(Theme.of(context).platform==TargetPlatform.android?dotenv.env['REDIRECT_URL_MOBILE'].toString():dotenv.env['REDIRECT_URL_WEB'].toString(),
+                      Theme.of(context).platform==TargetPlatform.android?dotenv.env['CALLBACK_URL_MOBILE'].toString():dotenv.env['CALLBACK_URL_WEB'].toString())}
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+
+  Future<void> authenticate(String redirect, String callback) async {
+    final state = _getRandomString(6);
+    String clientId = dotenv.env['CLIENT_ID']!;
+    String clientSecret = dotenv.env['CLIENT_SECRET']!;
+    try {
+      final result = await FlutterWebAuth.authenticate(
+        url: APIPath.requestAuthorization(clientId, redirect, state),
+        callbackUrlScheme: callback,
+      );
+      print(result);
+      // Validate state from response
+      final returnedState = Uri.parse(result).queryParameters['state'];
+      if (state != returnedState) throw HttpException('Invalid access');
+
+      final code = Uri.parse(result).queryParameters['code'];
+      final tokens = await SpotifyAuthApi.getAuthTokens(code!, redirect);
+
+      print(tokens.refreshToken);
+      print(tokens.accessToken);
+      UserRepository userRepository = new UserRepository();
+      SpotifyUser spotifyUser = new SpotifyUser(tokens.accessToken, tokens.refreshToken);
+      userRepository.updateSpotifyUser(spotifyUser);
+    } on Exception catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  static String _getRandomString(int length) {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    Random _rnd = Random();
+    return String.fromCharCodes(Iterable.generate(
+        length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
   }
 }
 
@@ -138,4 +122,5 @@ class TitleWithIcon extends StatelessWidget {
       ],
     );
   }
+
 }

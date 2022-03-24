@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -162,7 +163,7 @@ class _SignUpButton extends StatelessWidget {
     final theme = Theme.of(context);
     return TextButton(
       key: const Key('loginForm_createAccount_flatButton'),
-      onPressed: () => Navigator.of(context).pushNamed(SignUpPage.routeName),
+      onPressed: () => AutoRouter.of(context).pushNamed(SignUpPage.routeName),
       child: Text(
         'CREATE ACCOUNT',
         style: TextStyle(color: theme.primaryColor),
