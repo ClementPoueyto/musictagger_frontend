@@ -268,7 +268,8 @@ class AuthenticationRepository {
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
-    } catch (_) {
+    } catch (e) {
+      print(e);
       throw LogOutFailure();
     }
   }
@@ -276,6 +277,7 @@ class AuthenticationRepository {
 
 extension on firebase_auth.User {
   UserAuth get toUser {
-    return UserAuth(id: uid, email: email, name: displayName, photo: photoURL);
+
+    return UserAuth(id: uid, email: email, name: displayName, photo: photoURL, refreshToken: refreshToken);
   }
 }

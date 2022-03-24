@@ -1,60 +1,43 @@
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
-import 'package:music_tagger/theme.dart';
-import 'package:user_repository/src/user_repository.dart';
+import 'package:music_tagger/router/AuthGuard.dart';
+import 'package:music_tagger/router/routes.gr.dart';
 
-import '../router/root_router_delegate.dart';
-import '../router/router_cubit.dart';
 
 class App extends StatelessWidget {
-
-  final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
-
   App({
     Key? key,
-    required AuthenticationRepository authenticationRepository, required UserRepository userRepository,
-  })  : _authenticationRepository = authenticationRepository, _userRepository = userRepository,
+    required AuthenticationRepository authenticationRepository,
+  })  : _authenticationRepository = authenticationRepository,
         super(key: key);
 
   final AuthenticationRepository _authenticationRepository;
-  final UserRepository _userRepository;
+  final _appRouter = AppRouter(authGuard: AuthGuard());
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
-      value: [_authenticationRepository,_userRepository],
-      child: MultiBlocProvider ( providers : [
-        BlocProvider(
+      value: _authenticationRepository,
+      child: BlocProvider(
         create: (_) => AppBloc(
           authenticationRepository: _authenticationRepository,
-          userRepository: _userRepository,
-        ),),
-        BlocProvider(
-          create: (context) => RouterCubit(),
-        ),],
-        child: const AppView(),
-      ),
-    );
-  }
+        ),
+        child: BlocBuilder<AppBloc, AppState>(
+          builder: (context, state) => MaterialApp.router(
+            theme: ThemeData.from(
+              colorScheme: ColorScheme.fromSwatch(
+                primarySwatch: Colors.blue,
+              ).copyWith(secondary: Colors.yellow),
+            ),
 
-}
+            routerDelegate: _appRouter.delegate(),
+            routeInformationParser: _appRouter.defaultRouteParser(),
+          ),
+        )
 
-class AppView extends StatelessWidget {
-  const AppView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: theme,
-      home: FlowBuilder<AppStatus>(
-        state: context.select((AppBloc bloc) => bloc.state.status),
-        onGeneratePages: onGenerateAppViewPages,
       ),
     );
   }
 }
-
-

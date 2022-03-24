@@ -1,8 +1,12 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:form_inputs/form_inputs.dart';
 import 'package:formz/formz.dart';
+
+import '../../home/view/home_page.dart';
 
 part 'login_state.dart';
 
@@ -31,7 +35,7 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
-  Future<void> logInWithCredentials() async {
+  Future<void> logInWithCredentials(BuildContext context) async {
     if (!state.status.isValidated) return;
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
@@ -40,6 +44,8 @@ class LoginCubit extends Cubit<LoginState> {
         password: state.password.value,
       );
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      AutoRouter.of(context).replaceNamed( HomePage.routeName);
+
     } on LogInWithEmailAndPasswordFailure catch (e) {
       emit(
         state.copyWith(
@@ -52,11 +58,13 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  Future<void> logInWithGoogle() async {
+  Future<void> logInWithGoogle(BuildContext context) async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       await _authenticationRepository.logInWithGoogle();
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
+      await AutoRouter.of(context).replaceNamed( HomePage.routeName);
+
     } on LogInWithGoogleFailure catch (e) {
       emit(
         state.copyWith(
