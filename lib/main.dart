@@ -5,6 +5,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app/bloc_observer.dart';
 import 'app/view/app.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -12,7 +13,7 @@ Future<void> main() async {
     () async {
       try {
         WidgetsFlutterBinding.ensureInitialized();
-        await Firebase.initializeApp(
+        await Firebase.initializeApp(name:kIsWeb?null:"mobile",
           options: FirebaseOptions(
               apiKey: "AIzaSyBK57uo9i34cf2G3XcpD_s7SwYeII-GzMc",
               authDomain: "music-tagger-f7265.firebaseapp.com",

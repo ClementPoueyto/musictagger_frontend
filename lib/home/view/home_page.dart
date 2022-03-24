@@ -22,15 +22,8 @@ class HomePage extends StatelessWidget {
 
   HomePage({Key? key}) : super(key: key);
 
-  static Page page() => MaterialPage<void>(child: HomePage());
   static const String routeName = '/home';
 
-  static Route route() {
-    return MaterialPageRoute<dynamic>(
-      settings: RouteSettings(name: routeName),
-      builder: (context) => HomePage(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +31,9 @@ class HomePage extends StatelessWidget {
     final user = context.select((AppBloc bloc) => bloc.state.user);
     print(user);
     return Scaffold(
-      /*appBar: CustomAppBar(title:"Home", function: () async => {
+      appBar: CustomAppBar(title:"Home", function: () async => {
         await AutoRouter.of(context).pushNamed("/login"),
-        context.read<AppBloc>().add(AppLogoutRequested())}),*/
+        context.read<AppBloc>().add(AppLogoutRequested())}),
       body: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(

@@ -11,21 +11,20 @@
 // ignore_for_file: type=lint
 
 import 'package:auto_route/auto_route.dart' as _i3;
-import 'package:flutter/material.dart' as _i6;
+import 'package:flutter/material.dart' as _i5;
 
-import '../home/home.dart' as _i4;
-import '../home/widgets/custom_bottom_app_bar.dart' as _i1;
+import '../home/home.dart' as _i1;
 import '../login/login.dart' as _i2;
-import '../screens/screens.dart' as _i5;
-import 'AuthGuard.dart' as _i7;
+import '../screens/screens.dart' as _i4;
+import 'AuthGuard.dart' as _i6;
 
 class AppRouter extends _i3.RootStackRouter {
   AppRouter(
-      {_i6.GlobalKey<_i6.NavigatorState>? navigatorKey,
+      {_i5.GlobalKey<_i5.NavigatorState>? navigatorKey,
       required this.authGuard})
       : super(navigatorKey);
 
-  final _i7.AuthGuard authGuard;
+  final _i6.AuthGuard authGuard;
 
   @override
   final Map<String, _i3.PageFactory> pagesMap = {
@@ -49,11 +48,11 @@ class AppRouter extends _i3.RootStackRouter {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
       return _i3.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i4.HomePage(key: args.key));
+          routeData: routeData, child: _i1.HomePage(key: args.key));
     },
     ProfileScreen.name: (routeData) {
       return _i3.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i5.ProfileScreen());
+          routeData: routeData, child: _i4.ProfileScreen());
     }
   };
 
@@ -117,9 +116,9 @@ class ProfileRouter extends _i3.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i4.HomePage]
+/// [_i1.HomePage]
 class HomeRoute extends _i3.PageRouteInfo<HomeRouteArgs> {
-  HomeRoute({_i6.Key? key})
+  HomeRoute({_i5.Key? key})
       : super(HomeRoute.name, path: '', args: HomeRouteArgs(key: key));
 
   static const String name = 'HomeRoute';
@@ -128,7 +127,7 @@ class HomeRoute extends _i3.PageRouteInfo<HomeRouteArgs> {
 class HomeRouteArgs {
   const HomeRouteArgs({this.key});
 
-  final _i6.Key? key;
+  final _i5.Key? key;
 
   @override
   String toString() {
@@ -137,7 +136,7 @@ class HomeRouteArgs {
 }
 
 /// generated route for
-/// [_i5.ProfileScreen]
+/// [_i4.ProfileScreen]
 class ProfileScreen extends _i3.PageRouteInfo<void> {
   const ProfileScreen() : super(ProfileScreen.name, path: '');
 

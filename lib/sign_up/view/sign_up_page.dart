@@ -8,12 +8,6 @@ class SignUpPage extends StatelessWidget {
 
   static const String routeName = '/signup';
 
-  static Route route() {
-    return MaterialPageRoute<dynamic>(
-      settings: RouteSettings(name: routeName),
-      builder: (context) => SignUpPage(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

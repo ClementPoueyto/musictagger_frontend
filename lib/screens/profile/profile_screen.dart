@@ -7,8 +7,6 @@ import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/home/home.dart';
-import 'package:music_tagger/login/login.dart';
-import 'package:music_tagger/login/view/view.dart';
 import 'package:music_tagger/router/routes.gr.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
@@ -17,14 +15,10 @@ import 'package:user_repository/user_repository.dart';
 
 
 class ProfileScreen extends StatelessWidget {
-  static const String routeName = '/profile';
 
-  static Route route() {
-    return MaterialPageRoute<dynamic>(
-      settings: RouteSettings(name: routeName),
-      builder: (context) => ProfileScreen(),
-    );
-  }
+  static const String routeName = '/profile';
+  ProfileScreen({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
