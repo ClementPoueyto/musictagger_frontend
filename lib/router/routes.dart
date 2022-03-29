@@ -14,6 +14,9 @@ import 'package:music_tagger/screens/screens.dart';
             AutoRoute<dynamic>(name: "HomeRouter", path : 'home',page: EmptyRouterPage,children: [
               AutoRoute<dynamic>(path: '', page: HomePage,guards: [AuthGuard], initial: true)
             ]),
+            AutoRoute<dynamic>(name: "HomeRouter", path : 'home',page: EmptyRouterPage,children: [
+              AutoRoute<dynamic>(path: '', page: HomePage,guards: [AuthGuard], initial: true)
+            ]),
             AutoRoute<dynamic>(name: "ProfileRouter", path : 'profile',page: EmptyRouterPage, children: [
               AutoRoute<dynamic>(path: '', page: ProfileScreen, guards: [AuthGuard],)
             ])

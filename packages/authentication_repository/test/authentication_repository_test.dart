@@ -295,7 +295,7 @@ void main() {
         when(() => firebaseAuth.authStateChanges())
             .thenAnswer((_) => Stream.value(null));
         await expectLater(
-          authenticationRepository.user,
+          authenticationRepository.userAuth,
           emitsInOrder(const <UserAuth>[UserAuth.empty]),
         );
       });
@@ -308,7 +308,7 @@ void main() {
         when(() => firebaseAuth.authStateChanges())
             .thenAnswer((_) => Stream.value(firebaseUser));
         await expectLater(
-          authenticationRepository.user,
+          authenticationRepository.userAuth,
           emitsInOrder(const <UserAuth>[user]),
         );
         verify(

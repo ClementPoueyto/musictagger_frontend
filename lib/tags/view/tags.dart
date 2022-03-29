@@ -17,7 +17,7 @@ class Tags extends StatelessWidget {
       appBar: CustomAppBar(title:"Tags", function: () async => {
         AutoRouter.of(context).replace(LoginRouter())
         ,
-        context.read<AppBloc>().add(AppLogoutRequested())}),
+        context.read<AuthBloc>().add(AuthLogoutRequested())}),
       body: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(

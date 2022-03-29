@@ -10,8 +10,7 @@ import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/router/routes.gr.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
-import 'package:user_repository/user_repository.dart';
-
+import 'package:tag_repository/tag_repository.dart';
 
 
 class ProfileScreen extends StatelessWidget {
@@ -23,13 +22,13 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final user = context.select((AppBloc bloc) => bloc.state.user);
+    final user = context.select((AuthBloc bloc) => bloc.state.userAuth);
     print(user);
     return Scaffold(
       appBar: CustomAppBar(title:"Profile", function: () async => {
         AutoRouter.of(context).replace(LoginRouter())
         ,
-        context.read<AppBloc>().add(AppLogoutRequested())}),
+        context.read<AuthBloc>().add(AuthLogoutRequested())}),
       body: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(
@@ -72,9 +71,9 @@ class ProfileScreen extends StatelessWidget {
 
       print(tokens.refreshToken);
       print(tokens.accessToken);
-      UserRepository userRepository = new UserRepository();
+      TagRepository tagRepository = new TagRepository();
       SpotifyUser spotifyUser = new SpotifyUser(tokens.accessToken, tokens.refreshToken);
-      userRepository.updateSpotifyUser(spotifyUser);
+      //userRepository.connectSpotify(spotifyUser);
     } on Exception catch (e) {
       print(e);
       rethrow;

@@ -12,8 +12,7 @@ import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/home/widgets/custom_bottom_app_bar.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
-import 'package:user_repository/user_repository.dart';
-
+import 'package:tag_repository/tag_repository.dart';
 import '../widgets/avatar.dart';
 
 
@@ -28,12 +27,12 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final user = context.select((AppBloc bloc) => bloc.state.user);
+    final user = context.select((AuthBloc bloc) => bloc.state.userAuth);
     print(user);
     return Scaffold(
       appBar: CustomAppBar(title:"Home", function: () async => {
         await AutoRouter.of(context).pushNamed("/login"),
-        context.read<AppBloc>().add(AppLogoutRequested())}),
+        context.read<AuthBloc>().add(AuthLogoutRequested())}),
       body: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(
@@ -48,7 +47,8 @@ class HomePage extends StatelessWidget {
                 child: const Text('spotify auth'),
                 onPressed: () =>{
                   authenticate(Theme.of(context).platform==TargetPlatform.android?dotenv.env['REDIRECT_URL_MOBILE'].toString():dotenv.env['REDIRECT_URL_WEB'].toString(),
-                Theme.of(context).platform==TargetPlatform.android?dotenv.env['CALLBACK_URL_MOBILE'].toString():dotenv.env['CALLBACK_URL_WEB'].toString())}
+                Theme.of(context).platform==TargetPlatform.android?dotenv.env['CALLBACK_URL_MOBILE'].toString():dotenv.env['CALLBACK_URL_WEB'].toString(),
+                  User.empty)}
             ),
           ],
         ),
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
 
 
 
-  Future<void> authenticate(String redirect, String callback) async {
+  Future<void> authenticate(String redirect, String callback, User user) async {
     final state = _getRandomString(6);
     String clientId = dotenv.env['CLIENT_ID']!;
     String clientSecret = dotenv.env['CLIENT_SECRET']!;
@@ -78,9 +78,10 @@ class HomePage extends StatelessWidget {
 
       print(tokens.refreshToken);
       print(tokens.accessToken);
-      UserRepository userRepository = new UserRepository();
+      TagRepository tagRepository = new TagRepository();
       SpotifyUser spotifyUser = new SpotifyUser(tokens.accessToken, tokens.refreshToken);
-      userRepository.updateSpotifyUser(spotifyUser);
+
+      //userRepository.connectSpotify();
     } on Exception catch (e) {
       print(e);
       rethrow;

@@ -21,10 +21,10 @@ class App extends StatelessWidget {
     return RepositoryProvider.value(
       value: _authenticationRepository,
       child: BlocProvider(
-        create: (_) => AppBloc(
+        create: (_) => AuthBloc(
           authenticationRepository: _authenticationRepository,
         ),
-        child: BlocBuilder<AppBloc, AppState>(
+        child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) => MaterialApp.router(
             theme: ThemeData.from(
               colorScheme: ColorScheme.fromSwatch(

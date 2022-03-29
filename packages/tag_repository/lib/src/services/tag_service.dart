@@ -3,10 +3,10 @@ import 'dart:convert' as convert;
 
 import 'package:tag_repository/src/models/models.dart';
 
-class ApiUserService {
+class ApiTagService {
   final String _url = 'http://localhost:8080/tag/';
 
-  Future<Tag> getTagById() async {
+  Future<Tag> getTagById(String tagId) async {
     final response = await http.get(Uri.parse(_url));
     if (response.statusCode == 200) {
       return tagModelFromJson(response.body);

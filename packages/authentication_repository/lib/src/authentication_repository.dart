@@ -180,7 +180,7 @@ class AuthenticationRepository {
   /// the authentication state changes.
   ///
   /// Emits [UserAuth.empty] if the user is not authenticated.
-  Stream<UserAuth> get user {
+  Stream<UserAuth> get userAuth {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
       final user = firebaseUser == null ? UserAuth.empty : firebaseUser.toUser;
       _cache.write(key: userCacheKey, value: user);
@@ -259,7 +259,7 @@ class AuthenticationRepository {
   }
 
   /// Signs out the current user which will emit
-  /// [UserAuth.empty] from the [user] Stream.
+  /// [UserAuth.empty] from the [userAuth] Stream.
   ///
   /// Throws a [LogOutFailure] if an exception occurs.
   Future<void> logOut() async {
