@@ -11,9 +11,11 @@ class AutoTabsScaffoldPage extends StatelessWidget {
     return AutoTabsScaffold(
       routes:  [
          HomeRouter(),
+        TagRouter(),
         ProfileRouter()
       ],
-      bottomNavigationBuilder: (_, tabsRouter) {
+
+    bottomNavigationBuilder: (_, tabsRouter) {
         return BottomNavigationBar(
           backgroundColor: Colors.indigo,
           currentIndex: tabsRouter.activeIndex,
@@ -22,6 +24,10 @@ class AutoTabsScaffoldPage extends StatelessWidget {
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.tag),
+              label: 'Tags',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_box),

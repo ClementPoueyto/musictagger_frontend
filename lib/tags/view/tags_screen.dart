@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/router/routes.gr.dart';
-import '../../home/widgets/custom_app_bar.dart';
+import 'package:music_tagger/widgets/widgets.dart';
 
-class Tags extends StatelessWidget {
-  Tags({
+class TagsScreen extends StatelessWidget {
+  TagsScreen({
     Key? key,
   }) : super(key: key);
 

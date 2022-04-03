@@ -15,8 +15,8 @@ class ApiTagService {
     }
   }
 
-  Future<List<Tag>> getTags() async {
-    final response = await http.get(Uri.parse(_url));
+  Future<List<Tag>> getTags(String userId) async {
+    final response = await http.get(Uri.parse(_url+"?id="+userId.toString()));
     if (response.statusCode == 200) {
       List<Tag> tags = [];
       List<Map<String, dynamic>> tagsMap = convert.jsonDecode(response.body) as List<Map<String, dynamic>>;

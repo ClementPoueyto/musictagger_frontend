@@ -10,9 +10,9 @@ class TagRepository {
   final _providerUser = ApiUserService();
   final _providerTag = ApiTagService();
 
-  Future<User?> getUser() async {
-    if (user != null) return user;
-    User _user = await _providerUser.fetchUser();
+  Future<User> getUser(String id) async {
+    if (user != null) return user!;
+    User _user = await _providerUser.fetchUser(id);
     if(_user==null){
       _user = await Future.delayed(
         const Duration(milliseconds: 300),
@@ -20,6 +20,7 @@ class TagRepository {
       );
     }
     this.user = _user;
+    print(_user);
     return _user;
   }
 
@@ -40,7 +41,7 @@ class TagRepository {
 
   Future<List<Tag>> getTags({required String userId}) async {
     try {
-      return await _providerTag.getTags();
+      return await _providerTag.getTags(userId);
     } on Exception catch (e) {
       throw FetchAndUpdateTagFailure.fromCode(e.toString());
     } catch (_) {

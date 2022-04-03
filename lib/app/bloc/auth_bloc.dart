@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:tag_repository/tag_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -10,8 +10,8 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
+  AuthBloc({required AuthenticationRepository authenticationRepository, required TagRepository tagRepository})
+      : _authenticationRepository = authenticationRepository, _tagRepository = tagRepository,
         super(
         authenticationRepository.currentUser.isNotEmpty
             ? AuthState.authenticated(authenticationRepository.currentUser)
@@ -20,11 +20,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthUserChanged>(_onUserChanged);
     on<AuthLogoutRequested>(_onLogoutRequested);
     _userSubscription = _authenticationRepository.userAuth.listen(
-          (user) => add(AuthUserChanged(user)),
+          (user) => {
+            add(AuthUserChanged(user)),
+          _tagRepository.getUser(user.id)
+          }
     );
   }
 
   final AuthenticationRepository _authenticationRepository;
+  final TagRepository _tagRepository;
   late final StreamSubscription<UserAuth> _userSubscription;
 
 

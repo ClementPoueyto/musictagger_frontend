@@ -1,2 +1,2 @@
-export 'bloc/tags_bloc.dart';
-export 'view/tags.dart';
+export 'view/tags_screen.dart';
+export 'cubit/tags_cubit.dart';

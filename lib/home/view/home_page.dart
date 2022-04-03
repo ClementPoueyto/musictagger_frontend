@@ -9,11 +9,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/home/home.dart';
-import 'package:music_tagger/home/widgets/custom_bottom_app_bar.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
+import 'package:music_tagger/widgets/widgets.dart';
 import 'package:tag_repository/tag_repository.dart';
-import '../widgets/avatar.dart';
+import '../../router/routes.gr.dart';
+
 
 
 class HomePage extends StatelessWidget {
@@ -27,22 +28,22 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final user = context.select((AuthBloc bloc) => bloc.state.userAuth);
-    print(user);
+    final userAuth = context.select((AuthBloc bloc) => bloc.state.userAuth);
+    print(userAuth);
     return Scaffold(
       appBar: CustomAppBar(title:"Home", function: () async => {
-        await AutoRouter.of(context).pushNamed("/login"),
+        await AutoRouter.of(context).push(LoginRouter()),
         context.read<AuthBloc>().add(AuthLogoutRequested())}),
       body: Align(
         alignment: const Alignment(0, -1 / 3),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Avatar(photo: user.photo),
+            Avatar(photo: userAuth.photo),
             const SizedBox(height: 4),
-            Text(user.email ?? '', style: textTheme.headline6),
+            Text(userAuth.email ?? '', style: textTheme.headline6),
             const SizedBox(height: 4),
-            Text(user.name ?? '', style: textTheme.headline5),
+            Text(userAuth.name ?? '', style: textTheme.headline5),
             ElevatedButton(
                 child: const Text('spotify auth'),
                 onPressed: () =>{

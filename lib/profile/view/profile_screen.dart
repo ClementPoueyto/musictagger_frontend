@@ -6,11 +6,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
-import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/router/routes.gr.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
 import 'package:tag_repository/tag_repository.dart';
+
+import 'package:music_tagger/widgets/widgets.dart';
 
 
 class ProfileScreen extends StatelessWidget {
@@ -26,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
     print(user);
     return Scaffold(
       appBar: CustomAppBar(title:"Profile", function: () async => {
-        AutoRouter.of(context).replace(LoginRouter())
+        AutoRouter.of(context).push(LoginRouter())
         ,
         context.read<AuthBloc>().add(AuthLogoutRequested())}),
       body: Align(
