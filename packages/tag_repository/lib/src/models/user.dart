@@ -7,17 +7,17 @@ class User extends Equatable {
 
   final String id;
 
-  final SpotifyUser? spotifyUser;
+  final SpotifyUser spotifyUser;
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, spotifyUser];
 
-  static const empty = const User('-',  null);
+  static const empty = const User('-',  SpotifyUser.empty);
 
   static User fromJson(Map<String, dynamic> data) {
     return User(
       data['id'],
-      data['spotifyUser']
+        SpotifyUser.fromJson(data['spotifyUser'])
     );
   }
 

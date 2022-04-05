@@ -25,6 +25,8 @@ class TagRepository {
   }
 
   Future<void> connectSpotify(User _user) async {
+    print("ptin");
+    print(_user);
     if (_user == null || _user.spotifyUser==null) return null;
     return _providerUser.connectSpotify(_user);
   }

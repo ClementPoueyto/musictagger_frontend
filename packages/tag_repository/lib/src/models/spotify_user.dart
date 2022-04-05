@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-class SpotifyUser {
-  SpotifyUser( this.spotifyAccessToken, this.spotifyRefreshToken);
+class SpotifyUser extends Equatable{
+  const SpotifyUser( this.spotifyAccessToken, this.spotifyRefreshToken);
 
-  String spotifyAccessToken;
+  final String spotifyAccessToken;
 
-  String spotifyRefreshToken;
+  final String spotifyRefreshToken;
 
   final int expiresIn = 3600;
 
   @override
   List<Object> get props => [spotifyRefreshToken, spotifyAccessToken, expiresIn];
 
-  static final empty = SpotifyUser('', '');
+  static const empty = SpotifyUser('_', '_');
 
   Map<String, dynamic> toJson(){
     final Map<String, String> data = new Map<String, String>();
@@ -21,5 +21,12 @@ class SpotifyUser {
     data['expiresIn'] = expiresIn.toString();
 
     return data;
+  }
+
+  static SpotifyUser fromJson(Map<String, dynamic> data) {
+    return SpotifyUser(
+        data['spotifyAccessToken'],
+        data['spotifyRefreshToken'],
+    );
   }
 }

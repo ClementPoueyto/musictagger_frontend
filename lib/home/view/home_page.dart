@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
     print(userAuth);
     return Scaffold(
       appBar: CustomAppBar(title:"Home", function: () async => {
-        await AutoRouter.of(context).push(LoginRouter()),
+        AutoRouter.of(context).push(LoginRouter()),
         context.read<AuthBloc>().add(AuthLogoutRequested())}),
       body: Align(
         alignment: const Alignment(0, -1 / 3),
@@ -79,10 +79,8 @@ class HomePage extends StatelessWidget {
 
       print(tokens.refreshToken);
       print(tokens.accessToken);
-      TagRepository tagRepository = new TagRepository();
       SpotifyUser spotifyUser = new SpotifyUser(tokens.accessToken, tokens.refreshToken);
 
-      //userRepository.connectSpotify();
     } on Exception catch (e) {
       print(e);
       rethrow;

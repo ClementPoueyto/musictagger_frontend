@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/router/routes.gr.dart';
+import 'package:music_tagger/tags/cubit/tags_cubit.dart';
 import 'package:music_tagger/widgets/widgets.dart';
 
 class TagsScreen extends StatelessWidget {
@@ -18,18 +19,26 @@ class TagsScreen extends StatelessWidget {
         AutoRouter.of(context).replace(LoginRouter())
         ,
         context.read<AuthBloc>().add(AuthLogoutRequested())}),
-      body: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const SizedBox(height: 4),
-            Text("text", style: textTheme.headline6),
-            const SizedBox(height: 4),
-            Text("test", style: textTheme.headline5),
-          ],
-        ),
-      ),
+      body: Column(children: [
+        BlocBuilder<TagsCubit, TagsState>(
+          builder: (context, state) {
+            if(state is TagsLoading){
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if(state is Tagsloaded){
+              return Text('Something went good.');
+
+            }
+            else{
+              return Text('Something went wrong.');
+            }
+          },
+        )
+      ],),
+
+
     );
   }
 }

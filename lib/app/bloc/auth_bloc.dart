@@ -10,8 +10,8 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc({required AuthenticationRepository authenticationRepository, required TagRepository tagRepository})
-      : _authenticationRepository = authenticationRepository, _tagRepository = tagRepository,
+  AuthBloc({required AuthenticationRepository authenticationRepository})
+      : _authenticationRepository = authenticationRepository,
         super(
         authenticationRepository.currentUser.isNotEmpty
             ? AuthState.authenticated(authenticationRepository.currentUser)
@@ -22,13 +22,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _userSubscription = _authenticationRepository.userAuth.listen(
           (user) => {
             add(AuthUserChanged(user)),
-          _tagRepository.getUser(user.id)
           }
     );
   }
 
   final AuthenticationRepository _authenticationRepository;
-  final TagRepository _tagRepository;
   late final StreamSubscription<UserAuth> _userSubscription;
 
 

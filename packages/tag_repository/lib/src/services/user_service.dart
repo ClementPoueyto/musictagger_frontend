@@ -36,6 +36,7 @@ class ApiUserService {
         'Accept': '*/*',
       };
       Response response = await http.post(Uri.parse(_url+"connect/spotify?userId="+user.id.toString()), headers: headers, body:json.encode(user.spotifyUser!.toJson()));
+      print(response.statusCode);
       if (response.statusCode != 201) {
         throw Exception('Failed to connect user to spotify');
       }
