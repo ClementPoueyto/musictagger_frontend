@@ -30,7 +30,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<void> updateProfile(User user) async {
+  Future<void> connectSpotify(User user) async {
+    print(user);
     try{
       await tagsRepository.connectSpotify(user);
       emit(ProfileLoaded( user: user));

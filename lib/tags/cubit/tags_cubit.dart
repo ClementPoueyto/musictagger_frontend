@@ -20,11 +20,24 @@ class TagsCubit extends Cubit<TagsState> {
   final TagRepository tagsRepository;
   final AuthenticationRepository authenticationRepository;
 
+  int page = 0;
+  bool isFetching = false;
+
   Future<void> fetchTags(String userId) async{
-    emit(TagsLoading());
+    if (state is TagsLoading) return;
+
+    final currentState = state;
+
+    var oldTags = <Tag>[];
+    if (currentState is TagsLoaded) {
+      oldTags = currentState.tags;
+    }
+    emit(TagsLoading(oldTags, isFirstFetch: page==0));
     try{
-      final List<Tag> tags = await tagsRepository.getTags(userId: userId);
-      emit(Tagsloaded(tags: tags));
+      final List<Tag> tags = await tagsRepository.getTags(userId: userId, page: page);
+      oldTags.addAll(tags);
+      page++;
+      emit(TagsLoaded(tags: oldTags));
     }
     catch(err){
       print(err);
@@ -33,6 +46,11 @@ class TagsCubit extends Cubit<TagsState> {
   }
 
   void updateTags(List<Tag> tags){
-    emit(Tagsloaded(tags: tags));
+    emit(TagsLoaded(tags: tags));
+  }
+
+  Future<void> refreshTags(String userId)async {
+    this.page = 0;
+    this.fetchTags(userId);
   }
 }

@@ -15,7 +15,7 @@ class TagsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: CustomAppBar(title:"Tags", function: () async => {
+      appBar: CustomAppBar(title:"Generation", function: () async => {
         AutoRouter.of(context).replace(LoginRouter())
         ,
         context.read<AuthBloc>().add(AuthLogoutRequested())}),
@@ -27,7 +27,7 @@ class TagsScreen extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-            if(state is Tagsloaded){
+            if(state is TagsLoaded){
               return Text('Something went good.');
 
             }

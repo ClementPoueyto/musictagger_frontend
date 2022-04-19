@@ -5,6 +5,7 @@ import 'package:music_tagger/profile/view/profile_screen.dart';
 import 'package:music_tagger/router/AuthGuard.dart';
 import 'package:music_tagger/tags/tags.dart';
 import 'package:music_tagger/widgets/widgets.dart';
+import 'package:music_tagger/tag/tag.dart';
 
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
@@ -12,10 +13,11 @@ import 'package:music_tagger/widgets/widgets.dart';
 
       AutoRoute<dynamic>(path: "/",page: AutoTabsScaffoldPage, guards: [AuthGuard],
           children: [
-            AutoRoute<dynamic>(name: "HomeRouter", path : 'home',page: EmptyRouterPage,children: [
-              AutoRoute<dynamic>(path: '', page: HomePage,guards: [AuthGuard], initial: true)
+            AutoRoute<dynamic>(name: "HomeRouter", path : 'tags',page: EmptyRouterPage,children: [
+              AutoRoute<dynamic>(path: '', page: HomePage,guards: [AuthGuard], initial: true,),
+              AutoRoute<dynamic>(path: ':id', page: TagScreen,guards: [AuthGuard],)
             ]),
-            AutoRoute<dynamic>(name: "TagRouter", path : 'tags',page: EmptyRouterPage,children: [
+            AutoRoute<dynamic>(name: "TagRouter", path : 'generate',page: EmptyRouterPage,children: [
               AutoRoute<dynamic>(path: '', page: TagsScreen,guards: [AuthGuard], initial: true)
             ]),
             AutoRoute<dynamic>(name: "ProfileRouter", path : 'profile',page: EmptyRouterPage, children: [

@@ -17,7 +17,7 @@ class User extends Equatable {
   static User fromJson(Map<String, dynamic> data) {
     return User(
       data['id'],
-        SpotifyUser.fromJson(data['spotifyUser'])
+        data['spotifyUser']!=null?SpotifyUser.fromJson(data['spotifyUser']):SpotifyUser.empty
     );
   }
 

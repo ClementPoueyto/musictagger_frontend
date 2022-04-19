@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'dart:convert' as convert;
 
 import 'package:tag_repository/src/models/models.dart';
 
 class ApiTagService {
-  final String _url = 'http://localhost:8080/tag/';
+  //mobile :   final String _url = 'http://10.0.2.2:8080/tag';
+  final String _url = 'http://localhost:8080/tags';
 
   Future<Tag> getTagById(String tagId) async {
-    final response = await http.get(Uri.parse(_url));
+    final response = await http.get(Uri.parse(_url+"/"+tagId));
     if (response.statusCode == 200) {
       return tagModelFromJson(response.body);
     } else {
@@ -15,17 +19,59 @@ class ApiTagService {
     }
   }
 
-  Future<List<Tag>> getTags(String userId) async {
-    final response = await http.get(Uri.parse(_url+"?id="+userId.toString()));
-    if (response.statusCode == 200) {
-      List<Tag> tags = [];
-      List<Map<String, dynamic>> tagsMap = convert.jsonDecode(response.body) as List<Map<String, dynamic>>;
-      tagsMap.forEach((element) {
-        tags.add(Tag.fromJson(element));
-      });
-      return tags;
-    } else {
-      throw Exception("Failed to load tags");
+  Future<List<Tag>> getTags(String userId, int page) async {
+    Map<String, String > headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': '*/*',
+    'Access-Control-Allow-Origin': '*',
+      'Access-Control-Request-Method':'GET'
+    };
+    try {
+      Response response = await http.get(
+          Uri.parse(_url + "?userId=" + userId+"&page="+page.toString()), headers: headers);
+      if (response.statusCode == 200) {
+        List<Tag> tags = [];
+        print(response.body);
+        List<dynamic> tagsMap = convert.jsonDecode(
+            utf8.decode(response.bodyBytes)) as List<dynamic>;
+        tagsMap.forEach((element ) {
+          print(element["tags"][0]);
+          var tag = Tag.fromJson(element);
+          tags.add(tag);
+        });
+        return tags;
+      } else {
+        throw Exception(response.body);
+      }
+    }
+    catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return Future.error("Data not found / Connection issue");
+    }
+  }
+
+  Future<List<String>> getTagsName(String userId) async {
+    Map<String, String > headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': '*/*',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Request-Method':'GET'
+    };
+    try {
+      Response response = await http.get(
+          Uri.parse(_url + "/names?userId=" + userId), headers: headers);
+      if (response.statusCode == 200) {
+        print(response.body);
+        List<String> tagsMap = List.from(convert.jsonDecode(
+            utf8.decode(response.bodyBytes)));
+        return tagsMap;
+      } else {
+        throw Exception(response.body);
+      }
+    }
+    catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return Future.error("Data not found / Connection issue");
     }
   }
 

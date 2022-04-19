@@ -23,11 +23,11 @@ class AutoTabsScaffoldPage extends StatelessWidget {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: 'Home',
+              label: 'Tags',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.tag),
-              label: 'Tags',
+              icon: Icon(Icons.create),
+              label: 'Generate',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_box),

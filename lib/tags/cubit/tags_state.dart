@@ -8,12 +8,18 @@ abstract class TagsState extends Equatable {
 
 class TagsInitial extends TagsState {}
 
-class TagsLoading extends TagsState {}
+class TagsLoading extends TagsState {
+  final List<Tag> oldTags;
+  final bool isFirstFetch;
 
-class Tagsloaded extends TagsState {
+  TagsLoading(this.oldTags, {this.isFirstFetch=false});
+
+}
+
+class TagsLoaded extends TagsState {
   final List<Tag> tags;
 
-  const Tagsloaded({required this.tags});
+  const TagsLoaded({required this.tags});
 
   @override
   List<Object> get props => [tags];

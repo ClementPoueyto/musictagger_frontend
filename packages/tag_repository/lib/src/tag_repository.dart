@@ -6,26 +6,23 @@ import '../tag_repository.dart';
 
 class TagRepository {
 
-  User? user;
   final _providerUser = ApiUserService();
   final _providerTag = ApiTagService();
 
   Future<User> getUser(String id) async {
-    if (user != null) return user!;
+
     User _user = await _providerUser.fetchUser(id);
     if(_user==null){
       _user = await Future.delayed(
         const Duration(milliseconds: 300),
-            () => user = User(Uuid().v4(),SpotifyUser.empty),
+            () => _user = User(Uuid().v4(),SpotifyUser.empty),
       );
     }
-    this.user = _user;
     print(_user);
     return _user;
   }
 
   Future<void> connectSpotify(User _user) async {
-    print("ptin");
     print(_user);
     if (_user == null || _user.spotifyUser==null) return null;
     return _providerUser.connectSpotify(_user);
@@ -41,10 +38,22 @@ class TagRepository {
     }
   }
 
-  Future<List<Tag>> getTags({required String userId}) async {
+  Future<List<Tag>> getTags({required String userId, required int page}) async {
     try {
-      return await _providerTag.getTags(userId);
+      return await _providerTag.getTags(userId, page);
     } on Exception catch (e) {
+      print(e.toString());
+      throw FetchAndUpdateTagFailure.fromCode(e.toString());
+    } catch (_) {
+      throw const FetchAndUpdateTagFailure();
+    }
+  }
+
+  Future<List<String>> getTagsNames({required String userId}) async {
+    try {
+      return await _providerTag.getTagsName(userId);
+    } on Exception catch (e) {
+      print(e.toString());
       throw FetchAndUpdateTagFailure.fromCode(e.toString());
     } catch (_) {
       throw const FetchAndUpdateTagFailure();

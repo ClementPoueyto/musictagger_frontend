@@ -1,5 +1,6 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:music_tagger/profile/cubit/profile_cubit.dart';
+import 'package:music_tagger/tag/cubit/tag_names_cubit.dart';
 import 'package:music_tagger/tags/cubit/tags_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/router/AuthGuard.dart';
 import 'package:music_tagger/router/routes.gr.dart';
+
+import '../../tag/cubit/tag_cubit.dart';
 
 
 class App extends StatelessWidget {
@@ -39,6 +42,10 @@ class App extends StatelessWidget {
               (_) => TagsCubit(_tagRepository, _authenticationRepository),),
           BlocProvider<ProfileCubit>(create:
               (_) => ProfileCubit(_tagRepository, _authenticationRepository),),
+          BlocProvider<TagCubit>(create:
+              (_) => TagCubit(_tagRepository, _authenticationRepository),),
+          BlocProvider<TagNamesCubit>(create:
+              (_) => TagNamesCubit(_tagRepository, _authenticationRepository),),
         ],
 
         child: BlocBuilder<AuthBloc, AuthState>(

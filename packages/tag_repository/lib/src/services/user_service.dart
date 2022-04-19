@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -16,7 +15,7 @@ class ApiUserService {
       'Accept': '*/*',
     };
     try {
-      Response response = await http.get(Uri.parse(_url+"?id="+id.toString()),headers: headers);
+      Response response = await http.get(Uri.parse(_url+"/"+id.toString()),headers: headers);
       if (response.statusCode != 200) {
         throw Exception(response.body);
       }
@@ -35,9 +34,9 @@ class ApiUserService {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': '*/*',
       };
-      Response response = await http.post(Uri.parse(_url+"connect/spotify?userId="+user.id.toString()), headers: headers, body:json.encode(user.spotifyUser!.toJson()));
+      Response response = await http.post(Uri.parse(_url+"spotify/connect?userId="+user.id.toString()), headers: headers, body:json.encode(user.spotifyUser.toJson()));
       print(response.statusCode);
-      if (response.statusCode != 201) {
+      if (response.statusCode != 200) {
         throw Exception('Failed to connect user to spotify');
       }
 
