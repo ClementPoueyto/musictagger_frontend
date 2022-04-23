@@ -7,7 +7,8 @@ import 'dart:convert' as convert;
 import 'package:tag_repository/src/models/models.dart';
 
 class ApiTagService {
-  //mobile :   final String _url = 'http://10.0.2.2:8080/tag';
+  //mobile :
+  //final String _url = 'http://10.0.2.2:8080/tags';
   final String _url = 'http://localhost:8080/tags';
 
   Future<Tag> getTagById(String tagId) async {
@@ -35,7 +36,6 @@ class ApiTagService {
         List<dynamic> tagsMap = convert.jsonDecode(
             utf8.decode(response.bodyBytes)) as List<dynamic>;
         tagsMap.forEach((element ) {
-          print(element["tags"][0]);
           var tag = Tag.fromJson(element);
           tags.add(tag);
         });
@@ -75,4 +75,25 @@ class ApiTagService {
     }
   }
 
+  Future<void> updateTagsToTrack(Tag tag, String userId) async {
+    Map<String, String > headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': '*/*',
+      'Access-Control-Allow-Origin': '*',
+    };
+    try {
+      Response response = await http.post(
+          Uri.parse(_url + "/"+tag.id.toString()+"?userId=" + userId), body: convert.jsonEncode(
+          tag.tags), headers: headers);
+      if (response.statusCode == 200) {
+        print(response.body);
+      } else {
+        throw Exception(response.body);
+      }
+    }
+    catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      return Future.error("Data not found / Connection issue");
+    }
+  }
 }

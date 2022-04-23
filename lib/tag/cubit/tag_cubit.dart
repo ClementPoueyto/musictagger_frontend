@@ -26,7 +26,14 @@ class TagCubit extends Cubit<TagState> {
     }
   }
 
-  void updateTags(Tag tag){
-    emit(TagLoaded(tag: tag));
+  Future<void> updateTag(Tag tag) async {
+    try{
+      await tagsRepository.updateTagsToTrack(tag: tag);
+      emit(TagLoaded(tag: tag));
+    }
+    catch(err){
+      print(err);
+      emit(TagError(error: err.toString()));
+    }
   }
 }

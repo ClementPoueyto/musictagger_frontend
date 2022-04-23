@@ -15,15 +15,12 @@ class TagsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: CustomAppBar(title:"Generation", function: () async => {
-        AutoRouter.of(context).replace(LoginRouter())
-        ,
-        context.read<AuthBloc>().add(AuthLogoutRequested())}),
+      appBar: const CustomAppBar(title:"Generation",),
       body: Column(children: [
         BlocBuilder<TagsCubit, TagsState>(
           builder: (context, state) {
             if(state is TagsLoading){
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }

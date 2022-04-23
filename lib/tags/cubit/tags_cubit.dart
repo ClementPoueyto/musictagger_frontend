@@ -27,12 +27,12 @@ class TagsCubit extends Cubit<TagsState> {
     if (state is TagsLoading) return;
 
     final currentState = state;
-
+    final isFirstFetch = page==0;
     var oldTags = <Tag>[];
-    if (currentState is TagsLoaded) {
+    if (currentState is TagsLoaded && !isFirstFetch) {
       oldTags = currentState.tags;
     }
-    emit(TagsLoading(oldTags, isFirstFetch: page==0));
+    emit(TagsLoading(oldTags, isFirstFetch: isFirstFetch));
     try{
       final List<Tag> tags = await tagsRepository.getTags(userId: userId, page: page);
       oldTags.addAll(tags);
@@ -45,8 +45,35 @@ class TagsCubit extends Cubit<TagsState> {
     }
   }
 
-  void updateTags(List<Tag> tags){
+  Future<void> updateTags(List<Tag> tags)async {
     emit(TagsLoaded(tags: tags));
+  }
+
+
+
+  void updateTag(Tag tag){
+    final currentState = state;
+
+    var oldTags = <Tag>[];
+    if (currentState is TagsLoaded) {
+      oldTags = currentState.tags;
+      emit(TagsLoading(oldTags));
+      if(tag.tags.isNotEmpty){
+        final index = oldTags.indexWhere((item)=>tag.id==item.id);
+        oldTags[index] = tag;
+      }
+      else{
+        oldTags.removeWhere((item)=>tag.id==item.id);
+      }
+
+      emit(TagsLoaded(tags: oldTags));
+    }
+
+  }
+
+  Future<void> reinitialisation() async {
+    this.page = 0;
+    emit(TagsInitial());
   }
 
   Future<void> refreshTags(String userId)async {

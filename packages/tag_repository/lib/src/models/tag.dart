@@ -14,25 +14,30 @@ class Tag extends Equatable{
       this.id,
      this.tags,
      this.track,
-  );
+      this.userId,
+      );
 
   final int id;
   final List<String> tags;
   final Track track;
+  final String userId;
 
   factory Tag.fromJson(Map<String, dynamic> json) => Tag(
       json["id"],
       List<String>.from(json["tags"]),
       Track.fromJson(json["track"]),
+      json["userId"],
+
   );
 
   Map<String, dynamic> toJson() => {
     "id" : id,
     "tags": tags,
-    "track": track
+    "track": track,
+    "userId" : userId
   };
 
-  static const empty = const Tag(0,[],Track.empty);
+  static const empty = const Tag(0,[],Track.empty, "-");
 
   @override
   List<Object> get props => [tags,track];

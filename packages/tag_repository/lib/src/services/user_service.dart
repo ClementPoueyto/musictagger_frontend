@@ -7,7 +7,7 @@ import '../models/models.dart';
 
 
 class ApiUserService {
-  final String _url = 'http://localhost:8080/user/';
+  final String _url = 'http://localhost:8080/users/';
 
   Future<User> fetchUser(String id) async {
     Map<String, String > headers = {
@@ -34,13 +34,21 @@ class ApiUserService {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': '*/*',
       };
-      Response response = await http.post(Uri.parse(_url+"spotify/connect?userId="+user.id.toString()), headers: headers, body:json.encode(user.spotifyUser.toJson()));
+      Response response = await http.post(Uri.parse(_url+user.id.toString()+"/spotify/connect?userId="+user.id.toString()), headers: headers, body:json.encode(user.spotifyUser.toJson()));
       print(response.statusCode);
       if (response.statusCode != 200) {
         throw Exception('Failed to connect user to spotify');
       }
+  }
 
-
-
+  Future<void> importTracksFromSpotify(String userId) async {
+    Map<String, String > headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': '*/*',
+    };
+    Response response = await http.get(Uri.parse(_url+userId+"/spotify/export"), headers: headers);
+    if (response.statusCode != 200) {
+      throw Exception('Failed to connect user to spotify');
+    }
   }
 }

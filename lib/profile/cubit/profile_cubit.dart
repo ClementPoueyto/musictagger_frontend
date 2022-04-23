@@ -41,4 +41,15 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(error: err.toString()));
     }
   }
+
+  Future<void> importTracksFromSpotify(String userId) async {
+    try{
+      await tagsRepository.importSpotifyTracks(userId);
+
+    }
+    catch(err){
+      print(err);
+      emit(ProfileError(error: err.toString()));
+    }
+  }
 }

@@ -28,6 +28,12 @@ class TagRepository {
     return _providerUser.connectSpotify(_user);
   }
 
+  Future<void> importSpotifyTracks(String _userId) async {
+    print(_userId);
+    if (_userId == null) return null;
+    return _providerUser.importTracksFromSpotify(_userId);
+  }
+
   Future<Tag> getTagById({required String tagId}) async {
     try {
       return await _providerTag.getTagById(tagId);
@@ -52,6 +58,17 @@ class TagRepository {
   Future<List<String>> getTagsNames({required String userId}) async {
     try {
       return await _providerTag.getTagsName(userId);
+    } on Exception catch (e) {
+      print(e.toString());
+      throw FetchAndUpdateTagFailure.fromCode(e.toString());
+    } catch (_) {
+      throw const FetchAndUpdateTagFailure();
+    }
+  }
+
+  Future<void> updateTagsToTrack({required Tag tag}) async {
+    try {
+      return await _providerTag.updateTagsToTrack(tag, tag.userId);
     } on Exception catch (e) {
       print(e.toString());
       throw FetchAndUpdateTagFailure.fromCode(e.toString());

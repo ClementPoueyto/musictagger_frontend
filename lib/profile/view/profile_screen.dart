@@ -10,8 +10,11 @@ import 'package:music_tagger/profile/cubit/profile_cubit.dart';
 import 'package:music_tagger/router/routes.gr.dart';
 import 'package:music_tagger/spotify/api_path.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
+import 'package:music_tagger/tag/cubit/tag_names_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:music_tagger/widgets/widgets.dart';
+
+import '../../tags/cubit/tags_cubit.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = '/profile';
@@ -26,10 +29,6 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         title: "Profile",
-        function: () async => {
-          AutoRouter.of(context).push(const LoginRouter()),
-          context.read<AuthBloc>().add(AuthLogoutRequested())
-        },
       ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
@@ -39,6 +38,8 @@ class ProfileScreen extends StatelessWidget {
             );
           }
           if (state is ProfileLoaded) {
+            final isConnectedToSpotify = (state.user.spotifyUser != null &&
+                state.user.spotifyUser.spotifyRefreshToken != null);
             return Align(
                 alignment: const Alignment(0, -1 / 3),
                 child: Column(
@@ -50,10 +51,8 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(user.name ?? '', style: textTheme.headline5),
                     Center(
-                      child: Text(state.user.spotifyUser != null &&
-                              state.user.spotifyUser.spotifyRefreshToken != null
-                          ? "Connecté"
-                          : "Non Connecté"),
+                      child: Text(
+                          isConnectedToSpotify ? "Connecté" : "Non Connecté"),
                     ),
                     ElevatedButton(
                         child: const Text('spotify auth'),
@@ -76,6 +75,28 @@ class ProfileScreen extends StatelessWidget {
                                             .toString(),
                                   ))
                             }),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    if (isConnectedToSpotify)
+                      ElevatedButton(
+                          child: const Text('importer mes musiques'),
+                          onPressed: () async => {
+                                await BlocProvider.of<ProfileCubit>(context)
+                                    .importTracksFromSpotify(state.user.id),
+                                await BlocProvider.of<TagsCubit>(context)
+                                    .refreshTags(state.user.id)
+                              }),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    ElevatedButton(
+                        child: const Text('Se déconnecter'),
+                        onPressed: () async => {
+                          logout(context)
+                        }),
+
+
                   ],
                 ));
           }
@@ -89,6 +110,15 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
+  Future<void> logout(BuildContext context)async {
+    await AutoRouter.of(context).push(const LoginRouter());
+    context.read<AuthBloc>().add(AuthLogoutRequested());
+    BlocProvider.of<ProfileCubit>(context).emit(ProfileInitial());
+    BlocProvider.of<TagsCubit>(context).emit(TagsInitial());
+    BlocProvider.of<TagNamesCubit>(context).emit(TagNamesInitial());
+
+
+  }
   Future<void> updateUser(BuildContext context, ProfileLoaded state,
       SpotifyUser spotifyUser) async {
     final user = User(state.user.id, spotifyUser);
