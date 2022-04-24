@@ -8,8 +8,8 @@ import 'package:tag_repository/src/models/models.dart';
 
 class ApiTagService {
   //mobile :
-  final String _url = 'http://10.0.2.2:8080/tags';
-  //final String _url = 'http://localhost:8080/tags';
+  //final String _url = 'http://10.0.2.2:8080/tags';
+  final String _url = 'http://localhost:8080/tags';
 
   Future<Tag> getTagById(String tagId) async {
     final response = await http.get(Uri.parse(_url+"/"+tagId));
@@ -20,7 +20,7 @@ class ApiTagService {
     }
   }
 
-  Future<List<Tag>> getTags(String userId, int page) async {
+  Future<List<Tag>> getTags(String userId, int page, String query) async {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
@@ -29,7 +29,7 @@ class ApiTagService {
     };
     try {
       Response response = await http.get(
-          Uri.parse(_url + "?userId=" + userId+"&page="+page.toString()), headers: headers);
+          Uri.parse(_url + "?userId=" + userId+"&page="+page.toString()+"&limit=50&query="+query.toString()), headers: headers);
       if (response.statusCode == 200) {
         List<Tag> tags = [];
         print(response.body);

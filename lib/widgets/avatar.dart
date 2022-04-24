@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:music_tagger/widgets/loading_indicator.dart';
+
+import 'loading_indicator.dart';
+
+const _avatarSize = 48.0;
 
 class Avatar extends StatelessWidget {
   const Avatar({Key? key, this.photo}) : super(key: key);
@@ -23,6 +26,6 @@ class Avatar extends StatelessWidget {
       ),
       placeholder: (context, url) => const LoadingIndicator(),
       errorWidget: (context, url, dynamic error) => const Icon(Icons.error),
-    ):const LoadingIndicator();
+    ):const Icon(Icons.person_outline, size: _avatarSize);
   }
 }

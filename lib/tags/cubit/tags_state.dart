@@ -10,19 +10,25 @@ class TagsInitial extends TagsState {}
 
 class TagsLoading extends TagsState {
   final List<Tag> oldTags;
-  final bool isFirstFetch;
+  final String search;
+  final int pageIndex;
 
-  TagsLoading(this.oldTags, {this.isFirstFetch=false});
+  TagsLoading(this.oldTags, this.search, this.pageIndex);
+
+  @override
+  List<Object> get props => [oldTags, search, pageIndex];
 
 }
 
 class TagsLoaded extends TagsState {
   final List<Tag> tags;
+  final String search;
+  final int pageIndex;
 
-  const TagsLoaded({required this.tags});
+  const TagsLoaded({required this.tags, required this.search, required this.pageIndex});
 
   @override
-  List<Object> get props => [tags];
+  List<Object> get props => [tags, search, pageIndex];
 }
 
 class TagsError extends TagsState {

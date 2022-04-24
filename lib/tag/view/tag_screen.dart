@@ -28,7 +28,7 @@ class TagScreen extends StatelessWidget {
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () =>
-                AutoRouter.of(context).pushNamed(HomePage.routeName)),
+                AutoRouter.of(context).navigateNamed(HomePage.routeName)),
       ),
       body: BlocProvider(
         create: (_) => TagCubit(context.read<TagRepository>(),

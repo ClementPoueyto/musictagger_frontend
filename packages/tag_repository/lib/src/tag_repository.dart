@@ -44,9 +44,9 @@ class TagRepository {
     }
   }
 
-  Future<List<Tag>> getTags({required String userId, required int page}) async {
+  Future<List<Tag>> getTags({required String userId, required int page, required String query}) async {
     try {
-      return await _providerTag.getTags(userId, page);
+      return await _providerTag.getTags(userId, page, query);
     } on Exception catch (e) {
       print(e.toString());
       throw FetchAndUpdateTagFailure.fromCode(e.toString());
