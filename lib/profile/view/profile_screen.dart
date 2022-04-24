@@ -111,11 +111,8 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Future<void> logout(BuildContext context)async {
-    await AutoRouter.of(context).push(const LoginRouter());
     context.read<AuthBloc>().add(AuthLogoutRequested());
-    BlocProvider.of<ProfileCubit>(context).emit(ProfileInitial());
-    BlocProvider.of<TagsCubit>(context).emit(TagsInitial());
-    BlocProvider.of<TagNamesCubit>(context).emit(TagNamesInitial());
+    await AutoRouter.of(context).push(const LoginRouter());
 
 
   }

@@ -270,7 +270,7 @@ class AuthenticationRepository {
       ]);
     } catch (e) {
       print(e);
-      throw LogOutFailure();
+      //throw LogOutFailure();
     }
   }
 }

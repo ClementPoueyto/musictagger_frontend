@@ -8,8 +8,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit(this.tagsRepository, this.authenticationRepository) : super(ProfileInitial()){
     authenticationRepository.userAuth.listen(
             (user) => {
-          if(user!=null&&user.id!=null){
+          if(user.isNotEmpty){
             fetchProfile(user.id)
+          }
+          else{
+            emit(ProfileInitial())
           }
         }
     );

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:music_tagger/tags/cubit/tags_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -21,7 +22,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLogoutRequested>(_onLogoutRequested);
     _userSubscription = _authenticationRepository.userAuth.listen(
           (user) => {
+            print("changement"),
+            print(user),
             add(AuthUserChanged(user)),
+
           }
     );
   }

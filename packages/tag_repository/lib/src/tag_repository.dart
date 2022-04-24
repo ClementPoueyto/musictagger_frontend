@@ -15,7 +15,7 @@ class TagRepository {
     if(_user==null){
       _user = await Future.delayed(
         const Duration(milliseconds: 300),
-            () => _user = User(Uuid().v4(),SpotifyUser.empty),
+            () => _user = User("",SpotifyUser.empty),
       );
     }
     print(_user);

@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/router/routes.gr.dart';
 import 'package:music_tagger/widgets/tag_button.dart';
 import 'package:tag_repository/tag_repository.dart';
+import '../../home/view/home_page.dart';
 import '../../tags/cubit/tags_cubit.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/tag_box.dart';
@@ -29,7 +31,7 @@ class TagScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(leading: IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () => AutoRouter.of(context).pop()
+        onPressed: () => AutoRouter.of(context).pushNamed(HomePage.routeName)
       ), ),
       body: _tag(),
     );
@@ -39,10 +41,8 @@ class TagScreen extends StatelessWidget {
     return BlocBuilder<TagCubit, TagState>(builder: (context, state) {
 
       Tag tag = Tag.empty;
-      bool isLoading = false;
 
       if (state is TagLoading) {
-        isLoading = true;
         return _loadingIndicator();
       }
       else if (state is TagLoaded) {

@@ -32,8 +32,10 @@ class AppRouter extends _i3.RootStackRouter {
   @override
   final Map<String, _i3.PageFactory> pagesMap = {
     AutoTabsScaffoldRoute.name: (routeData) {
+      final args = routeData.argsAs<AutoTabsScaffoldRouteArgs>(
+          orElse: () => const AutoTabsScaffoldRouteArgs());
       return _i3.MaterialPageX<dynamic>(
-          routeData: routeData, child: const _i1.AutoTabsScaffoldPage());
+          routeData: routeData, child: _i1.AutoTabsScaffoldPage(key: args.key));
     },
     LoginRouter.name: (routeData) {
       return _i3.MaterialPageX<dynamic>(
@@ -114,11 +116,26 @@ class AppRouter extends _i3.RootStackRouter {
 
 /// generated route for
 /// [_i1.AutoTabsScaffoldPage]
-class AutoTabsScaffoldRoute extends _i3.PageRouteInfo<void> {
-  const AutoTabsScaffoldRoute({List<_i3.PageRouteInfo>? children})
-      : super(AutoTabsScaffoldRoute.name, path: '/', initialChildren: children);
+class AutoTabsScaffoldRoute
+    extends _i3.PageRouteInfo<AutoTabsScaffoldRouteArgs> {
+  AutoTabsScaffoldRoute({_i8.Key? key, List<_i3.PageRouteInfo>? children})
+      : super(AutoTabsScaffoldRoute.name,
+            path: '/',
+            args: AutoTabsScaffoldRouteArgs(key: key),
+            initialChildren: children);
 
   static const String name = 'AutoTabsScaffoldRoute';
+}
+
+class AutoTabsScaffoldRouteArgs {
+  const AutoTabsScaffoldRouteArgs({this.key});
+
+  final _i8.Key? key;
+
+  @override
+  String toString() {
+    return 'AutoTabsScaffoldRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for

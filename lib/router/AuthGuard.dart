@@ -6,15 +6,15 @@ class AuthGuard extends AutoRedirectGuard {
   final AuthenticationRepository authenticationRepository = AuthenticationRepository();
 
   AuthGuard();
-  late bool isAuthenticated;
+  late bool isNotAuthenticated;
 
   late UserAuth user;
 
   @override
   Future<void> onNavigation(NavigationResolver resolver, StackRouter router) async {
     user = await authenticationRepository.userAuth.first;
-  isAuthenticated = user == UserAuth.empty;
-    if (!isAuthenticated) {
+  isNotAuthenticated = user == UserAuth.empty;
+    if (!isNotAuthenticated) {
       print("guard ok");
       resolver.next(true);
     } else {
