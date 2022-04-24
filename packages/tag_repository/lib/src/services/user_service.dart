@@ -7,8 +7,8 @@ import '../models/models.dart';
 
 
 class ApiUserService {
-  final String _url = 'http://localhost:8080/users/';
-  //final String _url = 'http://10.0.2.2:8080/users';
+  //final String _url = 'http://localhost:8080/users/';
+  final String _url = 'http://10.0.2.2:8080/users';
 
   Future<User> fetchUser(String id) async {
     Map<String, String > headers = {

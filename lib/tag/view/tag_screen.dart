@@ -3,13 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
-import 'package:music_tagger/router/routes.gr.dart';
-import 'package:music_tagger/widgets/tag_button.dart';
 import 'package:tag_repository/tag_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import '../../home/view/home_page.dart';
 import '../../tags/cubit/tags_cubit.dart';
 import '../../widgets/avatar.dart';
-import '../../widgets/tag_box.dart';
+import '../../widgets/loading_indicator.dart';
 import '../cubit/tag_cubit.dart';
 import '../cubit/tag_names_cubit.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
@@ -21,73 +20,105 @@ class TagScreen extends StatelessWidget {
 
   static const String routeName = '/tags/:id';
 
-
   @override
   Widget build(BuildContext context) {
     final userAuth = context.select((AuthBloc bloc) => bloc.state.userAuth);
-    BlocProvider.of<TagCubit>(context).fetchTag(tagId);
-    BlocProvider.of<TagNamesCubit>(context).fetchTagNames(userAuth.id);
-
     return Scaffold(
-      appBar: AppBar(leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () => AutoRouter.of(context).pushNamed(HomePage.routeName)
-      ), ),
-      body: _tag(),
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () =>
+                AutoRouter.of(context).pushNamed(HomePage.routeName)),
+      ),
+      body: BlocProvider(
+        create: (_) => TagCubit(context.read<TagRepository>(),
+            context.read<AuthenticationRepository>()),
+        child: BlocProvider(
+          create: (_) => TagNamesCubit(context.read<TagRepository>(),
+              context.read<AuthenticationRepository>()),
+          child: TagWidget(tagId, userAuth.id),
+        ),
+      ),
     );
   }
+}
 
-  Widget _tag() {
+class TagWidget extends StatelessWidget {
+  TagWidget(String this.tagId, String this.userId, {Key? key})
+      : super(key: key);
+
+  String tagId;
+  String userId;
+
+  @override
+  Widget build(BuildContext context) {
+    context.read<TagCubit>().fetchTag(tagId);
+    context.read<TagNamesCubit>().fetchTagNames(userId);
     return BlocBuilder<TagCubit, TagState>(builder: (context, state) {
-
       Tag tag = Tag.empty;
 
       if (state is TagLoading) {
-        return _loadingIndicator();
-      }
-      else if (state is TagLoaded) {
+        return const LoadingIndicator();
+      } else if (state is TagLoaded) {
         tag = state.tag;
-        return BlocBuilder<TagNamesCubit, TagNamesState>(builder: (nameContext, nameState) {
-          return SafeArea(child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(height: 4),
-                Avatar(photo: tag.track.image),
-                const SizedBox(height: 4),
-                Center(child : Text(tag.track.artistName)),
-                const SizedBox(height: 4),
-                Center(child : Text(tag.track.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
-                const SizedBox(height: 4),
-                Center(child : Text(tag.track.albumName)),
-                const SizedBox(height: 30),
-                if(nameState is TagNamesLoaded)
-                  _widgetTags(nameContext, nameState, tag)
-                else _loadingIndicator()
-              ],
-            ));});
+        return BlocBuilder<TagNamesCubit, TagNamesState>(
+            builder: (nameContext, nameState) {
+          return SafeArea(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const SizedBox(height: 4),
+              Avatar(photo: tag.track.image),
+              const SizedBox(height: 4),
+              Center(child: Text(tag.track.artistName)),
+              const SizedBox(height: 4),
+              Center(
+                  child: Text(
+                tag.track.name,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              )),
+              const SizedBox(height: 4),
+              Center(child: Text(tag.track.albumName)),
+              const SizedBox(height: 30),
+              if (nameState is TagNamesLoaded)
+                _widgetTags(nameContext, nameState, tag)
+              else
+                const LoadingIndicator()
+            ],
+          ));
+        });
+      } else {
+        return const LoadingIndicator();
       }
-      else{
-        return _loadingIndicator();
-      }
-
     });
   }
 
-  Widget _widgetTags(BuildContext context,TagNamesLoaded state, Tag tag) {
+  Widget _loadingIndicator() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Widget _widgetTags(BuildContext context, TagNamesLoaded state, Tag tag) {
     return Tags(
       key: key,
-        textField: TagsTextField(
+      textField: TagsTextField(
         hintText: "Aouter un tag",
-        textStyle: TextStyle(fontSize: 12,),
-    constraintSuggestion: false,
-          suggestions: [],
-    //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
-    onSubmitted: (String str) async {
-          if(!state.names.contains(str)&& str.length<50) {
+        textStyle: TextStyle(
+          fontSize: 12,
+        ),
+        constraintSuggestion: false,
+        suggestions: [],
+        //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
+        onSubmitted: (String str) async {
+          if (!state.names.contains(str) && str.length < 50) {
             await _onTagSelected(context, str, tag);
-            BlocProvider.of<TagNamesCubit>(context).updateTags([...state.names, str]);
+            BlocProvider.of<TagNamesCubit>(context)
+                .updateTags([...state.names, str]);
           }
-    },),
+        },
+      ),
       itemCount: state.names.length,
       itemBuilder: (index) {
         final String item = state.names[index];
@@ -101,31 +132,24 @@ class TagScreen extends StatelessWidget {
           textStyle: TextStyle(
             fontSize: 16,
           ),
-          onPressed: (_) => _onTagSelected(context,item, tag),
+          onPressed: (_) => _onTagSelected(context, item, tag),
         );
       },
     );
   }
 
-  Future _onTagSelected (BuildContext context, String name, Tag tag)async{
+  Future _onTagSelected(BuildContext context, String name, Tag tag) async {
     print(name);
     final List<String> copy = List.from(tag.tags);
-    if(!tag.tags.contains(name)){
+    if (!tag.tags.contains(name)) {
       copy.add(name);
-    }
-    else{
+    } else {
       copy.remove(name);
     }
-    BlocProvider.of<TagsCubit>(context).updateTag(Tag(tag.id,copy,tag.track, tag.userId));
+     BlocProvider.of<TagsCubit>(context)
+        .updateTag(Tag(tag.id, copy, tag.track, tag.userId));
 
-    await BlocProvider.of<TagCubit>(context).updateTag(Tag(tag.id,copy,tag.track, tag.userId));
+     BlocProvider.of<TagCubit>(context)
+        .updateTag(Tag(tag.id, copy, tag.track, tag.userId));
   }
-
-  Widget _loadingIndicator() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(child: CircularProgressIndicator()),
-    );
-  }
-
 }

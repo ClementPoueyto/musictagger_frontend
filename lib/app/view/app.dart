@@ -42,10 +42,6 @@ class App extends StatelessWidget {
               (_) => TagsCubit(_tagRepository, _authenticationRepository),),
           BlocProvider<ProfileCubit>(create:
               (_) => ProfileCubit(_tagRepository, _authenticationRepository),),
-          BlocProvider<TagCubit>(create:
-              (_) => TagCubit(_tagRepository, _authenticationRepository),),
-          BlocProvider<TagNamesCubit>(create:
-              (_) => TagNamesCubit(_tagRepository, _authenticationRepository),),
         ],
 
         child: BlocBuilder<AuthBloc, AuthState>(

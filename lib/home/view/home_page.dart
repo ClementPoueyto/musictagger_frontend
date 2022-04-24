@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +48,7 @@ class HomePage extends StatelessWidget {
   Widget _tagList(String userId) {
     return BlocBuilder<TagsCubit, TagsState>(builder: (context, state) {
       if (state is TagsLoading && state.isFirstFetch) {
-        return _loadingIndicator();
+        return const LoadingIndicator();
       }
 
       List<Tag> tags = [];
@@ -73,7 +74,7 @@ class HomePage extends StatelessWidget {
                       .jumpTo(scrollController.position.maxScrollExtent);
                 });
 
-                return _loadingIndicator();
+                return const LoadingIndicator();
               }
             },
             separatorBuilder: (context, index) {
@@ -91,12 +92,6 @@ class HomePage extends StatelessWidget {
 
   }
 
-  Widget _loadingIndicator() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(child: CircularProgressIndicator()),
-    );
-  }
 
   Widget _tag(Tag tag, int index, BuildContext context) {
     return InkWell(
@@ -125,14 +120,12 @@ class HomePage extends StatelessWidget {
                     ),
                   Expanded(
                     flex: 5,
-                    child: Image.network(
-                      tag.track.image!,
-                      loadingBuilder: (context, widget, imageChunkEvent) {
-                        return imageChunkEvent == null
-                            ? widget
-                            : CircularProgressIndicator();
-                      },
-                    ),
+                    child: CachedNetworkImage(
+                      imageUrl: tag.track.image!,
+                      progressIndicatorBuilder: (context, url, downloadProgress) =>
+                          LoadingIndicator(),
+                      errorWidget: (context, url, dynamic error) => Icon(Icons.error),
+                    )
                   ),
                   Expanded(
                     flex: 8,

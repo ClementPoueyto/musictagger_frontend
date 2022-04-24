@@ -1,6 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
-const _avatarSize = 48.0;
+import 'package:music_tagger/widgets/loading_indicator.dart';
 
 class Avatar extends StatelessWidget {
   const Avatar({Key? key, this.photo}) : super(key: key);
@@ -10,12 +10,19 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final photo = this.photo;
-    return CircleAvatar(
-      radius: _avatarSize,
-      backgroundImage: photo != null ? NetworkImage(photo) : null,
-      child: photo == null
-          ? const Icon(Icons.person_outline, size: _avatarSize)
-          : null,
-    );
+    return photo != null?CachedNetworkImage(
+      imageUrl: photo,
+      imageBuilder: (context, imageProvider) => Container(
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+              image: imageProvider, fit: BoxFit.cover),
+        ),
+      ),
+      placeholder: (context, url) => const LoadingIndicator(),
+      errorWidget: (context, url, dynamic error) => const Icon(Icons.error),
+    ):const LoadingIndicator();
   }
 }
