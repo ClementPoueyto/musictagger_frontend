@@ -11,14 +11,13 @@ import 'package:music_tagger/router/routes.gr.dart';
 
 import '../../tag/cubit/tag_cubit.dart';
 
-
 class App extends StatelessWidget {
-  App({
-    Key? key,
-    required AuthenticationRepository authenticationRepository,
-    required TagRepository tagRepository
-  })  : _authenticationRepository = authenticationRepository,
-      _tagRepository = tagRepository,
+  App(
+      {Key? key,
+      required AuthenticationRepository authenticationRepository,
+      required TagRepository tagRepository})
+      : _authenticationRepository = authenticationRepository,
+        _tagRepository = tagRepository,
         super(key: key);
 
   final AuthenticationRepository _authenticationRepository;
@@ -34,16 +33,23 @@ class App extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<AuthBloc>(create:
-              (_) => AuthBloc(
+          BlocProvider<AuthBloc>(
+            create: (_) => AuthBloc(
               authenticationRepository: _authenticationRepository,
-          ),),
-          BlocProvider<TagsCubit>(create:
-              (_) => TagsCubit(_tagRepository, _authenticationRepository),),
-          BlocProvider<ProfileCubit>(create:
-              (_) => ProfileCubit(_tagRepository, _authenticationRepository),),
+            ),
+          ),
+          BlocProvider<TagsCubit>(
+            create: (_) => TagsCubit(_tagRepository, _authenticationRepository),
+          ),
+          BlocProvider<ProfileCubit>(
+            create: (_) =>
+                ProfileCubit(_tagRepository, _authenticationRepository),
+          ),
+          BlocProvider(
+            create: (_) =>
+                TagNamesCubit(_tagRepository, _authenticationRepository),
+          )
         ],
-
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) => MaterialApp.router(
             theme: ThemeData.from(

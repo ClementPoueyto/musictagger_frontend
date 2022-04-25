@@ -11,7 +11,7 @@ class TagsCubit extends Cubit<TagsState> {
     authenticationRepository.userAuth.listen(
             (user) => {
               if(user.isNotEmpty){
-                fetchTags(user.id, '')
+                fetchTags(user.id, '', [])
               }
               else{
                 emit(TagsInitial())
@@ -26,29 +26,30 @@ class TagsCubit extends Cubit<TagsState> {
 
   bool isFetching = false;
 
-  Future<void> fetchTags(String userId, String? search) async{
+  Future<void> fetchTags(String userId, String? search, List<String>? filters) async{
     final currentState = state;
     if (currentState is TagsLoading) return;
     var oldTags = <Tag>[];
     var pageIndex = 0;
-
     if (currentState is TagsLoaded ) {
       //meme recherche
       search = search??currentState.search;
-      if(search == currentState.search) {
+      filters = filters??currentState.filters;
+      if(search == currentState.search && filters == currentState.filters) {
         oldTags = currentState.tags;
         pageIndex = currentState.pageIndex+1;
       }
     }
 
     search = search??'';
+    filters = filters??[];
 
-    emit(TagsLoading(oldTags, search,pageIndex));
+    emit(TagsLoading(oldTags, search,pageIndex,filters));
 
     try{
-      final tags = await tagsRepository.getTags(userId: userId, page: pageIndex, query: search);
+      final tags = await tagsRepository.getTags(userId: userId, page: pageIndex, query: search,filters: filters);
       oldTags.addAll(tags);
-      emit(TagsLoaded(search: search,tags: oldTags, pageIndex: pageIndex));
+      emit(TagsLoaded(search: search,tags: oldTags, pageIndex: pageIndex, filters: filters));
     }
     catch(err){
       print(err);
@@ -59,17 +60,19 @@ class TagsCubit extends Cubit<TagsState> {
 
 
 
-  void updateTag(Tag tag){
+  Future<void> updateTag(Tag tag)async {
     final currentState = state;
 
     var oldTags = <Tag>[];
+    var oldFilters = <String> [];
     var oldSearch = '';
     var oldPageIndex = 0;
     if (currentState is TagsLoaded) {
       oldTags = currentState.tags;
       oldSearch = currentState.search;
+      oldFilters = currentState.filters;
       oldPageIndex = currentState.pageIndex;
-      emit(TagsLoading(oldTags, oldSearch, oldPageIndex));
+      emit(TagsLoading(oldTags, oldSearch, oldPageIndex, oldFilters));
       if(tag.tags.isNotEmpty){
         final index = oldTags.indexWhere((item)=>tag.id==item.id);
         oldTags[index] = tag;
@@ -77,7 +80,7 @@ class TagsCubit extends Cubit<TagsState> {
       else{
         oldTags.removeWhere((item)=>tag.id==item.id);
       }
-      emit(TagsLoaded(tags: oldTags, search: oldSearch, pageIndex: oldPageIndex));
+      emit(TagsLoaded(tags: oldTags, search: oldSearch, pageIndex: oldPageIndex, filters: oldFilters));
     }
 
   }
@@ -87,6 +90,6 @@ class TagsCubit extends Cubit<TagsState> {
   }
 
   Future<void> refreshTags(String userId)async {
-    this.fetchTags(userId, '');
+    this.fetchTags(userId, null, null);
   }
 }

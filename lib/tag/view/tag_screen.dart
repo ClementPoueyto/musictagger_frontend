@@ -33,11 +33,8 @@ class TagScreen extends StatelessWidget {
       body: BlocProvider(
         create: (_) => TagCubit(context.read<TagRepository>(),
             context.read<AuthenticationRepository>()),
-        child: BlocProvider(
-          create: (_) => TagNamesCubit(context.read<TagRepository>(),
-              context.read<AuthenticationRepository>()),
-          child: TagWidget(tagId, userAuth.id),
-        ),
+        child: TagWidget(tagId, userAuth.id),
+
       ),
     );
   }
@@ -121,15 +118,14 @@ class TagWidget extends StatelessWidget {
       ),
       itemCount: state.names.length,
       itemBuilder: (index) {
-        final String item = state.names[index];
+        final item = state.names[index];
 
         return ItemTags(
           key: Key(index.toString()),
           index: index,
           title: item,
           active: tag.tags.contains(item),
-          pressEnabled: true,
-          textStyle: TextStyle(
+          textStyle: const TextStyle(
             fontSize: 16,
           ),
           onPressed: (_) => _onTagSelected(context, item, tag),
@@ -140,16 +136,16 @@ class TagWidget extends StatelessWidget {
 
   Future _onTagSelected(BuildContext context, String name, Tag tag) async {
     print(name);
-    final List<String> copy = List.from(tag.tags);
+    final copy = List<String>.from(tag.tags);
     if (!tag.tags.contains(name)) {
       copy.add(name);
     } else {
       copy.remove(name);
     }
-     BlocProvider.of<TagsCubit>(context)
+     await BlocProvider.of<TagsCubit>(context)
         .updateTag(Tag(tag.id, copy, tag.track, tag.userId));
 
-     BlocProvider.of<TagCubit>(context)
+    await BlocProvider.of<TagCubit>(context)
         .updateTag(Tag(tag.id, copy, tag.track, tag.userId));
   }
 }

@@ -20,7 +20,7 @@ class ApiTagService {
     }
   }
 
-  Future<List<Tag>> getTags(String userId, int page, String query) async {
+  Future<List<Tag>> getTags(String userId, int page, String query, List<String> filters) async {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
@@ -29,7 +29,7 @@ class ApiTagService {
     };
     try {
       Response response = await http.get(
-          Uri.parse(_url + "?userId=" + userId+"&page="+page.toString()+"&limit=50&query="+query.toString()), headers: headers);
+          Uri.parse(_url + "?userId=" + userId+"&page="+page.toString()+"&limit=50&query="+query.toString()+"&filters="+filters.join(",")), headers: headers);
       if (response.statusCode == 200) {
         List<Tag> tags = [];
         print(response.body);
