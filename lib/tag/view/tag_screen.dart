@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/home/home.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import '../../home/view/home_page.dart';
-import '../../tags/cubit/tags_cubit.dart';
 import '../../widgets/avatar.dart';
 import '../../widgets/loading_indicator.dart';
 import '../cubit/tag_cubit.dart';
@@ -101,6 +101,7 @@ class TagWidget extends StatelessWidget {
     return Tags(
       key: key,
       textField: TagsTextField(
+        helperText: "test",
         hintText: "Aouter un tag",
         textStyle: TextStyle(
           fontSize: 12,
@@ -109,6 +110,7 @@ class TagWidget extends StatelessWidget {
         suggestions: [],
         //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
         onSubmitted: (String str) async {
+          if(!this.isTagNameValid(str)) return;
           if (!state.names.contains(str) && str.length < 50) {
             await _onTagSelected(context, str, tag);
             BlocProvider.of<TagNamesCubit>(context)
@@ -147,5 +149,11 @@ class TagWidget extends StatelessWidget {
 
     await BlocProvider.of<TagCubit>(context)
         .updateTag(Tag(tag.id, copy, tag.track, tag.userId));
+  }
+
+  bool isTagNameValid(String str){
+    if(str.trim().isEmpty) return false;
+    if(str.contains('\'')||str.contains('\"')||str.contains(',')) return false;
+    return true;
   }
 }

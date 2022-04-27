@@ -1,9 +1,9 @@
 import 'dart:async';
-
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tag_repository/tag_repository.dart';
-import 'package:authentication_repository/authentication_repository.dart';
+
 part 'tags_state.dart';
 
 class TagsCubit extends Cubit<TagsState> {

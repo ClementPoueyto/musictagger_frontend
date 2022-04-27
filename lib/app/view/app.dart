@@ -1,7 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:music_tagger/home/cubit/tags_cubit.dart';
 import 'package:music_tagger/profile/cubit/profile_cubit.dart';
 import 'package:music_tagger/tag/cubit/tag_names_cubit.dart';
-import 'package:music_tagger/tags/cubit/tags_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

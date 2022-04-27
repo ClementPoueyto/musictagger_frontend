@@ -24,7 +24,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> fetchProfile(String userId) async{
     emit(ProfileLoading());
     try{
-      final User user = await tagsRepository.getUser(userId);
+      final user = await tagsRepository.getUser(userId);
       emit(ProfileLoaded( user: user));
     }
     catch(err){

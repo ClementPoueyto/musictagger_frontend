@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/home/cubit/tags_cubit.dart';
 import 'package:music_tagger/profile/cubit/profile_cubit.dart';
 import 'package:music_tagger/router/routes.gr.dart';
 import 'package:music_tagger/spotify/api_path.dart';
@@ -13,8 +14,6 @@ import 'package:music_tagger/spotify/spotify_auth_api.dart';
 import 'package:music_tagger/tag/cubit/tag_names_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:music_tagger/widgets/widgets.dart';
-
-import '../../tags/cubit/tags_cubit.dart';
 
 class ProfileScreen extends StatelessWidget {
   static const String routeName = '/profile';

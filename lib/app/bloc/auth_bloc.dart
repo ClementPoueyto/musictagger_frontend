@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:music_tagger/tags/cubit/tags_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';

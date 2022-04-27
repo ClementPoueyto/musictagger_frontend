@@ -1,19 +1,16 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_tags_x/flutter_tags_x.dart' as Tags_X;
 import 'package:music_tagger/app/app.dart';
+import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/tag/cubit/tag_names_cubit.dart';
-import 'package:music_tagger/tags/cubit/tags_cubit.dart';
 import 'package:music_tagger/widgets/widgets.dart';
-import '../../router/routes.gr.dart';
 import 'package:tag_repository/tag_repository.dart';
 
 class HomePage extends StatelessWidget {
@@ -105,7 +102,7 @@ class HomePage extends StatelessWidget {
               );
             }),
             if(stateTags is TagsLoaded)
-              Padding(padding: const EdgeInsets.fromLTRB(5, 0, 5, 15), child: _widgetTags(stateTags.filters)),
+              Padding(padding: const EdgeInsets.fromLTRB(5, 0, 5, 15), child: TagsList(tags:stateTags.filters)),
             Expanded(child: _tagList(context,userAuth.id, stateTags)),
           ],
         ),
@@ -146,7 +143,7 @@ class HomePage extends StatelessWidget {
             controller: scrollController,
             itemBuilder: (context, index) {
               if (index < tags.length) {
-                return _tag(tags[index], index, context);
+                return TrackTagTile(tag : tags[index],index : index);
               } else {
                 Timer(const Duration(milliseconds: 500), () {
                   scrollController
@@ -170,99 +167,6 @@ class HomePage extends StatelessWidget {
     await BlocProvider.of<TagsCubit>(context).refreshTags(userId);
   }
 
-  Widget _tag(Tag tag, int index, BuildContext context) {
-    return InkWell(
-      onTap: () {
-        AutoRouter.of(context).pushNamed(tag.id.toString());
-      },
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.1,
-        width: MediaQuery.of(context).size.width,
-        margin: const EdgeInsets.all(10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: kIsWeb ? 2 : 10,
-              child: Row(
-                children: [
-                  if (kIsWeb)
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        "${index + 1}",
-                        style: TextStyle(
-                            fontSize: 12.0,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  Expanded(
-                      flex: 5,
-                      child: CachedNetworkImage(
-                        imageUrl: tag.track.image!,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                LoadingIndicator(),
-                        errorWidget: (context, url, dynamic error) =>
-                            Icon(Icons.error),
-                      )),
-                  Expanded(
-                    flex: 8,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tag.track.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          tag.track.artistName,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (kIsWeb)
-              Expanded(
-                flex: 1,
-                child: Text(tag.track.albumName),
-              ),
-            Expanded(
-                flex: 5,
-                child:
-                    tag.tags.length > 0 ? _widgetTags(tag.tags) : SizedBox.shrink()),
-            Expanded(flex: 1, child: Center(child: Icon(Icons.chevron_right))),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _widgetTags(List<String> tags) {
-    return Tags_X.Tags(
-      key: key,
-      itemCount:tags.length,
-      itemBuilder: (index) {
-        final String item = tags[index];
-
-        return Tags_X.ItemTags(
-          key: Key(index.toString()),
-          index: index,
-          title: item,
-          pressEnabled: false,
-          textStyle: const TextStyle(
-            fontSize: kIsWeb ? 16 : 11,
-          ),
-        );
-      },
-    );
-  }
 
   Future<void> openFilterDialog(BuildContext context,String userId, TagNamesLoaded stateTagNames, TagsLoaded stateTags) async {
     await FilterListDialog.display<String>(
@@ -280,9 +184,9 @@ class HomePage extends StatelessWidget {
       onItemSearch: (tag, query) {
         return tag.toLowerCase().contains(query.toLowerCase());
       },
-      onApplyButtonClick: (list) {
-        context.read<TagsCubit>().fetchTags(userId, null, list);
-        AutoRouter.of(context).pop();
+      onApplyButtonClick: (list) async {
+        await context.read<TagsCubit>().fetchTags(userId, null, list);
+        await AutoRouter.of(context).pop();
       },
     );
   }
