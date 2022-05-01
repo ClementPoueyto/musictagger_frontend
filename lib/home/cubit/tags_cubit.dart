@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:music_tagger/profile/cubit/profile_cubit.dart';
 import 'package:tag_repository/tag_repository.dart';
 
 part 'tags_state.dart';
@@ -19,6 +20,7 @@ class TagsCubit extends Cubit<TagsState> {
               }
         }
     );
+
   }
 
   final TagRepository tagsRepository;
@@ -90,6 +92,28 @@ class TagsCubit extends Cubit<TagsState> {
   }
 
   Future<void> refreshTags(String userId)async {
-    this.fetchTags(userId, null, null);
+    final currentState = state;
+    if (currentState is TagsLoading) return;
+    var oldTags = <Tag>[];
+    var pageIndex = 0;
+    var search ="";
+    var filters = <String>[];
+    if (currentState is TagsLoaded ) {
+      //meme recherche
+      search = currentState.search;
+      filters = currentState.filters;
+    }
+    emit(TagsLoading(oldTags, search,pageIndex,filters));
+
+    try{
+      final tags = await tagsRepository.getTags(userId: userId, page: pageIndex, query: search,filters: filters);
+      oldTags.addAll(tags);
+      emit(TagsLoaded(search: search,tags: oldTags, pageIndex: pageIndex, filters: filters));
+    }
+    catch(err){
+      print(err);
+      emit(TagsError(error: err.toString()));
+    }
   }
+
 }

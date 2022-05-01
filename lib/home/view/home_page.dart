@@ -24,8 +24,8 @@ class HomePage extends StatelessWidget {
 
   void setupScrollController(BuildContext context, String userId) {
     scrollController.addListener(() {
-      if (scrollController.position.atEdge) {
-        if (scrollController.position.pixels != 0) {
+      if (scrollController.position.atEdge ) {
+        if (scrollController.position.pixels != 0 && context.read<TagsCubit>().state is! TagsLoading) {
           BlocProvider.of<TagsCubit>(context).fetchTags(userId, null, null);
         }
       }
@@ -41,6 +41,7 @@ class HomePage extends StatelessWidget {
         Debouncer<String>(const Duration(milliseconds: 500), initialValue: '');
     debouncer.values
         .listen((search) => debounceTick(context, userAuth.id, search));
+
     setupScrollController(context, userAuth.id);
 
     print(userAuth);

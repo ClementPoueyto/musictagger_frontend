@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:music_tagger/home/home.dart';
 import 'package:music_tagger/login/login.dart';
+import 'package:music_tagger/playlists_generation/playlists_generation.dart';
 import 'package:music_tagger/profile/view/profile_screen.dart';
 import 'package:music_tagger/router/AuthGuard.dart';
 import 'package:music_tagger/sign_up/sign_up.dart';
-import 'package:music_tagger/tags/tags.dart';
 import 'package:music_tagger/widgets/widgets.dart';
 import 'package:music_tagger/tag/tag.dart';
 
@@ -19,7 +19,7 @@ import 'package:music_tagger/tag/tag.dart';
               AutoRoute<dynamic>(path: ':id', page: TagScreen,guards: [AuthGuard],)
             ]),
             AutoRoute<dynamic>(name: 'TagRouter', path : 'generate',page: EmptyRouterPage,children: [
-              AutoRoute<dynamic>(path: '', page: TagsScreen,guards: [AuthGuard], initial: true)
+              AutoRoute<dynamic>(path: '', page: PlaylistGenerationScreen,guards: [AuthGuard], initial: true)
             ]),
             AutoRoute<dynamic>(name: 'ProfileRouter', path : 'profile',page: EmptyRouterPage, children: [
               AutoRoute<dynamic>(path: '', page: ProfileScreen, guards: [AuthGuard],)

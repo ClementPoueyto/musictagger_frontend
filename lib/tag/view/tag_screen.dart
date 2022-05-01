@@ -90,12 +90,6 @@ class TagWidget extends StatelessWidget {
     });
   }
 
-  Widget _loadingIndicator() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(child: CircularProgressIndicator()),
-    );
-  }
 
   Widget _widgetTags(BuildContext context, TagNamesLoaded state, Tag tag) {
     return Tags(
@@ -110,7 +104,7 @@ class TagWidget extends StatelessWidget {
         suggestions: [],
         //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
         onSubmitted: (String str) async {
-          if(!this.isTagNameValid(str)) return;
+          if(!isTagNameValid(str)) return;
           if (!state.names.contains(str) && str.length < 50) {
             await _onTagSelected(context, str, tag);
             BlocProvider.of<TagNamesCubit>(context)

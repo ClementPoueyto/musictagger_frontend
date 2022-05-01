@@ -28,6 +28,11 @@ class TagRepository {
     return _providerUser.connectSpotify(_user);
   }
 
+  Future<void> generatePlaylistToSpotify(String userId, List<String> tags) async {
+    if (userId == null || tags.length==0) return null;
+    return _providerUser.generatePlaylistToSpotify(userId, tags);
+  }
+
   Future<void> importSpotifyTracks(String _userId) async {
     print(_userId);
     if (_userId == null) return null;

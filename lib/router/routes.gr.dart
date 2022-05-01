@@ -15,10 +15,10 @@ import 'package:flutter/material.dart' as _i9;
 
 import '../home/home.dart' as _i5;
 import '../login/login.dart' as _i2;
+import '../playlists_generation/playlists_generation.dart' as _i7;
 import '../profile/view/profile_screen.dart' as _i8;
 import '../sign_up/sign_up.dart' as _i3;
 import '../tag/tag.dart' as _i6;
-import '../tags/tags.dart' as _i7;
 import '../widgets/widgets.dart' as _i1;
 import 'AuthGuard.dart' as _i10;
 
@@ -70,11 +70,12 @@ class AppRouter extends _i4.RootStackRouter {
           routeData: routeData,
           child: _i6.TagScreen(key: args.key, tagId: args.tagId));
     },
-    TagsScreen.name: (routeData) {
-      final args = routeData.argsAs<TagsScreenArgs>(
-          orElse: () => const TagsScreenArgs());
+    PlaylistGenerationScreen.name: (routeData) {
+      final args = routeData.argsAs<PlaylistGenerationScreenArgs>(
+          orElse: () => const PlaylistGenerationScreenArgs());
       return _i4.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i7.TagsScreen(key: args.key));
+          routeData: routeData,
+          child: _i7.PlaylistGenerationScreen(key: args.key));
     },
     ProfileScreen.name: (routeData) {
       final args = routeData.argsAs<ProfileScreenArgs>(
@@ -102,7 +103,7 @@ class AppRouter extends _i4.RootStackRouter {
               path: 'generate',
               parent: AutoTabsScaffoldRoute.name,
               children: [
-                _i4.RouteConfig(TagsScreen.name,
+                _i4.RouteConfig(PlaylistGenerationScreen.name,
                     path: '', parent: TagRouter.name, guards: [authGuard])
               ]),
           _i4.RouteConfig(ProfileRouter.name,
@@ -216,22 +217,24 @@ class TagScreenArgs {
 }
 
 /// generated route for
-/// [_i7.TagsScreen]
-class TagsScreen extends _i4.PageRouteInfo<TagsScreenArgs> {
-  TagsScreen({_i9.Key? key})
-      : super(TagsScreen.name, path: '', args: TagsScreenArgs(key: key));
+/// [_i7.PlaylistGenerationScreen]
+class PlaylistGenerationScreen
+    extends _i4.PageRouteInfo<PlaylistGenerationScreenArgs> {
+  PlaylistGenerationScreen({_i9.Key? key})
+      : super(PlaylistGenerationScreen.name,
+            path: '', args: PlaylistGenerationScreenArgs(key: key));
 
-  static const String name = 'TagsScreen';
+  static const String name = 'PlaylistGenerationScreen';
 }
 
-class TagsScreenArgs {
-  const TagsScreenArgs({this.key});
+class PlaylistGenerationScreenArgs {
+  const PlaylistGenerationScreenArgs({this.key});
 
   final _i9.Key? key;
 
   @override
   String toString() {
-    return 'TagsScreenArgs{key: $key}';
+    return 'PlaylistGenerationScreenArgs{key: $key}';
   }
 }
 
