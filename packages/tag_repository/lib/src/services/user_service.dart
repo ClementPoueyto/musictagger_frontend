@@ -47,7 +47,7 @@ class ApiUserService {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
     };
-    Response response = await http.get(Uri.parse(_url+userId+"/spotify/export"), headers: headers);
+    Response response = await http.get(Uri.parse(_url+userId+"/spotify/import"), headers: headers);
     if (response.statusCode != 200) {
       throw Exception('Failed to connect user to spotify');
     }

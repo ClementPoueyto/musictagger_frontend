@@ -14,7 +14,7 @@ class ApiTagService {
   Future<Tag> getTagById(String tagId) async {
     final response = await http.get(Uri.parse(_url+"/"+tagId));
     if (response.statusCode == 200) {
-      return tagModelFromJson(response.body);
+      return tagModelFromJson(response.bodyBytes);
     } else {
       throw Exception("Failed to load tag");
     }
@@ -34,7 +34,7 @@ class ApiTagService {
         List<Tag> tags = [];
         print(response.body);
         List<dynamic> tagsMap = convert.jsonDecode(
-            utf8.decode(response.bodyBytes)) as List<dynamic>;
+                utf8.decode(response.bodyBytes)) as List<dynamic>;
         tagsMap.forEach((element ) {
           var tag = Tag.fromJson(element);
           tags.add(tag);

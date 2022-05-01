@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class APIPath {
-  static List<String> _scopes = [
+  static final List<String> _scopes = [
     'user-read-private',
     'user-read-email',
     'playlist-read-private',
-    'user-modify-playback-state',
-    'user-read-playback-state'
+    'playlist-modify-private'
   ];
 
   static String requestAuthorization(

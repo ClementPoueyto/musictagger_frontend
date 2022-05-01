@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:tag_repository/src/models/track.dart';
 
 
-Tag tagModelFromJson(String str) => Tag.fromJson(json.decode(str));
+Tag tagModelFromJson(Uint8List bytes) => Tag.fromJson(json.decode(
+    utf8.decode(bytes)));
 
 String tagModelToJson(Tag data) => json.encode(data.toJson());
 
