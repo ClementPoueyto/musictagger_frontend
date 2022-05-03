@@ -158,11 +158,11 @@ class AuthenticationRepository {
     firebase_auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
   })  : _cache = cache ?? CacheClient(),
-        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
   final CacheClient _cache;
-  final firebase_auth.FirebaseAuth _firebaseAuth;
+  final firebase_auth.FirebaseAuth firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
   /// Whether or not the current environment is web
@@ -181,7 +181,7 @@ class AuthenticationRepository {
   ///
   /// Emits [UserAuth.empty] if the user is not authenticated.
   Stream<UserAuth> get userAuth {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
+    return firebaseAuth.authStateChanges().map((firebaseUser) {
       final user = firebaseUser == null ? UserAuth.empty : firebaseUser.toUser;
       _cache.write(key: userCacheKey, value: user);
       return user;
@@ -199,7 +199,7 @@ class AuthenticationRepository {
   /// Throws a [SignUpWithEmailAndPasswordFailure] if an exception occurs.
   Future<void> signUp({required String email, required String password}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -218,7 +218,7 @@ class AuthenticationRepository {
       late final firebase_auth.AuthCredential credential;
       if (isWeb) {
         final googleProvider = firebase_auth.GoogleAuthProvider();
-        final userCredential = await _firebaseAuth.signInWithPopup(
+        final userCredential = await firebaseAuth.signInWithPopup(
           googleProvider,
         );
         credential = userCredential.credential!;
@@ -231,7 +231,7 @@ class AuthenticationRepository {
         );
       }
 
-      await _firebaseAuth.signInWithCredential(credential);
+      await firebaseAuth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       throw LogInWithGoogleFailure.fromCode(e.code);
     } catch (_) {
@@ -247,7 +247,7 @@ class AuthenticationRepository {
     required String password,
   }) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
+      await firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -265,7 +265,7 @@ class AuthenticationRepository {
   Future<void> logOut() async {
     try {
       await Future.wait([
-        _firebaseAuth.signOut(),
+        firebaseAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
     } catch (e) {

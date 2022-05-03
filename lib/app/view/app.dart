@@ -52,7 +52,7 @@ class App extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) =>
-                PlaylistsGenerationCubit(_tagRepository),
+                PlaylistsGenerationCubit(_tagRepository, _authenticationRepository),
           )
         ],
         child: BlocBuilder<AuthBloc, AuthState>(

@@ -14,10 +14,11 @@ class TagNamesCubit extends Cubit<TagNamesState> {
   bool isFetching = false;
 
   Future<void> fetchTagNames(String userId) async{
-
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
     emit(TagNamesLoading());
     try{
-      final List<String> names= await tagsRepository.getTagsNames(userId: userId);
+      final names= await tagsRepository.getTagsNames(userId: userId, jwtToken: jwt);
       emit(TagNamesLoaded(names: names));
     }
     catch(err){

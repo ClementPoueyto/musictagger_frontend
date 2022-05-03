@@ -36,7 +36,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final userAuth = context.select((AuthBloc bloc) => bloc.state.userAuth);
     context.read<TagNamesCubit>().fetchTagNames(userAuth.id);
-
     final debouncer =
         Debouncer<String>(const Duration(milliseconds: 500), initialValue: '');
     debouncer.values

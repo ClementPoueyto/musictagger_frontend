@@ -14,10 +14,11 @@ class TagCubit extends Cubit<TagState> {
   bool isFetching = false;
 
   Future<void> fetchTag(String tagId) async{
-
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+  if(jwt==null){ return Future.error('No jwt Token'); }
     emit(TagLoading());
     try{
-      final Tag tag= await tagsRepository.getTagById(tagId: tagId);
+      final Tag tag= await tagsRepository.getTagById(tagId: tagId, jwtToken:jwt );
       emit(TagLoaded(tag: tag));
     }
     catch(err){
@@ -27,8 +28,10 @@ class TagCubit extends Cubit<TagState> {
   }
 
   Future<void> updateTag(Tag tag) async {
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
     try{
-      await tagsRepository.updateTagsToTrack(tag: tag);
+      await tagsRepository.updateTagsToTrack(tag: tag, jwtToken: jwt);
       emit(TagLoaded(tag: tag));
     }
     catch(err){

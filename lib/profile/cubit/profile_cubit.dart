@@ -24,9 +24,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   final TagsCubit tagsCubit;
 
   Future<void> fetchProfile(String userId) async{
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
     emit(ProfileLoading());
     try{
-      final user = await tagsRepository.getUser(userId);
+      final user = await tagsRepository.getUser(id: userId, jwtToken: jwt);
       emit(ProfileLoaded( user: user));
     }
     catch(err){
@@ -36,9 +38,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> connectSpotify(User user) async {
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
     print(user);
     try{
-      await tagsRepository.connectSpotify(user);
+      await tagsRepository.connectSpotify(user: user, jwtToken: jwt);
       emit(ProfileLoaded( user: user));
       await tagsCubit.refreshTags(user.id);
     }
@@ -49,8 +53,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   Future<void> importTracksFromSpotify(String userId) async {
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
     try{
-      await tagsRepository.importSpotifyTracks(userId);
+      await tagsRepository.importSpotifyTracks(userId: userId, jwtToken: jwt);
       await tagsCubit.refreshTags(userId);
 
     }

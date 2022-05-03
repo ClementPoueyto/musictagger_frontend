@@ -29,6 +29,8 @@ class TagsCubit extends Cubit<TagsState> {
   bool isFetching = false;
 
   Future<void> fetchTags(String userId, String? search, List<String>? filters) async{
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
     final currentState = state;
     if (currentState is TagsLoading) return;
     var oldTags = <Tag>[];
@@ -49,7 +51,7 @@ class TagsCubit extends Cubit<TagsState> {
     emit(TagsLoading(oldTags, search,pageIndex,filters));
 
     try{
-      final tags = await tagsRepository.getTags(userId: userId, page: pageIndex, query: search,filters: filters);
+      final tags = await tagsRepository.getTags(userId: userId, page: pageIndex, query: search,filters: filters, jwtToken: jwt);
       oldTags.addAll(tags);
       emit(TagsLoaded(search: search,tags: oldTags, pageIndex: pageIndex, filters: filters));
     }
@@ -92,6 +94,8 @@ class TagsCubit extends Cubit<TagsState> {
   }
 
   Future<void> refreshTags(String userId)async {
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
     final currentState = state;
     if (currentState is TagsLoading) return;
     var oldTags = <Tag>[];
@@ -106,7 +110,7 @@ class TagsCubit extends Cubit<TagsState> {
     emit(TagsLoading(oldTags, search,pageIndex,filters));
 
     try{
-      final tags = await tagsRepository.getTags(userId: userId, page: pageIndex, query: search,filters: filters);
+      final tags = await tagsRepository.getTags(userId: userId, page: pageIndex, query: search,filters: filters, jwtToken: jwt);
       oldTags.addAll(tags);
       emit(TagsLoaded(search: search,tags: oldTags, pageIndex: pageIndex, filters: filters));
     }

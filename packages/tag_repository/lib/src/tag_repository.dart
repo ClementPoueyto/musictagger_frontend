@@ -9,9 +9,11 @@ class TagRepository {
   final _providerUser = ApiUserService();
   final _providerTag = ApiTagService();
 
-  Future<User> getUser(String id) async {
 
-    User _user = await _providerUser.fetchUser(id);
+
+  Future<User> getUser({required String id, required String jwtToken}) async {
+
+    User _user = await _providerUser.fetchUser(id, jwtToken);
     if(_user==null){
       _user = await Future.delayed(
         const Duration(milliseconds: 300),
@@ -22,26 +24,26 @@ class TagRepository {
     return _user;
   }
 
-  Future<void> connectSpotify(User _user) async {
-    print(_user);
-    if (_user == null || _user.spotifyUser==null) return null;
-    return _providerUser.connectSpotify(_user);
+  Future<void> connectSpotify({required User user, required String jwtToken}) async {
+    print(user);
+    if (user == null || user.spotifyUser==null) return null;
+    return _providerUser.connectSpotify(user, jwtToken);
   }
 
-  Future<void> generatePlaylistToSpotify(String userId, List<String> tags) async {
+  Future<void> generatePlaylistToSpotify({required String userId, required List<String> tags, required String jwtToken}) async {
     if (userId == null || tags.length==0) return null;
-    return _providerUser.generatePlaylistToSpotify(userId, tags);
+    return _providerUser.generatePlaylistToSpotify(userId, tags, jwtToken);
   }
 
-  Future<void> importSpotifyTracks(String _userId) async {
-    print(_userId);
-    if (_userId == null) return null;
-    return _providerUser.importTracksFromSpotify(_userId);
+  Future<void> importSpotifyTracks({required String userId, required String jwtToken}) async {
+    print(userId);
+    if (userId == null) return null;
+    return _providerUser.importTracksFromSpotify(userId, jwtToken);
   }
 
-  Future<Tag> getTagById({required String tagId}) async {
+  Future<Tag> getTagById({required String tagId,required String jwtToken}) async {
     try {
-      return await _providerTag.getTagById(tagId);
+      return await _providerTag.getTagById(tagId, jwtToken);
     } on Exception catch (e) {
       throw FetchAndUpdateTagFailure.fromCode(e.toString());
     } catch (_) {
@@ -49,20 +51,9 @@ class TagRepository {
     }
   }
 
-  Future<List<Tag>> getTags({required String userId, required int page, required String query, required List<String> filters}) async {
+  Future<List<Tag>> getTags({required String userId, required int page, required String query, required List<String> filters, required String jwtToken}) async {
     try {
-      return await _providerTag.getTags(userId, page, query, filters);
-    } on Exception catch (e) {
-      print(e.toString());
-      throw FetchAndUpdateTagFailure.fromCode(e.toString());
-    } catch (_) {
-      throw const FetchAndUpdateTagFailure();
-    }
-  }
-
-  Future<List<String>> getTagsNames({required String userId}) async {
-    try {
-      return await _providerTag.getTagsName(userId);
+      return await _providerTag.getTags(userId, page, query, filters, jwtToken);
     } on Exception catch (e) {
       print(e.toString());
       throw FetchAndUpdateTagFailure.fromCode(e.toString());
@@ -71,9 +62,20 @@ class TagRepository {
     }
   }
 
-  Future<void> updateTagsToTrack({required Tag tag}) async {
+  Future<List<String>> getTagsNames({required String userId, required String jwtToken}) async {
     try {
-      return await _providerTag.updateTagsToTrack(tag, tag.userId);
+      return await _providerTag.getTagsName(userId, jwtToken);
+    } on Exception catch (e) {
+      print(e.toString());
+      throw FetchAndUpdateTagFailure.fromCode(e.toString());
+    } catch (_) {
+      throw const FetchAndUpdateTagFailure();
+    }
+  }
+
+  Future<void> updateTagsToTrack({required Tag tag,required String jwtToken}) async {
+    try {
+      return await _providerTag.updateTagsToTrack(tag, tag.userId, jwtToken);
     } on Exception catch (e) {
       print(e.toString());
       throw FetchAndUpdateTagFailure.fromCode(e.toString());

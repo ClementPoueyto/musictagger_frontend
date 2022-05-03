@@ -1,13 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tag_repository/tag_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 part 'playlists_generation_state.dart';
 
 class PlaylistsGenerationCubit extends Cubit<PlaylistsGenerationState> {
-  PlaylistsGenerationCubit(this.tagRepository) : super(const PlaylistsGenerationLoaded(selected: []));
+  PlaylistsGenerationCubit(this.tagRepository, this.authenticationRepository) : super(const PlaylistsGenerationLoaded(selected: []));
 
   final TagRepository tagRepository;
-
+  final AuthenticationRepository authenticationRepository;
   void updateSelectedTag(String tag) {
     final currentState = state;
     if(currentState is PlaylistsGenerationLoaded){
@@ -23,10 +24,13 @@ class PlaylistsGenerationCubit extends Cubit<PlaylistsGenerationState> {
   }
 
   Future<void> generatePlaylist( String userId, List<String> tags) async {
+    final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
+    if(jwt==null){ return Future.error('No jwt Token'); }
+
     final currentState = state;
     if(currentState is PlaylistsGenerationLoaded){
       emit(PlaylistsGenerationLoading(selected: tags));
-      await tagRepository.generatePlaylistToSpotify(userId, tags);
+      await tagRepository.generatePlaylistToSpotify(userId: userId, tags: tags, jwtToken: jwt);
       emit(PlaylistsGenerationLoaded(selected: tags));
     }
 

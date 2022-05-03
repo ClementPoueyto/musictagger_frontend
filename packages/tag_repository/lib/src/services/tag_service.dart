@@ -11,8 +11,15 @@ class ApiTagService {
   //final String _url = 'http://10.0.2.2:8080/tags';
   final String _url = 'http://localhost:8080/tags';
 
-  Future<Tag> getTagById(String tagId) async {
-    final response = await http.get(Uri.parse(_url+"/"+tagId));
+  Future<Tag> getTagById(String tagId, String token) async {
+    Map<String, String > headers = {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': '*/*',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Request-Method':'GET',
+      'authorization': 'Bearer $token'
+    };
+    final response = await http.get(Uri.parse(_url+"/"+tagId), headers: headers);
     if (response.statusCode == 200) {
       return tagModelFromJson(response.bodyBytes);
     } else {
@@ -20,12 +27,13 @@ class ApiTagService {
     }
   }
 
-  Future<List<Tag>> getTags(String userId, int page, String query, List<String> filters) async {
+  Future<List<Tag>> getTags(String userId, int page, String query, List<String> filters, String token) async {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
     'Access-Control-Allow-Origin': '*',
-      'Access-Control-Request-Method':'GET'
+      'Access-Control-Request-Method':'GET',
+      'authorization': 'Bearer $token'
     };
     try {
       Response response = await http.get(
@@ -50,12 +58,14 @@ class ApiTagService {
     }
   }
 
-  Future<List<String>> getTagsName(String userId) async {
+  Future<List<String>> getTagsName(String userId, String token) async {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Request-Method':'GET'
+      'Access-Control-Request-Method':'GET',
+      'authorization': 'Bearer $token'
+
     };
     try {
       Response response = await http.get(
@@ -75,14 +85,16 @@ class ApiTagService {
     }
   }
 
-  Future<void> updateTagsToTrack(Tag tag, String userId) async {
+  Future<void> updateTagsToTrack(Tag tag, String userId, String token) async {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
       'Access-Control-Allow-Origin': '*',
+      'authorization': 'Bearer $token'
+
     };
     try {
-      Response response = await http.post(
+      Response response = await http.put(
           Uri.parse(_url + "/"+tag.id.toString()+"?userId=" + userId), body: convert.jsonEncode(
           tag.tags), headers: headers);
       if (response.statusCode == 200) {

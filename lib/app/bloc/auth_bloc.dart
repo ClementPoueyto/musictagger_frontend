@@ -15,8 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         super(
         authenticationRepository.currentUser.isNotEmpty
             ? AuthState.authenticated(authenticationRepository.currentUser)
-            : const AuthState.unauthenticated(),
-      ) {
+            : const AuthState.unauthenticated(), ) {
     on<AuthUserChanged>(_onUserChanged);
     on<AuthLogoutRequested>(_onLogoutRequested);
     _userSubscription = _authenticationRepository.userAuth.listen(
