@@ -30,7 +30,7 @@ class TagRepository {
     return _providerUser.connectSpotify(user, jwtToken);
   }
 
-  Future<void> generatePlaylistToSpotify({required String userId, required List<String> tags, required String jwtToken}) async {
+  Future<String?> generatePlaylistToSpotify({required String userId, required List<String> tags, required String jwtToken}) async {
     if (userId == null || tags.length==0) return null;
     return _providerUser.generatePlaylistToSpotify(userId, tags, jwtToken);
   }

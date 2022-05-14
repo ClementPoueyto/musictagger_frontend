@@ -52,9 +52,11 @@ dependencies:
   debounce_throttle: ^2.0.0
   easy_debounce: ^2.0.2+1
   filter_list: ^1.0.1
+  url_launcher: ^6.1.2
 
   form_inputs:
     path: packages/form_inputs
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

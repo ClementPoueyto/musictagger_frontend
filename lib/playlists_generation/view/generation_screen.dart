@@ -64,8 +64,9 @@ class PlaylistGenerationScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(primary: theme.primaryColor),
                           child: const Text('Generer playlist'),
                           onPressed: () async => {
-                            context.read<PlaylistsGenerationCubit>().generatePlaylist(userAuth.id, playlistState.selected)
-                          }),
+                            await context.read<PlaylistsGenerationCubit>().generatePlaylist(userAuth.id, playlistState.selected)
+
+                        }),
                     ],
                   )))
                 ]));

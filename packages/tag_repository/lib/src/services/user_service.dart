@@ -61,7 +61,7 @@ class ApiUserService {
     }
   }
 
-  Future<void> generatePlaylistToSpotify(String userId, List<String> tags, String token) async {
+  Future<String> generatePlaylistToSpotify(String userId, List<String> tags, String token) async {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
@@ -75,5 +75,6 @@ class ApiUserService {
     if (response.statusCode != 200) {
       throw Exception('Failed to generate playlist to spotify');
     }
+    return response.body;
   }
 }
