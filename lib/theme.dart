@@ -3,14 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 final theme = ThemeData(
   textTheme: GoogleFonts.openSansTextTheme(),
-  primaryColorDark: const Color(0xFF0097A7),
-  primaryColorLight: const Color(0xFFB2EBF2),
-  primaryColor: const Color(0xFF00BCD4),
-  colorScheme: const ColorScheme.light(secondary: Color(0xFF009688)),
-  scaffoldBackgroundColor: const Color(0xFFE0F2F1),
+  primaryColor: const Color(0xFF1D2F6F),
+  colorScheme: const ColorScheme.light(secondary: Color(0xFF797B84), primary: const Color(0xFFEBEBEB)  ),
+  scaffoldBackgroundColor: const Color(0xFFEBEBEB),
+  appBarTheme: AppBarTheme(
+    backgroundColor: const Color(0xFF1D2F6F),
+  ),
   inputDecorationTheme: InputDecorationTheme(
+    filled: true,
+    fillColor: Colors.white,
+
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(20),
     ),
+
+
   ),
 );

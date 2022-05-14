@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:music_tagger/spotify/spotify_auth_api.dart';
 
@@ -16,7 +15,7 @@ class SpotifyAuth extends ChangeNotifier {
   ///
   /// Implemented using 'Authorization Code' flow from Spotify auth guide:
   /// https://developer.spotify.com/documentation/general/guides/authorization-guide/
-  Future<void> authenticate(String clientId, String redirectUri) async {
+  /*Future<void> authenticate(String clientId, String redirectUri) async {
 
     final state = _getRandomString(6);
 
@@ -37,7 +36,7 @@ class SpotifyAuth extends ChangeNotifier {
       print(e);
       rethrow;
     }
-  }
+  }*/
 
 
   static String _getRandomString(int length) {

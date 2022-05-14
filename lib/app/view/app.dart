@@ -3,6 +3,7 @@ import 'package:music_tagger/home/cubit/tags_cubit.dart';
 import 'package:music_tagger/playlists_generation/cubit/playlists_generation_cubit.dart';
 import 'package:music_tagger/profile/cubit/profile_cubit.dart';
 import 'package:music_tagger/tag/cubit/tag_names_cubit.dart';
+import 'package:music_tagger/theme.dart';
 import 'package:tag_repository/tag_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +11,6 @@ import 'package:music_tagger/app/app.dart';
 import 'package:music_tagger/router/AuthGuard.dart';
 import 'package:music_tagger/router/routes.gr.dart';
 
-import '../../tag/cubit/tag_cubit.dart';
 
 class App extends StatelessWidget {
   App(
@@ -57,11 +57,7 @@ class App extends StatelessWidget {
         ],
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) => MaterialApp.router(
-            theme: ThemeData.from(
-              colorScheme: ColorScheme.fromSwatch(
-                primarySwatch: Colors.blue,
-              ).copyWith(secondary: Colors.yellow),
-            ),
+            theme: theme,
             routerDelegate: _appRouter.delegate(),
             routeInformationParser: _appRouter.defaultRouteParser(),
           ),

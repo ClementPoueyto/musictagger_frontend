@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
+import 'package:music_tagger/widgets/loading_indicator.dart';
 import '../../sign_up/view/sign_up_page.dart';
 import '../cubit/login_cubit.dart';
 
@@ -84,7 +85,7 @@ class _PasswordInput extends StatelessWidget {
               context.read<LoginCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
+            labelText: 'mot de passe',
             helperText: '',
             errorText: state.password.invalid ? 'invalid password' : null,
           ),
@@ -101,7 +102,7 @@ class _LoginButton extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
+            ? const LoadingIndicator()
             : ElevatedButton(
                 key: const Key('loginForm_continue_raisedButton'),
                 style: ElevatedButton.styleFrom(
@@ -118,7 +119,7 @@ class _LoginButton extends StatelessWidget {
 
                         }
                     : null,
-                child: const Text('LOGIN'),
+                child: const Text('Se connecter'),
               );
       },
     );
@@ -134,7 +135,7 @@ class _GoogleLoginButton extends StatelessWidget {
           return ElevatedButton.icon(
                   key: const Key('loginForm_googleLogin_raisedButton'),
                   label: const Text(
-                    'SIGN IN WITH GOOGLE',
+                    'SE CONNECTER AVEC GOOGLE',
                     style: TextStyle(color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -162,7 +163,7 @@ class _SignUpButton extends StatelessWidget {
       key: const Key('loginForm_createAccount_flatButton'),
       onPressed: () => AutoRouter.of(context).pushNamed(SignUpPage.routeName),
       child: Text(
-        'CREATE ACCOUNT',
+        "Créer un compte",
         style: TextStyle(color: theme.primaryColor),
       ),
     );

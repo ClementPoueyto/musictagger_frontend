@@ -6,7 +6,10 @@ abstract class TagsState extends Equatable {
   List<Object> get props => [];
 }
 
-class TagsInitial extends TagsState {}
+class TagsInitial extends TagsState {
+  final String search;
+  const TagsInitial(this.search);
+}
 
 class TagsLoading extends TagsState {
   final List<Tag> oldTags;

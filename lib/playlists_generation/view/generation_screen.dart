@@ -16,10 +16,9 @@ class PlaylistGenerationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userAuth = context.select((AuthBloc bloc) => bloc.state.userAuth);
     BlocProvider.of<TagNamesCubit>(context).fetchTagNames(userAuth.id);
+    final theme = Theme.of(context);
+
     return Scaffold(
-        appBar: const CustomAppBar(
-          title: "Generation",
-        ),
         body: BlocBuilder<TagNamesCubit, TagNamesState>(
             builder: (tagsContext, tagsState) {
           if (tagsState is TagNamesLoaded) {
@@ -27,7 +26,7 @@ class PlaylistGenerationScreen extends StatelessWidget {
                     PlaylistsGenerationState>(
                 builder: (playlistContext, playlistState) {
               if (playlistState is PlaylistsGenerationLoaded) {
-                return Column(children: [
+                return Padding(padding: EdgeInsets.all(15), child :ListView(children: [
                   SafeArea(
                       child: Center(
                           child: Column(
@@ -44,6 +43,9 @@ class PlaylistGenerationScreen extends StatelessWidget {
                             key: Key(index.toString()),
                             index: index,
                             title: item,
+                            elevation: 0,
+                            border: const Border.fromBorderSide(BorderSide.none),
+                            activeColor: theme.colorScheme.secondary,
                             active: playlistState.selected.contains(item),
                             onPressed: (_) => {
                               context
@@ -59,13 +61,14 @@ class PlaylistGenerationScreen extends StatelessWidget {
                       const SizedBox(height: 30),
 
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: theme.primaryColor),
                           child: const Text('Generer playlist'),
                           onPressed: () async => {
                             context.read<PlaylistsGenerationCubit>().generatePlaylist(userAuth.id, playlistState.selected)
                           }),
                     ],
                   )))
-                ]);
+                ]));
               } else {
                 return const LoadingIndicator();
               }

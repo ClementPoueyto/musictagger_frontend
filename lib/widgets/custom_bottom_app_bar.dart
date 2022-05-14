@@ -8,8 +8,9 @@ class AutoTabsScaffoldPage extends StatelessWidget {
 
   @override
   Widget build(context) {
+    final theme = Theme.of(context);
     return AutoTabsScaffold(
-      routes:  [
+      routes:  const [
          HomeRouter(),
         TagRouter(),
         ProfileRouter()
@@ -17,21 +18,23 @@ class AutoTabsScaffoldPage extends StatelessWidget {
 
     bottomNavigationBuilder: (_, tabsRouter) {
         return BottomNavigationBar(
-          backgroundColor: Colors.indigo,
+          selectedFontSize: 16,
+          unselectedItemColor: theme.colorScheme.primary,
+          backgroundColor: theme.primaryColor,
           currentIndex: tabsRouter.activeIndex,
           onTap: tabsRouter.setActiveIndex,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Tags',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.create),
-              label: 'Generate',
+              label: 'Generation',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.account_box),
-              label: 'Profile',
+              label: 'Profil',
             ),
           ],
         );

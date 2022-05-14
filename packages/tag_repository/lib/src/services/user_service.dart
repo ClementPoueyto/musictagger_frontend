@@ -4,11 +4,11 @@ import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 import '../models/models.dart';
+import '../utils/constant.dart';
 
 
 class ApiUserService {
-  final String _url = 'http://localhost:8080/users';
-  //final String _url = 'http://10.0.2.2:8080/users';
+  final String _url = URL_API+'users';
 
   Future<User> fetchUser(String id, String token) async {
 
@@ -36,6 +36,7 @@ class ApiUserService {
       Map<String, String > headers = {
         'Content-Type': 'application/json; charset=UTF-8',
         'Accept': '*/*',
+        'Access-Control-Allow-Origin': '*',
         'authorization': 'Bearer $token'
 
       };
@@ -50,6 +51,7 @@ class ApiUserService {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
+      'Access-Control-Allow-Origin': '*',
       'authorization': 'Bearer $token'
 
     };
@@ -63,6 +65,7 @@ class ApiUserService {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
+      'Access-Control-Allow-Origin': '*',
       'authorization': 'Bearer $token'
 
     };

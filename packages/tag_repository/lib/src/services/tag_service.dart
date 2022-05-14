@@ -1,23 +1,22 @@
 import 'dart:convert';
-
+import 'dart:async';
+import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
-import 'dart:convert' as convert;
 
 import 'package:tag_repository/src/models/models.dart';
 
+import '../utils/constant.dart';
+
 class ApiTagService {
-  //mobile :
-  //final String _url = 'http://10.0.2.2:8080/tags';
-  final String _url = 'http://localhost:8080/tags';
+  final String _url = URL_API+'tags';
+
 
   Future<Tag> getTagById(String tagId, String token) async {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Request-Method':'GET',
-      'authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
     final response = await http.get(Uri.parse(_url+"/"+tagId), headers: headers);
     if (response.statusCode == 200) {
@@ -31,17 +30,16 @@ class ApiTagService {
     Map<String, String > headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
-    'Access-Control-Allow-Origin': '*',
-      'Access-Control-Request-Method':'GET',
-      'authorization': 'Bearer $token'
+      'Access-Control-Allow-Origin': '*',
+      'Authorization': 'Bearer $token'
     };
     try {
-      Response response = await http.get(
+      final response = await http.get(
           Uri.parse(_url + "?userId=" + userId+"&page="+page.toString()+"&limit=50&query="+query.toString()+"&filters="+filters.join(",")), headers: headers);
       if (response.statusCode == 200) {
         List<Tag> tags = [];
         print(response.body);
-        List<dynamic> tagsMap = convert.jsonDecode(
+        List<dynamic> tagsMap = jsonDecode(
                 utf8.decode(response.bodyBytes)) as List<dynamic>;
         tagsMap.forEach((element ) {
           var tag = Tag.fromJson(element);
@@ -63,16 +61,15 @@ class ApiTagService {
       'Content-Type': 'application/json; charset=UTF-8',
       'Accept': '*/*',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Request-Method':'GET',
-      'authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token'
 
     };
     try {
-      Response response = await http.get(
+      final response = await http.get(
           Uri.parse(_url + "/names?userId=" + userId), headers: headers);
       if (response.statusCode == 200) {
         print(response.body);
-        List<String> tagsMap = List.from(convert.jsonDecode(
+        List<String> tagsMap = List.from(jsonDecode(
             utf8.decode(response.bodyBytes)));
         return tagsMap;
       } else {
@@ -94,8 +91,8 @@ class ApiTagService {
 
     };
     try {
-      Response response = await http.put(
-          Uri.parse(_url + "/"+tag.id.toString()+"?userId=" + userId), body: convert.jsonEncode(
+      final response = await http.put(
+          Uri.parse(_url + "/"+tag.id.toString()+"?userId=" + userId), body: jsonEncode(
           tag.tags), headers: headers);
       if (response.statusCode == 200) {
         print(response.body);

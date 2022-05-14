@@ -2,16 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-//colors
-const Color white = const Color(0xFFFFFFFF);
-const Color whiteShadow = const Color(0xFFF5F5F5);
-const Color black = Colors.black;
-const Color base = Colors.green;
-const Color accent = const Color(0xFF00C853);
 
 //Value
 String urlApi ="";
 
+int MOBILE_SIZE = 600;
 //keys
 String keyId = "id";
 String keyDisplayName ="displayName";

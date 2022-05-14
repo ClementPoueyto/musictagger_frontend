@@ -22,6 +22,7 @@ class TagScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final userAuth = context.select((AuthBloc bloc) => bloc.state.userAuth);
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +35,6 @@ class TagScreen extends StatelessWidget {
         create: (_) => TagCubit(context.read<TagRepository>(),
             context.read<AuthenticationRepository>()),
         child: TagWidget(tagId, userAuth.id),
-
       ),
     );
   }
@@ -60,29 +60,32 @@ class TagWidget extends StatelessWidget {
         tag = state.tag;
         return BlocBuilder<TagNamesCubit, TagNamesState>(
             builder: (nameContext, nameState) {
-          return SafeArea(
-              child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const SizedBox(height: 4),
-              Avatar(photo: tag.track.image),
-              const SizedBox(height: 4),
-              Center(child: Text(tag.track.artistName)),
-              const SizedBox(height: 4),
-              Center(
-                  child: Text(
-                tag.track.name,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              )),
-              const SizedBox(height: 4),
-              Center(child: Text(tag.track.albumName)),
-              const SizedBox(height: 30),
-              if (nameState is TagNamesLoaded)
-                _widgetTags(nameContext, nameState, tag)
-              else
-                const LoadingIndicator()
-            ],
-          ));
+          return SafeArea(             
+              child: Padding(padding: EdgeInsets.all(15),
+              child :ListView(children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const SizedBox(height: 4),
+                Avatar(photo: tag.track.image),
+                const SizedBox(height: 4),
+                Center(child: Text(tag.track.artistName)),
+                const SizedBox(height: 4),
+                Center(
+                    child: Text(
+                  tag.track.name,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                )),
+                const SizedBox(height: 4),
+                Center(child: Text(tag.track.albumName)),
+                const SizedBox(height: 30),
+                if (nameState is TagNamesLoaded)
+                  _widgetTags(nameContext, nameState, tag)
+                else
+                  const LoadingIndicator()
+              ],
+            )
+          ])));
         });
       } else {
         return const LoadingIndicator();
@@ -90,12 +93,11 @@ class TagWidget extends StatelessWidget {
     });
   }
 
-
   Widget _widgetTags(BuildContext context, TagNamesLoaded state, Tag tag) {
+    final theme = Theme.of(context);
     return Tags(
       key: key,
       textField: TagsTextField(
-        helperText: "test",
         hintText: "Aouter un tag",
         textStyle: TextStyle(
           fontSize: 12,
@@ -104,7 +106,7 @@ class TagWidget extends StatelessWidget {
         suggestions: [],
         //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
         onSubmitted: (String str) async {
-          if(!isTagNameValid(str)) return;
+          if (!isTagNameValid(str)) return;
           if (!state.names.contains(str) && str.length < 50) {
             await _onTagSelected(context, str, tag);
             BlocProvider.of<TagNamesCubit>(context)
@@ -120,6 +122,9 @@ class TagWidget extends StatelessWidget {
           key: Key(index.toString()),
           index: index,
           title: item,
+          elevation: 0,
+          border: const Border.fromBorderSide(BorderSide.none),
+          activeColor: theme.colorScheme.secondary,
           active: tag.tags.contains(item),
           textStyle: const TextStyle(
             fontSize: 16,
@@ -138,16 +143,17 @@ class TagWidget extends StatelessWidget {
     } else {
       copy.remove(name);
     }
-     await BlocProvider.of<TagsCubit>(context)
+    await BlocProvider.of<TagsCubit>(context)
         .updateTag(Tag(tag.id, copy, tag.track, tag.userId));
 
     await BlocProvider.of<TagCubit>(context)
         .updateTag(Tag(tag.id, copy, tag.track, tag.userId));
   }
 
-  bool isTagNameValid(String str){
-    if(str.trim().isEmpty) return false;
-    if(str.contains('\'')||str.contains('\"')||str.contains(',')) return false;
+  bool isTagNameValid(String str) {
+    if (str.trim().isEmpty) return false;
+    if (str.contains('\'') || str.contains('\"') || str.contains(','))
+      return false;
     return true;
   }
 }

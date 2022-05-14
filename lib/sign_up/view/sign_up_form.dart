@@ -72,7 +72,7 @@ class _PasswordInput extends StatelessWidget {
               context.read<SignUpCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
+            labelText: 'mot de passe',
             helperText: '',
             errorText: state.password.invalid ? 'invalid password' : null,
           ),
@@ -97,7 +97,7 @@ class _ConfirmPasswordInput extends StatelessWidget {
               .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'confirm password',
+            labelText: 'confirmer mot de passe',
             helperText: '',
             errorText: state.confirmedPassword.invalid
                 ? 'passwords do not match'
@@ -128,7 +128,7 @@ class _SignUpButton extends StatelessWidget {
           onPressed: state.status.isValidated
               ? () => context.read<SignUpCubit>().signUpFormSubmitted()
               : null,
-          child: const Text('SIGN UP'),
+          child: const Text("S'inscire"),
         );
       },
     );

@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:music_tagger/secret.dart';
 
 import 'api_path.dart';
 import 'auth_tokens.dart';
 
 class SpotifyAuthApi {
-  static final clientId = dotenv.env['CLIENT_ID'];
-  static final clientSecret = dotenv.env['CLIENT_SECRET'];
+  static final clientId = CLIENT_ID;
+  static final clientSecret = CLIENT_SECRET;
   static final base64Credential =
       utf8.fuse(base64).encode('$clientId:$clientSecret');
 

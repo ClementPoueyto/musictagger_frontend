@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
+import 'package:music_tagger/utils/constants.dart';
 import 'package:music_tagger/widgets/widgets.dart';
 import 'package:tag_repository/tag_repository.dart';
 
@@ -15,6 +16,7 @@ class TrackTagTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size.width;
 
     return InkWell(
       onTap: () {
@@ -28,20 +30,19 @@ class TrackTagTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: kIsWeb ? 2 : 10,
+              flex: size>MOBILE_SIZE ? 4 : 10,
               child: Row(
                 children: [
-                  if (kIsWeb)
-                    Expanded(
-                      flex: 1,
-                      child: Text(
+                  if (size>MOBILE_SIZE)
+                     Padding(padding: const EdgeInsets.only(right: 3.0),
+                     child :Text(
                         '${index + 1}',
                         style: const TextStyle(
                             fontSize: 12.0,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                      ),),
+                    
                   Expanded(
                       flex: 5,
                       child: CachedNetworkImage(
@@ -52,6 +53,7 @@ class TrackTagTile extends StatelessWidget {
                         errorWidget: (context, url, dynamic error) =>
                             const Icon(Icons.error),
                       )),
+                  const SizedBox(width: 10,),
                   Expanded(
                     flex: 8,
                     child: Column(
@@ -60,7 +62,11 @@ class TrackTagTile extends StatelessWidget {
                         Text(
                           tag.track.name,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style:  TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: size>MOBILE_SIZE?14:12
+                          ),
+
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -73,13 +79,13 @@ class TrackTagTile extends StatelessWidget {
                 ],
               ),
             ),
-            if (kIsWeb)
+            if (size>MOBILE_SIZE)
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Text(tag.track.albumName),
               ),
             Expanded(
-                flex: 5,
+                flex: 10,
                 child:
                 tag.tags.isNotEmpty ? TagsList(tags: tag.tags) : const SizedBox.shrink()),
             const Expanded(flex: 1, child: Center(child: Icon(Icons.chevron_right))),

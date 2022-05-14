@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:tag_repository/tag_repository.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app/bloc_observer.dart';
 import 'app/view/app.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
   return BlocOverrides.runZoned(
     () async {
       try {

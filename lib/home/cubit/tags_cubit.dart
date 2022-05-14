@@ -8,16 +8,13 @@ import 'package:tag_repository/tag_repository.dart';
 part 'tags_state.dart';
 
 class TagsCubit extends Cubit<TagsState> {
-  TagsCubit( this.tagsRepository, this.authenticationRepository) : super(TagsInitial()){
+  TagsCubit( this.tagsRepository, this.authenticationRepository) : super(TagsInitial("")){
     authenticationRepository.userAuth.listen(
             (user) => {
               if(user.isNotEmpty){
                 fetchTags(user.id, '', [])
               }
-              else{
-                emit(TagsInitial())
 
-              }
         }
     );
 
@@ -89,9 +86,7 @@ class TagsCubit extends Cubit<TagsState> {
 
   }
 
-  Future<void> reinitialisation() async {
-    emit(TagsInitial());
-  }
+
 
   Future<void> refreshTags(String userId)async {
     final jwt = await authenticationRepository.firebaseAuth.currentUser?.getIdToken();
