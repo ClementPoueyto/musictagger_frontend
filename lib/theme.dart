@@ -14,7 +14,8 @@ final theme = ThemeData(
     fillColor: Colors.white,
 
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20),
+      borderSide: BorderSide.none,
+      borderRadius: BorderRadius.circular(30),
     ),
 
 

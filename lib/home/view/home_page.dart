@@ -18,7 +18,7 @@ import '../../utils/constants.dart';
 
 class HomePage extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey =
-      new GlobalKey<NavigatorState>();
+      GlobalKey<NavigatorState>();
   final scrollController = ScrollController();
   final _controller = TextEditingController();
   final debouncer =
@@ -44,8 +44,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size.width;
     final userAuth = context.select((AuthBloc bloc) => bloc.state.userAuth);
     context.read<TagNamesCubit>().fetchTagNames(userAuth.id);
     debouncer.values
@@ -132,6 +130,7 @@ class HomePage extends StatelessWidget {
                         elevation: 0,
                         activeColor: Colors.white,
                         textActiveColor: Colors.black,
+                        pressEnabled: false,
                         border: const Border.fromBorderSide(BorderSide.none),
                         combine: X.ItemTagsCombine.withTextBefore,
                         removeButton: X.ItemTagsRemoveButton(
@@ -142,8 +141,8 @@ class HomePage extends StatelessWidget {
                             return true;
                           },
                         ), //
-                        textStyle:  TextStyle(
-                          fontSize: ((size >MOBILE_SIZE) ? 16 : 11),
+                        textStyle:  const TextStyle(
+                          fontSize: 16 ,
                           color: Colors.black
                         ),
                       );
@@ -214,6 +213,7 @@ class HomePage extends StatelessWidget {
 
   Future<void> openFilterDialog(BuildContext context, String userId,
       TagNamesLoaded stateTagNames, TagsLoaded stateTags) async {
+    final theme = Theme.of(context);
     await FilterListDialog.display<String>(
       context,
       listData: stateTagNames.names,
@@ -226,6 +226,14 @@ class HomePage extends StatelessWidget {
       allButtonText: 'Tous',
       resetButtonText: 'Réinitialiser',
       applyButtonText: 'Appliquer',
+      themeData: FilterListThemeData(context,
+          choiceChipTheme: ChoiceChipThemeData(selectedBackgroundColor: theme.colorScheme.secondary),
+
+          controlButtonBarTheme: ControlButtonBarThemeData(
+              controlButtonTheme: ControlButtonThemeData(primaryButtonBackgroundColor: theme.primaryColor,
+                  textStyle: TextStyle(color: theme.primaryColor)))
+      ),
+
       onItemSearch: (tag, query) {
         return tag.toLowerCase().contains(query.toLowerCase());
       },

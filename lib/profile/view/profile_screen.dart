@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:io';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_auth/flutter_web_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,18 +61,14 @@ class ProfileScreen extends StatelessWidget {
                                   context,
                                   state,
                                   await authenticate(
-                                    Theme.of(context).platform ==
-                                            TargetPlatform.android
-                                        ? REDIRECT_URL_MOBILE
-                                            .toString()
-                                        : REDIRECT_URL_WEB
+                                    kIsWeb
+                                        ? REDIRECT_URL_WEB.toString()
+                                        :REDIRECT_URL_MOBILE.toString(),
+                                    kIsWeb
+                                        ? CALLBACK_URL_WEB
+                                        .toString():CALLBACK_URL_MOBILE
                                             .toString(),
-                                    Theme.of(context).platform ==
-                                            TargetPlatform.android
-                                        ? CALLBACK_URL_MOBILE
-                                            .toString()
-                                        : CALLBACK_URL_WEB
-                                            .toString(),
+
                                   ))
                             }),
                     const SizedBox(
@@ -146,7 +143,7 @@ class ProfileScreen extends StatelessWidget {
 
       print(tokens.refreshToken);
       print(tokens.accessToken);
-      return new SpotifyUser(tokens.accessToken, tokens.refreshToken);
+      return SpotifyUser(tokens.accessToken, tokens.refreshToken);
     } on Exception catch (e) {
       print(e);
       rethrow;
