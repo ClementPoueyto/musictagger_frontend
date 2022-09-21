@@ -1,0 +1,22 @@
+<mat-toolbar class="position-fixed" color="primary">
+    <mat-toolbar-row>
+        <button fxShow.xs fxHide mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item >Tags</button>
+            <button mat-menu-item >Generer</button>
+
+        </mat-menu>
+            <div fxHide.xs fxShow>
+                <a mat-button>Tags</a>
+                <a mat-button >Generer</a>
+  
+
+            </div>
+            <span class="example-spacer"></span>
+
+            <button mat-raised-button (click)="logout()">Logout</button>
+
+    </mat-toolbar-row>
+</mat-toolbar>

@@ -63,11 +63,10 @@ export class LoginComponent implements OnInit {
       return;
     }
     console.log(token)
-      this.authService.RefreshToken({jwt_token : token}).subscribe(
-        async tokenResponse =>{
+      this.authService.refreshToken({jwt_token : token}).subscribe(
+         tokenResponse =>{
           if(tokenResponse){
-            console.log(tokenResponse)
-            await this.loginSuccess(tokenResponse.jwt_token);
+            this.router.navigate(['../tags'])
           }
         }
       )

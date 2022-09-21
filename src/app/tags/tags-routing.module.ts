@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth-guard/auth.guard';
-import { SearchComponent } from './components/search/search.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
-  { path : '', component : SearchComponent, canActivate : [AuthGuard]}
+  { path : '', component : HomeComponent, canActivate : [AuthGuard]}
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
