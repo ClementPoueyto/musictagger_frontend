@@ -8,5 +8,4 @@ export interface SpotifyUser{
 
      expiresIn : number;
 
-     tokenCreation : Date;
 }

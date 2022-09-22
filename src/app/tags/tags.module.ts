@@ -7,7 +7,8 @@ import { AngularMaterialModule } from '../angular-material/angular-material.modu
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthenticationModule } from '../authentication/authentication.module';
+import { SpotifyModule } from '../spotify/spotify.module';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -20,9 +21,12 @@ import { AuthenticationModule } from '../authentication/authentication.module';
     CommonModule,
     TagsRoutingModule,
     AngularMaterialModule,
+    SpotifyModule,
     HttpClientModule,
-    AuthenticationModule
-  ]
+    MatDialogModule
+
+  ],
+  
   
 })
 export class TagsModule { }

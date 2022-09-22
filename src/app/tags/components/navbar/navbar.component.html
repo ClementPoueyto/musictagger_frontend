@@ -6,17 +6,20 @@
         <mat-menu #menu="matMenu">
             <button mat-menu-item >Tags</button>
             <button mat-menu-item >Generer</button>
+            <button mat-menu-item >Profil</button>
 
         </mat-menu>
             <div fxHide.xs fxShow>
                 <a mat-button>Tags</a>
                 <a mat-button >Generer</a>
-  
+                <a mat-button >Profil</a>
+
 
             </div>
             <span class="example-spacer"></span>
 
-            <button mat-raised-button (click)="logout()">Logout</button>
+            <h3 *ngIf="user">{{user.firstname}}</h3>
+            <button *ngIf="user" mat-raised-button (click)="logout()">Logout</button>
 
     </mat-toolbar-row>
 </mat-toolbar>

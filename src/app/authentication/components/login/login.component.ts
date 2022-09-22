@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
   ) { 
     this.matIconRegistry.addSvgIcon(
-      "logo",
+      "google-logo",
       this.domSanitizer.bypassSecurityTrustResourceUrl(googleLogoURL));
   }
   async ngOnInit(): Promise<void> {

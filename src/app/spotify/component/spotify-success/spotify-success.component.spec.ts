@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarComponent } from './navbar.component';
+import { SpotifySuccessComponent } from './spotify-success.component';
 
-describe('NavbarComponent', () => {
-  let component: NavbarComponent;
-  let fixture: ComponentFixture<NavbarComponent>;
+describe('SpotifySuccessComponent', () => {
+  let component: SpotifySuccessComponent;
+  let fixture: ComponentFixture<SpotifySuccessComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavbarComponent ]
+      declarations: [ SpotifySuccessComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NavbarComponent);
+    fixture = TestBed.createComponent(SpotifySuccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

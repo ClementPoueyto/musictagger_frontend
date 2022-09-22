@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LoginComponent } from './login.component';
+import { SpotifyFailureComponent } from './spotify-failure.component';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('SpotifyFailureComponent', () => {
+  let component: SpotifyFailureComponent;
+  let fixture: ComponentFixture<SpotifyFailureComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ]
+      declarations: [ SpotifyFailureComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(SpotifyFailureComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

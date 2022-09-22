@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-navbar',
@@ -9,6 +10,8 @@ import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 })
 export class NavbarComponent implements OnInit {
 
+  @Input()
+  user? : User;
   constructor(private router: Router,) { }
 
   ngOnInit(): void {

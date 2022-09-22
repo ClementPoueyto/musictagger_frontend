@@ -3,6 +3,22 @@
     justify-content: center;
     margin: 100px 0px;
   }
+
+  #google-btn{
+    height: 10rem;
+     display: flex;
+      align-items: center;
+       justify-content:center;
+  }
+
+  #google-a{
+    padding: 1rem;
+  }
+
+  #google-svg{
+    width: 50px;
+    height:30px
+  }
   
   mat-card {
     max-width: 600px;
