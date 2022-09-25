@@ -7,6 +7,8 @@ export interface SearchTaggedTrackRequest{
 
     page : number;
 
+    limit : number;
+
     tags : string[];
 
     query : string;
@@ -14,6 +16,19 @@ export interface SearchTaggedTrackRequest{
 }
 
 export interface SearchTaggedTrackResponse{
+    data : TaggedTrack[]
+    metadata : Metadata
+}
+
+export interface LikeTaggedTrackRequest{
+    jwt_token : string;
+
+    page : number;
+
+    limit : number;
+}
+
+export interface LikeTaggedTrackResponse{
     data : TaggedTrack[]
     metadata : Metadata
 }

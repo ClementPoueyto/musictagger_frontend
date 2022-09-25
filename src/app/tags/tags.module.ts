@@ -6,17 +6,26 @@ import { SearchComponent } from './components/search/search.component';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { HttpClientModule } from '@angular/common/http';
 import { SpotifyModule } from '../spotify/spotify.module';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { LoaderComponent } from './components/loader/loader.component';
+
+import {
+  HTTP_INTERCEPTORS,
+  HttpClientModule,
+} from '@angular/common/http';
+import { LoaderInterceptor } from './interceptor/loader.interceptor';
+import { TrackComponent } from './components/track/track.component';
 
 
 @NgModule({
   declarations: [
     SearchComponent,
     HomeComponent,
-    NavbarComponent
-    ],
+    NavbarComponent,
+    LoaderComponent,
+    TrackComponent
+  ],
   imports: [
     CommonModule,
     TagsRoutingModule,
@@ -26,6 +35,13 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
     MatDialogModule
 
   ],
+  providers: [
+    {
+       provide: HTTP_INTERCEPTORS,
+       useClass: LoaderInterceptor,
+       multi: true,
+    },
+ ],
   
   
 })
