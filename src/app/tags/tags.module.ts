@@ -4,10 +4,8 @@ import { CommonModule } from '@angular/common';
 import { TagsRoutingModule } from './tags-routing.module';
 import { SearchComponent } from './components/search/search.component';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
-import { HomeComponent } from './components/home/home.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { SpotifyModule } from '../spotify/spotify.module';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { LoaderComponent } from './components/loader/loader.component';
 
 import {
@@ -21,8 +19,6 @@ import { TrackComponent } from './components/track/track.component';
 @NgModule({
   declarations: [
     SearchComponent,
-    HomeComponent,
-    NavbarComponent,
     LoaderComponent,
     TrackComponent
   ],

@@ -1,6 +1,6 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { tap } from 'rxjs';
+import { tap, firstValueFrom} from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CustomValidators } from '../../validators/custom-validator';
@@ -34,10 +34,10 @@ export class RegisterComponent implements OnInit {
       return;
     }
     if(this.registerForm.valid){
-      this.authService.register(this.registerForm.value).pipe(
+      firstValueFrom(this.authService.register(this.registerForm.value).pipe(
         // If registration was successfull, then navigate to login route
-        tap(() => this.router.navigate(['../login']))
-      ).subscribe();
+        tap(() => this.router.navigate(['../login'])))
+      )
     }
   }
   ngOnInit(): void {

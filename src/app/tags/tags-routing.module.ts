@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../auth-guard/auth.guard';
-import { HomeComponent } from './components/home/home.component';
+import { SearchComponent } from './components/search/search.component';
 import { TrackComponent } from './components/track/track.component';
 
 const routes: Routes = [
-  { path : '', component : HomeComponent, canActivate : [AuthGuard]},
+  { path : '', component : SearchComponent, canActivate : [AuthGuard]},
 
   { path : 'tracks/:id', component : TrackComponent, canActivate : [AuthGuard]}
 

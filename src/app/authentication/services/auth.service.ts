@@ -1,25 +1,47 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { firstValueFrom, map, Observable, of, tap,BehaviorSubject } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CheckTokenRequest, CheckTokenResponse, LoginRequest, LoginResponse, RefreshTokenRequest, RefreshTokenResponse, RegisterRequest, RegisterResponse } from './auth-interfaces';
 import { catchError } from 'rxjs/operators';
 import { API_URL } from 'src/app/constants';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
+import { Router } from '@angular/router';
 
+export enum AuthStatus{
+  LOGIN, LOGOUT
+}
 
 @Injectable({
   providedIn: 'root'
 })
 
+
+
 export class AuthService {
+
+  private currentAuthStatusSubject: BehaviorSubject<AuthStatus>;
+    public currentAuthStatus: Observable<AuthStatus>;
 
   constructor(
     private http: HttpClient,
     private snackbar: MatSnackBar,
-    private jwtService: JwtHelperService
-  ) { }
+    private jwtService: JwtHelperService,
+    private router : Router
+  ) {
+    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+    if(token){
+      this.currentAuthStatusSubject = new BehaviorSubject<AuthStatus>(AuthStatus.LOGIN);
+
+    }
+    else{
+      this.currentAuthStatusSubject = new BehaviorSubject<AuthStatus>(AuthStatus.LOGOUT);
+
+    }
+    this.currentAuthStatus = this.currentAuthStatusSubject.asObservable();
+        
+   }
 
   /*
    Due to the '/api' the url will be rewritten by the proxy, e.g. to http://localhost:8080/api/auth/login
@@ -36,8 +58,28 @@ export class AuthService {
         });
         return of()
       }),
+      tap((res)=> {this.loginSuccess(res.jwt_token)})
 
     );
+  }
+
+  async logout(): Promise<void> {
+    localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
+    this.currentAuthStatusSubject.next(AuthStatus.LOGOUT)
+    this.router.navigate(['../login']);
+
+  }
+
+  loginSuccess(token : string) : void {
+    if(!this.jwtService.isTokenExpired(token)){
+      localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
+      this.currentAuthStatusSubject.next(AuthStatus.LOGIN);
+      this.snackbar.open('Login Successfull', 'Close', {
+        duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
+      });
+      this.router.navigate(['../tags']);
+
+    }
   }
 
   /*

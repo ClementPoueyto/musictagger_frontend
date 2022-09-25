@@ -1,24 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { SpotifyUser } from 'src/app/tags/models/spotify-user.model';
 import { UserService } from 'src/app/tags/services/user.service';
-
+import { Subscription } from 'rxjs'
 @Component({
   selector: 'app-spotify-success',
   templateUrl: './spotify-success.component.html',
   styleUrls: ['./spotify-success.component.scss']
 })
-export class SpotifySuccessComponent implements OnInit {
-
+export class SpotifySuccessComponent implements OnInit, OnDestroy {
+  routeSub : Subscription = new Subscription();
   constructor(private readonly userService : UserService,      private router: Router,
     private snackbar: MatSnackBar,    private route: ActivatedRoute,
 
     ) { }
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
+  }
 
   ngOnInit(): void {
-    this.route.queryParams
+    this.routeSub = this.route.queryParams
     .subscribe(async params => { 
       const spotifyUser : SpotifyUser = {
         spotifyId : params["spotifyId"],
@@ -34,9 +37,13 @@ export class SpotifySuccessComponent implements OnInit {
           this.snackbar.open('Spotify Login Success', 'Close', {
             duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
           });
-          setTimeout(()=>{
-            this.router.navigate(['../tags']);
-          },2000)
+          this.userService.getUser({jwt_token : new_token.jwt_token}).then(res=>{
+            if(res){
+                this.router.navigate(['../tags']);
+            }
+          }
+          )
+          
 
         }
       }

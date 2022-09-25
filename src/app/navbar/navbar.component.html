@@ -1,4 +1,4 @@
-<mat-toolbar class="position-fixed" color="primary">
+<mat-toolbar *ngIf="showNavbar" class="position-fixed" color="primary">
     <mat-toolbar-row>
         <button fxShow.xs fxHide mat-icon-button [matMenuTriggerFor]="menu">
             <mat-icon>menu</mat-icon>
@@ -18,8 +18,7 @@
             </div>
             <span class="example-spacer"></span>
 
-            <h3 *ngIf="user">{{user.firstname}}</h3>
-            <button *ngIf="user" mat-raised-button (click)="logout()">Logout</button>
+            <button  mat-raised-button (click)="logout()">Logout</button>
 
     </mat-toolbar-row>
 </mat-toolbar>

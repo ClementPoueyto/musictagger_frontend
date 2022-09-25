@@ -7,8 +7,9 @@
     *ngFor="let chip of availableChips"
     (click)="chipRef.selectViaInteraction()"
     [selected]="chip.selected"
+    [value]="chip.name"
   >
-    {{chip.name}}
+    {{chip.display}}
   </mat-chip>
 </mat-chip-list>
 </div>
