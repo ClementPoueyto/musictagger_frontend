@@ -1,0 +1,40 @@
+<mat-card>
+    <mat-card-title *ngIf="mode=='edit'">Edit Playlist</mat-card-title>
+    <mat-card-title *ngIf="mode=='create'">Create Playlist</mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="playlistForm" (ngSubmit)="editPlaylist()">
+
+        <mat-form-field>
+          <input type="title" matInput placeholder="Title" formControlName="title">
+          <mat-error
+            *ngIf="this.playlistForm.get('title')?.hasError('required')">
+            title is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input type="description" matInput placeholder="Description" formControlName="description">
+          </mat-form-field>
+
+      </form>
+      <mat-chip-list  #chipList [multiple]="true" [selectable]="true">
+        <mat-chip 
+        #chip="matChip"
+          *ngFor="let tag of tagNames"
+          [value]="tag"
+          [selected]="selected.includes(tag)"
+          [selectable]="true"
+          (click)="onChipDialogChange(tag)"
+          >
+          {{tag}}
+        </mat-chip>
+      </mat-chip-list>
+      
+      <div class="button">        
+        <button type="submit" mat-button  (click)="close()">Close</button>
+        <!-- Button is disabled(not clickable), if our RegisterForm contains Validation Errors -->
+        <button type="submit" color="primary" mat-raised-button [disabled]="!(playlistForm.valid&&selected.length>0)" (click)="editPlaylist()">Save</button>
+      </div>
+    </mat-card-content>
+
+  </mat-card>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthenticationRoutingModule } from './authentication/authentication-routing.module';
+import { PlaylistRoutingModule } from './playlist/playlist-routing.module';
 import { SpotifyRoutingModule } from './spotify/spotify-routing.module';
 import { TagsRoutingModule } from './tags/tags-routing.module';
 
@@ -15,9 +16,14 @@ const routes: Routes = [
     loadChildren: () => SpotifyRoutingModule,
   },
   {
+    path: 'playlists',
+    loadChildren: () => PlaylistRoutingModule,
+  },
+  {
     path: '',
     loadChildren: () => AuthenticationRoutingModule,
   },
+
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
   {
     path: '**',

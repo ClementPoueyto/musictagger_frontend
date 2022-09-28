@@ -1,15 +1,3 @@
-.demo-table {
-    width: 100%;
-  }
-  
-  .demo-button-container {
-    padding-bottom: 16px;
-  }
-  
-  .demo-button + .demo-button {
-    margin-left: 8px;
-  }
-
   img{
     width: 50px;
     height: 50px;
@@ -19,12 +7,22 @@
 
   }
 
+  .filter-button{
+    margin : 10px
+  }
+  
+  .tagsSearch{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+   }
+
+   table{
+    width: 100%;
+   }
   .mat-cell {
     padding: 0px 8px 0 8px;
-  }
-
-  .chip-datasource{
-    margin : 5px
   }
 
    .tags {

@@ -10,6 +10,8 @@ import { LikeTaggedTrackRequest, SearchTaggedTrackRequest } from '../../services
 import { Metadata } from '../../models/metadata.model';
 import { PageEvent } from '@angular/material/paginator';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -21,11 +23,12 @@ export class SearchComponent implements OnInit,OnDestroy {
   dataToDisplay = [];
 
   dataSource = new TrackDataSource(this.dataToDisplay);
-
+  nbTagsToDisplay = 0;
   selectedChip : 'like' | 'tags' = 'like'
 
   query : string = "";
 
+  tags : string[] = [];
   metadata : Metadata = {total : 0, page : 0, limit : 50}
   availableChips = [
     { name: 'like', display : "Spotify Likes", selected: true },
@@ -38,10 +41,11 @@ export class SearchComponent implements OnInit,OnDestroy {
   userSub : Subscription = new Subscription();
   searchSub : Subscription = new Subscription();
 
-  constructor(private readonly tagService : TagService,private readonly userService : UserService, private readonly router : Router ) {
+  constructor(private readonly tagService : TagService,private readonly userService : UserService, private readonly router : Router, public dialog : MatDialog ) {
       this.query = tagService.query;
       this.metadata = tagService.metadata;
       this.selectedChip = tagService.selectedChip;
+      this.tags = tagService.tags;
       if(tagService.selectedChip == 'tags') this.availableChips = [
         { name: 'like', display : "Spotify Likes",selected: false },
         { name: 'tags', display : "Tags",selected: true },
@@ -61,16 +65,15 @@ export class SearchComponent implements OnInit,OnDestroy {
         .subscribe(value => {
           const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
           if(token)
-          this.getData({key : this.selectedChip, request : { jwt_token : token, page : this.metadata.page, limit : this.metadata.limit, query : this.query}})
+          this.getData({key : this.selectedChip, request : { jwt_token : token, page : this.metadata.page, limit : this.metadata.limit, query : this.query, tags : this.tags}})
 
         });
 
         this.userSub = this.userService.currentUser.subscribe(
           user=>{
-            console.log(user)
             const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
             if(token&&user&&user.spotifyUser){
-              this.getData({key : this.selectedChip, request : { jwt_token : token, page : this.tagService.metadata.page, limit : this.tagService.metadata.limit, query : this.query}})
+              this.getData({key : this.selectedChip, request : { jwt_token : token, page : this.metadata.page, limit : this.metadata.limit, query : this.query, tags : this.tags}})
             }
           }
         )
@@ -82,28 +85,51 @@ export class SearchComponent implements OnInit,OnDestroy {
     }
   
     onWindowSizeChanging(width : number, height : number){
-      if(width<500){
-        this.displayedColumns = ['photo', 'title', 'artist', 'tags'];
-      }
-      else{
+      if(width>=700){
+        this.nbTagsToDisplay = 10;
         this.displayedColumns = ['photo', 'title', 'artist', 'album','tags'];
       }
+      if(width>=1000){
+        this.nbTagsToDisplay = 20;
+        this.displayedColumns = ['photo', 'title', 'artist', 'album','tags'];
+      }
+      if(width<700){
+        this.displayedColumns = ['photo', 'title', 'artist', 'tags'];
+        this.nbTagsToDisplay = 5;
+      }
+      if(width<500){
+        this.displayedColumns = ['photo', 'title', 'tags'];
+        this.nbTagsToDisplay = 4;
+      }
+      if(width<350){
+
+      }
+      
     }
 
   onChipChange($event: any) {
     this.selectedChip = $event.value.trim()
-
+    this.dataSource.setData([])
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
     if(token){
       this.metadata = { total : 0, limit : 50, page : 0}
-      this.getData({key :this.selectedChip, request : { jwt_token : token, page : 0, limit : 50, query : this.query}})
+      this.getData({key :this.selectedChip, request : { jwt_token : token, page : 0, limit : 50, query : this.query,  tags : this.tags}})
+    }
+
+  }
+
+  onFilterChipChange($event: any, tag : string){
+    if(!$event.selected){
+      this.tags = this.tags.filter(val => val!=tag)
+      this.onFilterChange();
     }
 
   }
 
   getData(param : {key : "tags" | "like", request : {jwt_token : string, page : number; limit : number, query? : string, tags? : string[]}} ){
-    if(param.key == 'tags' ){
+ 
 
+    if(param.key == 'tags' ){
       this.tagService.searchTaggedTrack(param.request as SearchTaggedTrackRequest ).then(
         res=> {
           this.dataSource.setData(res.data);
@@ -125,7 +151,7 @@ export class SearchComponent implements OnInit,OnDestroy {
   handlePaginatorEvent($event: PageEvent){
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
     if(token){
-      this.getData({key : this.selectedChip, request : { jwt_token : token, page : $event.pageIndex, limit : $event.pageSize, query : this.query}})
+      this.getData({key : this.selectedChip, request : { jwt_token : token, page : $event.pageIndex, limit : $event.pageSize, query : this.query, tags : this.tags}})
 
     }
   }
@@ -147,10 +173,35 @@ export class SearchComponent implements OnInit,OnDestroy {
       window.innerHeight);
   }
 
-  
+  clearSearch(){
+    this.query = "";
+    this.searchUpdate.next(this.query)
+
+  }
 
 
+  openFilterDialog(){
+    const filterDialog = this.dialog.open(FilterDialogComponent, {
+      minWidth: '300px',
+      data: {
+        selected: this.tags
+    }});
+    filterDialog.afterClosed().subscribe(result => {
+      if(result){
+        this.tags = result;
+        this.onFilterChange()
+      }
+      
+    });
+  }
 
+  onFilterChange(){
+    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+    if(token){
+      this.getData({key :this.selectedChip, request : { jwt_token : token, page : 0, limit : this.metadata.limit, query : this.query, tags : this.tags}})
+
+    }
+  }
 }
 
 class TrackDataSource extends DataSource<TaggedTrack> {

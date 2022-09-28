@@ -1,0 +1,44 @@
+<app-loader></app-loader>
+
+<div class="manage">
+    <button mat-mini-fab color="primary" (click)="openAddPlaylistDialog()">
+      <mat-icon>add</mat-icon>
+    </button>
+</div>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" >
+      
+    <!-- Photo Column -->
+    <ng-container matColumnDef="photo">
+      <th mat-header-cell *matHeaderCellDef>Photo</th>
+      <td mat-cell *matCellDef="let playlist"><img [src]="" /></td>
+    </ng-container>
+  
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Title</th>
+      <td mat-cell *matCellDef="let playlist">{{playlist.name}}</td>
+    </ng-container>
+
+     <!-- Artist Column -->
+     <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let playlist">{{playlist.description}}</td>
+    </ng-container>
+
+  
+    <!-- Tags Column -->
+    <ng-container  matColumnDef="tags">
+      <th  mat-header-cell *matHeaderCellDef>Tags</th>
+      <td   mat-cell *matCellDef="let playlist">
+        <mat-chip-list class = "tags" [selectable] = false focused=false>
+          <mat-chip  [selectable]=false chipListSelectable = false  *ngFor="let tag of playlist.tags | slice:0:nbTagsToDisplay">
+            {{tag}}
+          </mat-chip>
+        </mat-chip-list>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClickRow(row)"></tr>
+  </table>

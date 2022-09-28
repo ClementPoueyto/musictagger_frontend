@@ -1,0 +1,31 @@
+<div *ngIf="playlist" class="playlist-page">
+    <div  class="edit-button">
+      <button   mat-mini-fab color="warn" (click)="deleteDialog()">
+        <mat-icon>delete</mat-icon>
+      </button>
+        <button   mat-mini-fab color="primary" (click)="editDialog()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          
+    </div>
+    <img *ngIf="false" [src]="" />
+
+    <h1>
+        {{playlist.name}}
+    </h1>
+    <h4>
+        {{playlist.description}}
+    </h4>
+    <mat-chip-list  class="tags" #chipList [multiple]="true" [selectable]="false">
+        <mat-chip 
+        #chip="matChip"
+          *ngFor="let tag of playlist.tags"
+          [value]="tag"
+          [selected]="true"
+          [selectable]="true"
+          >
+          {{tag}}
+        </mat-chip>
+      </mat-chip-list>
+
+</div>

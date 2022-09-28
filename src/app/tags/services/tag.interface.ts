@@ -16,8 +16,8 @@ export interface SearchTaggedTrackRequest{
 }
 
 export interface SearchTaggedTrackResponse{
-    data : TaggedTrack[]
-    metadata : Metadata
+    data : TaggedTrack[];
+    metadata : Metadata;
 }
 
 export interface LikeTaggedTrackRequest{
@@ -29,6 +29,20 @@ export interface LikeTaggedTrackRequest{
 }
 
 export interface LikeTaggedTrackResponse{
-    data : TaggedTrack[]
-    metadata : Metadata
+    data : TaggedTrack[];
+    metadata : Metadata;
+}
+
+export interface GetTaggedTrackByTrackIdRequest{
+    trackId : number;
+
+    jwt_token : string;
+}
+
+export interface GetTagNamesRequest{
+    jwt_token : string;
+}
+
+export interface GetTagNamesResponse{
+    tagNames : string[];
 }

@@ -1,0 +1,22 @@
+<mat-card *ngIf="tagNames.length>0">
+    <mat-card-title>Select Filters</mat-card-title>
+    <mat-card-content>
+        <mat-chip-list  #chipList [multiple]="true" [selectable]="true">
+            <mat-chip 
+            #chip="matChip"
+              *ngFor="let tag of tagNames"
+              [value]="tag"
+              [selected]="selected.includes(tag)"
+              [selectable]="true"
+              (click)="onChipDialogChange(tag)"
+              >
+              {{tag}}
+            </mat-chip>
+          </mat-chip-list>
+    </mat-card-content>
+    <mat-card-actions>
+
+        <button mat-raised-button (click)="onResetClick()">Reset</button>
+        <button mat-raised-button color="primary" (click)="onSaveClick()">Save</button>
+      </mat-card-actions>
+  </mat-card>

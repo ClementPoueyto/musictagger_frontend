@@ -1,1 +1,38 @@
-<p>track works!</p>
+<div *ngIf="tagtrack" class="track-page">
+    <img [src]="tagtrack.track.image" />
+
+    <h1>
+        {{tagtrack.track.title}}
+    </h1>
+    <h4>
+        {{tagtrack.track.albumTitle}}
+    </h4>
+    <h3>
+        {{tagtrack.track.artistName}}
+    </h3>
+    <mat-chip-list  #chipList [multiple]="true" [selectable]="true">
+        <mat-chip 
+        #chip="matChip"
+          *ngFor="let tag of tagNames"
+          [value]="tag"
+          [selected]="tagtrack.tags.includes(tag)"
+          [selectable]="true"
+          (click)="chip.toggleSelected()"
+          (selectionChange)="onChipChange($event, tag)"
+          >
+          {{tag}}
+        </mat-chip>
+      </mat-chip-list>
+      <div class="input">
+      <mat-form-field class="example-form-field" appearance="fill">
+        <mat-label>Add Tag</mat-label>
+        <input matInput type="text" [(ngModel)]="value" [value]="value">
+        <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+        <button mat-mini-fab color="primary" (click)="addTag()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+</div>

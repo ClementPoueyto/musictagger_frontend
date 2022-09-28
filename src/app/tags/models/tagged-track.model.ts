@@ -2,7 +2,7 @@ import { Track } from "./track.model";
 
 export interface TaggedTrack{
 
-    id : string;
+    id : number;
 
 
     tags : string[]

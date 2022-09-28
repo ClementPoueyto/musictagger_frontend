@@ -2,7 +2,7 @@ import { SpotifyTrackInfo } from "./spotify-track.model";
 
 export interface Track {
 
-    id : string;
+    id : number;
   
     spotifyTrack : SpotifyTrackInfo;
 

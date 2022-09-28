@@ -1,11 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, catchError, firstValueFrom, Observable, of, tap } from 'rxjs';
 import { AuthService } from 'src/app/authentication/services/auth.service';
 import { API_URL } from 'src/app/constants';
-import { SpotifyUser } from '../models/spotify-user.model';
 import { User } from '../models/user.model';
 import { SpotifyUserLoginRequest, SpotifyUserLoginResponse, UserRequest } from './user-interface';
 
@@ -43,7 +41,6 @@ export class UserService {
       }),
       tap((res)=>this.$currentUserSubject.next(res))
       ),)
-      console.log(new Date()+" - "+res.spotifyUser?.spotifyId)
     return res;
   }
 

@@ -15,3 +15,8 @@ import { SpotifyUser } from "../models/spotify-user.model"
   export interface SpotifyUserLoginResponse {
     jwt_token : string,
   }
+
+  export interface TagRequest {
+    jwt_token : string,
+    body : { trackId : number, tag : string}
+  }
