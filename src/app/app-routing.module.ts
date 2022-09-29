@@ -16,7 +16,7 @@ const routes: Routes = [
     loadChildren: () => SpotifyRoutingModule,
   },
   {
-    path: 'playlists',
+    path: 'export',
     loadChildren: () => PlaylistRoutingModule,
   },
   {

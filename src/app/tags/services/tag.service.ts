@@ -35,9 +35,10 @@ export class TagService {
       + (searchTaggedTrackRequest.tags?.length > 0 ? "&tags=" + searchTaggedTrackRequest.tags.join(',') : "" )+
         "&page=" + searchTaggedTrackRequest.page +
         "&size=" + searchTaggedTrackRequest.limit +
-        (searchTaggedTrackRequest.query ? "&query=" + searchTaggedTrackRequest.query : "" ),
+        (searchTaggedTrackRequest.query ? "&query=" + searchTaggedTrackRequest.query : "" )+
+        (searchTaggedTrackRequest.onlyMetadata?"&onlyMetadata="+searchTaggedTrackRequest.onlyMetadata:""),
       { headers: headers }).pipe(
-        catchError(() => {
+        catchError((err) => {
           this.snackbar.open('get TaggedTrack fail', 'Close', {
             duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
           });

@@ -13,6 +13,8 @@ export interface SearchTaggedTrackRequest{
 
     query : string;
 
+    onlyMetadata? : boolean
+
 }
 
 export interface SearchTaggedTrackResponse{

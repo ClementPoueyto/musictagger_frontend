@@ -5,8 +5,17 @@ table{
     padding: 0px 8px 0 8px;
   }
 
+  h1{
+    text-align: center;
+    margin : 5px
+  }
+
   .manage{
     margin : 10px;
     display: flex;
     justify-content: end;
+  }
+
+  .clickable{
+    cursor: pointer;
   }

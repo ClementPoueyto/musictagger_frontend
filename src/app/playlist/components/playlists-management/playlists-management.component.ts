@@ -15,15 +15,17 @@ import { EditPlaylistComponent } from '../edit-playlist/edit-playlist.component'
 })
 export class PlaylistsManagementComponent implements OnInit, OnDestroy {
 
-  displayedColumns: string[] = ['photo', 'title' , 'description', 'tags'];
+  displayedColumns: string[] = ['title' , 'description', 'tags'];
   dataToDisplay = [];
 
   nbTagsToDisplay = 50;
-
+  nbElements = 0;
   dataSource = new PlaylistDataSource(this.dataToDisplay);
-
+  
   userSub: Subscription = new Subscription();
   playlistsSub: Subscription = new Subscription();
+
+  displayLoader : boolean = true;
 
   constructor(private readonly playlistService: PlaylistService
     , private readonly userService: UserService , 
@@ -46,7 +48,7 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
   }
 
   onClickRow(row: Playlist) {
-    this.router.navigate(['playlists/'+row.id]);
+    this.router.navigate(['export/'+row.id]);
 
   }
 
@@ -58,8 +60,12 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
         mode : 'create'
       }
       });
+      addDialog.afterOpened().subscribe(()=>{
+        this.displayLoader = false;
+      })
       addDialog.afterClosed().subscribe(result => {
       if(result&&result=='refresh'){
+        this.displayLoader = true;
         this.getData();
       }
       
@@ -71,6 +77,7 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
     if (token) {
       this.playlistService.getPlaylists({ jwt_token: token }).then(res=>{
         this.dataSource.setData(res)
+        this.nbElements = res.length
       }
       );
     }
@@ -86,18 +93,14 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
   onWindowSizeChanging(width : number, height : number){
     if(width>=700){
       this.nbTagsToDisplay = 20;
-      this.displayedColumns = ['photo', 'title', 'description','tags'];
     }
     if(width>=1000){
       this.nbTagsToDisplay = 50;
-      this.displayedColumns = ['photo', 'title', 'description','tags'];
     }
     if(width<700){
-      this.displayedColumns = ['photo', 'title', 'description','tags'];
       this.nbTagsToDisplay = 10;
     }
     if(width<500){
-      this.displayedColumns = ['photo', 'title', 'tags'];
       this.nbTagsToDisplay = 5;
     }
   

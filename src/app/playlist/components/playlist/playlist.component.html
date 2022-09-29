@@ -1,14 +1,17 @@
+<app-loader *ngIf="displayLoader"></app-loader>
 <div *ngIf="playlist" class="playlist-page">
     <div  class="edit-button">
       <button   mat-mini-fab color="warn" (click)="deleteDialog()">
         <mat-icon>delete</mat-icon>
       </button>
+      <h1>
+        Playlist
+    </h1>
         <button   mat-mini-fab color="primary" (click)="editDialog()">
             <mat-icon>edit</mat-icon>
           </button>
           
     </div>
-    <img *ngIf="false" [src]="" />
 
     <h1>
         {{playlist.name}}
@@ -23,9 +26,46 @@
           [value]="tag"
           [selected]="true"
           [selectable]="true"
+          
           >
           {{tag}}
         </mat-chip>
       </mat-chip-list>
 
+      <mat-paginator [length]="this.metadata.total"
+              [pageSize]="this.metadata.limit"
+              [pageSizeOptions]="[20,50]"
+              (page)="handlePaginatorEvent($event)"
+              aria-label="Select page">
+    </mat-paginator>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" >
+      
+      <!-- Photo Column -->
+      <ng-container matColumnDef="photo">
+        <th mat-header-cell *matHeaderCellDef>Photo</th>
+        <td mat-cell *matCellDef="let track"><img [src]="track.image" /></td>
+      </ng-container>
+    
+      <!-- Title Column -->
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let track">{{track.title}}</td>
+      </ng-container>
+  
+       <!-- Artist Column -->
+       <ng-container matColumnDef="artist">
+        <th mat-header-cell *matHeaderCellDef>Artist</th>
+        <td mat-cell *matCellDef="let track">{{track.artistName}}</td>
+      </ng-container>
+    
+      <!-- Album Column -->
+      <ng-container  matColumnDef="album">
+        <th mat-header-cell *matHeaderCellDef>Album</th>
+        <td mat-cell *matCellDef="let track">{{track.albumTitle}}</td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr  mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 </div>
