@@ -50,7 +50,6 @@ export class TagService {
     this.query = searchTaggedTrackRequest.query;
     this.selectedChip = 'tags';
     this.tags = searchTaggedTrackRequest.tags;
-    console.log(res)
     return res;
   }
 

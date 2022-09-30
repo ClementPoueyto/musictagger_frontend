@@ -5,7 +5,7 @@ import { BehaviorSubject, catchError, firstValueFrom, Observable, of, tap } from
 import { AuthService } from 'src/app/authentication/services/auth.service';
 import { API_URL } from 'src/app/constants';
 import { User } from '../models/user.model';
-import { SpotifyUserLoginRequest, SpotifyUserLoginResponse, UserRequest } from './user-interface';
+import { SpotifyUserLoginRequest, SpotifyUserLogResponse, UserRequest } from './user-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -48,13 +48,31 @@ export class UserService {
     this.$currentUserSubject.next(null);
   }
 
-  async logInSpotifyUser(spotifyUserRequest: SpotifyUserLoginRequest): Promise<SpotifyUserLoginResponse> {
+  async logInSpotifyUser(spotifyUserRequest: SpotifyUserLoginRequest): Promise<SpotifyUserLogResponse> {
     const request = await this.authService.checkToken({jwt_token : spotifyUserRequest.jwt_token})
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${request.token}`
     })
-    const res = await firstValueFrom(this.http.post<SpotifyUserLoginResponse>(API_URL + 'users/' + request.decoded.userId+"/spotify",spotifyUserRequest.spotifyUser, { headers: headers }, ).pipe(
+    const res = await firstValueFrom(this.http.post<SpotifyUserLogResponse>(API_URL + 'users/' + request.decoded.userId+"/spotify",spotifyUserRequest.spotifyUser, { headers: headers }, ).pipe(
+      catchError(() => {
+        this.snackbar.open('Login failure', 'Close', {
+          duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
+        });
+        return of();
+      }),),
+
+    );
+    return res;
+  }
+
+  async logoutSpotifyUser(spotifyUserRequest: UserRequest): Promise<SpotifyUserLogResponse> {
+    const request = await this.authService.checkToken({jwt_token : spotifyUserRequest.jwt_token})
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${request.token}`
+    })
+    const res = await firstValueFrom(this.http.delete<SpotifyUserLogResponse>(API_URL + 'users/' + request.decoded.userId+"/spotify", { headers: headers }, ).pipe(
       catchError(() => {
         this.snackbar.open('Login failure', 'Close', {
           duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'

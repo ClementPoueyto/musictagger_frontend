@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthenticationRoutingModule } from './authentication/authentication-routing.module';
 import { PlaylistRoutingModule } from './playlist/playlist-routing.module';
+import { ProfileRoutingModule } from './profile/profile-routing.module';
 import { SpotifyRoutingModule } from './spotify/spotify-routing.module';
 import { TagsRoutingModule } from './tags/tags-routing.module';
 
@@ -24,10 +25,10 @@ const routes: Routes = [
     loadChildren: () => AuthenticationRoutingModule,
   },
 
-  { path: '', redirectTo: 'auth', pathMatch: 'full' },
+  { path: '*', redirectTo: '', pathMatch: 'full' },
   {
     path: '**',
-    redirectTo: 'login',
+    redirectTo: '',
   }
 ];
 

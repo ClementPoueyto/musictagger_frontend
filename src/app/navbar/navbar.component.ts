@@ -35,9 +35,5 @@ export class NavbarComponent implements OnInit, OnDestroy {
     });
   }
 
-  logout(){
-    this.userService.logout();
-    this.authService.logout();
-  }
-
+ 
 }

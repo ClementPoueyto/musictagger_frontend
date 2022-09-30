@@ -11,6 +11,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { TagsModule } from './tags/tags.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PlaylistModule } from './playlist/playlist.module';
+import { ProfileModule } from './profile/profile.module';
 
 // specify the key where the token is stored in the local storage
 export const LOCALSTORAGE_TOKEN_KEY = 'angular_material_login_and_register_example';
@@ -36,6 +37,7 @@ export function tokenGetter() {
     AuthenticationModule,
     TagsModule,
     PlaylistModule,
+    ProfileModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

@@ -7,9 +7,9 @@ export interface User {
   
     password?: string;
   
-    firstname?: string;
+    firstname: string;
   
-    lastname?: string;
+    lastname: string;
   
     createdAt: Date;
   

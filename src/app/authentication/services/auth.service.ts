@@ -66,7 +66,7 @@ export class AuthService {
   async logout(): Promise<void> {
     localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
     this.currentAuthStatusSubject.next(AuthStatus.LOGOUT)
-    this.router.navigate(['../login']);
+    this.router.navigate(['../']);
 
   }
 

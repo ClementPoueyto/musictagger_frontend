@@ -33,7 +33,6 @@ export class PlaylistService {
         }),),
 
     );
-    console.log(res)
     return res;
   }
 
@@ -54,7 +53,6 @@ export class PlaylistService {
         }),),
 
     );
-    console.log(res)
     return res;
   }
 
@@ -76,7 +74,6 @@ export class PlaylistService {
         }),),
 
     );
-    console.log(res)
     return res;
   }
 
@@ -107,7 +104,6 @@ export class PlaylistService {
         }),),
 
     );
-    console.log(res)
     return res;
   }
 
@@ -138,7 +134,6 @@ export class PlaylistService {
         }),),
 
     );
-    console.log(res)
     return res;
   }
 
@@ -159,7 +154,6 @@ export class PlaylistService {
         }),),
 
     );
-    console.log(res)
   }
 
  

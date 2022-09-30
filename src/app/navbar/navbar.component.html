@@ -6,19 +6,16 @@
         <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/../tags">Tags</button>
             <button mat-menu-item routerLink="../export">Export</button>
-            <button mat-menu-item routerLink="../profile">Profile</button>
 
         </mat-menu>
             <div fxHide.xs fxShow>
                 <a mat-button routerLink="/../tags">Tags</a>
                 <a mat-button routerLink="../export">Export</a>
-                <a mat-button routerLink="../profile">Profile</a>
 
 
             </div>
             <span class="example-spacer"></span>
-
-            <button  mat-raised-button (click)="logout()">Logout</button>
+            <app-profile-page></app-profile-page>
 
     </mat-toolbar-row>
 </mat-toolbar>

@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
     if(this.registerForm.valid){
       firstValueFrom(this.authService.register(this.registerForm.value).pipe(
         // If registration was successfull, then navigate to login route
-        tap(() => this.router.navigate(['../login'])))
+        tap(() => this.router.navigate(['../'])))
       )
     }
   }

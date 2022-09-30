@@ -92,15 +92,19 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
 
   onWindowSizeChanging(width : number, height : number){
     if(width>=700){
+      this.displayedColumns = ['title' , 'description', 'tags'];
       this.nbTagsToDisplay = 20;
     }
     if(width>=1000){
+      this.displayedColumns = ['title' , 'description', 'tags'];
       this.nbTagsToDisplay = 50;
     }
     if(width<700){
+      this.displayedColumns = ['title' , 'description', 'tags'];
       this.nbTagsToDisplay = 10;
     }
     if(width<500){
+      this.displayedColumns = ['title' , 'tags'];
       this.nbTagsToDisplay = 5;
     }
   

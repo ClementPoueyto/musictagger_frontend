@@ -1,0 +1,27 @@
+<div class="profile-page" *ngIf="profile">
+    <button  mat-icon-button [matMenuTriggerFor]="menu" aria-label="icon-button profile with a menu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <p>{{profile.email}}</p>
+
+        <a mat-menu-item *ngIf="profile&&!profile.spotifyUser" href="{{api_url_login_spotify}}">
+            <mat-icon id = "spotify-svg"
+            svgIcon="spotify-logo"></mat-icon>
+          <span>Spotify Login</span>
+        </a>
+        <button mat-menu-item *ngIf="profile&&profile.spotifyUser" (click)="logoutSpotify()">
+            <mat-icon id = "spotify-svg"
+            svgIcon="spotify-logo"></mat-icon>
+            <span>Spotify Logout</span>
+          </button>
+        <button mat-menu-item *ngIf="profile" (click)="logout()">
+          <mat-icon>login</mat-icon>
+          <span>Logout</span>
+        </button>
+        <button mat-menu-item *ngIf="!profile" (click)="login()">
+            <mat-icon>login</mat-icon>
+            <span>Login</span>
+          </button>
+      </mat-menu>
+</div>

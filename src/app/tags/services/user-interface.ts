@@ -12,7 +12,7 @@ import { SpotifyUser } from "../models/spotify-user.model"
     spotifyUser : SpotifyUser
   }
 
-  export interface SpotifyUserLoginResponse {
+  export interface SpotifyUserLogResponse {
     jwt_token : string,
   }
 
