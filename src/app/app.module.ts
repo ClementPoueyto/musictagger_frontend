@@ -12,7 +12,7 @@ import { TagsModule } from './tags/tags.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PlaylistModule } from './playlist/playlist.module';
 import { ProfileModule } from './profile/profile.module';
-
+import { HashLocationStrategy, LocationStrategy  } from '@angular/common';
 // specify the key where the token is stored in the local storage
 export const LOCALSTORAGE_TOKEN_KEY = 'angular_material_login_and_register_example';
 
@@ -41,11 +41,14 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ['localhost:3000', 'localhost:8080']
+        allowedDomains: ['localhost:3000', 'musictagger.clementpoueyto.fr']
       }
     })
   ],
-  providers: [],
+  providers: [
+    {provide : LocationStrategy , useClass: HashLocationStrategy}
+
+  ],
   bootstrap: [AppComponent],
   schemas : []
 })

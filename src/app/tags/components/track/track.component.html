@@ -1,4 +1,9 @@
 <div *ngIf="tagtrack" class="track-page">
+  <mat-toolbar>
+    <button mat-icon-button (click)="goBack()">
+     <mat-icon>arrow_back</mat-icon>
+   </button>
+  </mat-toolbar>
     <img [src]="tagtrack.track.image" />
 
     <h1>
@@ -17,8 +22,7 @@
           [value]="tag"
           [selected]="tagtrack.tags.includes(tag)"
           [selectable]="true"
-          (click)="chip.toggleSelected()"
-          (selectionChange)="onChipChange($event, tag)"
+          (click)="chip.toggleSelected(); onChipChange(tag)"
           >
           {{tag}}
         </mat-chip>
@@ -26,7 +30,7 @@
       <div class="input">
       <mat-form-field class="example-form-field" appearance="fill">
         <mat-label>Add Tag</mat-label>
-        <input matInput type="text" [(ngModel)]="value" [value]="value">
+        <input matInput type="text" [(ngModel)]="value" [value]="value" (keyup.enter)="addTag()">
         <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
           <mat-icon>close</mat-icon>
         </button>

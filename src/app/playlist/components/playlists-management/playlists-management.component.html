@@ -1,7 +1,5 @@
 <app-loader *ngIf="displayLoader"></app-loader>
 
-<h1>My playlists</h1>
-
 <div class="manage">
     <button mat-mini-fab color="primary" [disabled]="nbElements>=10" (click)="openAddPlaylistDialog()">
       <mat-icon>add</mat-icon>

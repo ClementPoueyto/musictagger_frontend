@@ -19,13 +19,6 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input type="text" matInput placeholder="Username" formControlName="username">
-          <mat-error
-            *ngIf="this.registerForm.get('username')?.touched && this.registerForm.get('username')?.hasError('required')">
-            Username is required</mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
           <input type="text" matInput placeholder="First Name" formControlName="firstname">
           <mat-error
             *ngIf="this.registerForm.get('firstname')?.touched && this.registerForm.get('firstname')?.hasError('required')">

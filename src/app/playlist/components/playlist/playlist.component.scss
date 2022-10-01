@@ -1,7 +1,12 @@
 .playlist-page{
+  margin-top: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
 }
 
 .edit-button{
@@ -12,9 +17,6 @@
     
 }
 
-button{
-    margin : 10px
-}
 
 mat-form-field{
     display: flex;

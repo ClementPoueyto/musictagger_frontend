@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { TaggedTrack } from '../../models/tagged-track.model';
@@ -19,7 +19,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   value = '';
 
 
-  constructor(private readonly route : ActivatedRoute, private readonly tagService : TagService,
+  constructor(private router : Router,private readonly route : ActivatedRoute, private readonly tagService : TagService,
     private snackbar: MatSnackBar,) { 
     }
 
@@ -53,15 +53,19 @@ export class TrackComponent implements OnInit, OnDestroy {
     }
   }
 
+  goBack(){
+    this.router.navigate(["../tags"])
+  }
 
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
   }
 
-  onChipChange($event : any, value : any){
+  onChipChange(value : any){
+    console.log(value)
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
     if(token&&this.tagtrack?.track){
-      if($event.selected){
+      if(!this.tagtrack?.tags.includes(value)){
         this.tagService.addTag({jwt_token : token, body:  {tag : value, trackId : this.tagtrack.track.id}})
       }
       else{
@@ -72,17 +76,19 @@ export class TrackComponent implements OnInit, OnDestroy {
 
   addTag(){
     const input = this.value.trim();
+    if(input==""){
+      this.snackbar.open('empty tag', 'Close', {
+        duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
+      });  
+      return;
+    }
     if(input!=""&&!this.tagtrack?.tags.includes(input)){
-      const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-      if(token&&this.tagtrack?.track){
+      if(this.tagtrack?.track){
         if(!this.tagNames.includes(input)){
+          this.onChipChange(input)
           this.tagNames.push(input);
-          this.tagtrack.tags.push(input)
+          this.tagtrack.tags.push(input);
         }
-
-          this.tagService.addTag({jwt_token : token, body:  {tag : input, trackId : this.tagtrack.track.id}}).then(res=>{
-            this.tagtrack = res;
-          })
         this.value = ''
     }
   }

@@ -117,6 +117,9 @@ handlePaginatorEvent($event: PageEvent){
     
   }
 
+  goBack(){
+    this.router.navigate(["../export"])
+  }
 
   deleteDialog(){
     const deleteDialog = this.dialog.open(DeletePlaylistComponent,{

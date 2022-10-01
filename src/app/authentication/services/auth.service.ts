@@ -70,14 +70,14 @@ export class AuthService {
 
   }
 
-  loginSuccess(token : string) : void {
-    if(!this.jwtService.isTokenExpired(token)){
-      localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
+  async loginSuccess(token : string) : Promise<void> {
+    if(!await this.jwtService.isTokenExpired(token)){
+      await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
       this.currentAuthStatusSubject.next(AuthStatus.LOGIN);
       this.snackbar.open('Login Successfull', 'Close', {
         duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
       });
-      this.router.navigate(['../tags']);
+      this.router.navigate(['tags']);
 
     }
   }

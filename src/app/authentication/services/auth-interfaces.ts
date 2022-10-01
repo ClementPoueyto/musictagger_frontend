@@ -31,7 +31,6 @@ export interface RefreshToken {
   */
   export interface RegisterRequest {
     email?: string | null ;
-    username?: string | null ;
     firstname?: string | null ;
     lastname?: string | null;
     password?: string | null ;

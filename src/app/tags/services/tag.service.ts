@@ -31,7 +31,7 @@ export class TagService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${request.token}`
     })
-    const res = await firstValueFrom(this.http.get<SearchTaggedTrackResponse>(API_URL + 'tags/pagination?userId=' + request.decoded.userId
+    const res = await firstValueFrom(this.http.get<SearchTaggedTrackResponse>(API_URL + 'tags?userId=' + request.decoded.userId
       + (searchTaggedTrackRequest.tags?.length > 0 ? "&tags=" + searchTaggedTrackRequest.tags.join(',') : "" )+
         "&page=" + searchTaggedTrackRequest.page +
         "&size=" + searchTaggedTrackRequest.limit +

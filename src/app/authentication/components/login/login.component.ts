@@ -8,6 +8,7 @@ import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import {Subscription, firstValueFrom} from 'rxjs';
+import { API_URL } from 'src/app/constants';
 
 
 const googleLogoURL = 
@@ -19,6 +20,9 @@ const googleLogoURL =
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
+
+  api_url_login_google = API_URL+"google";
+
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
@@ -48,16 +52,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.routeSub = this.route.queryParams
       .subscribe(async params => {
-        await this.isAlreadylogged();
-        
-        if(params["jwt"]){
-          this.authService.loginSuccess(params["jwt"]);
+        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+        if(token){
+          firstValueFrom(this.authService.refreshToken({jwt_token : token})).then(tokenResponse=>{
+            if(tokenResponse) this.router.navigate(['../tags'])
+          }   )  
         }
-        else if(params["failure"]){
-          this.snackbar.open('Login failure : '+params["message"], 'Close', {
-            duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-          });
-        }
+        else{
+          if(params["jwt"]){
+            this.authService.loginSuccess(params["jwt"]);
+          }
+          else if(params["failure"]){
+            this.snackbar.open('Login failure : '+params["message"], 'Close', {
+              duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
+            });
+          }
+        }        
+       
         
       } 
     );
@@ -68,9 +79,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     if(!token){
       return;
     }
-      firstValueFrom(this.authService.refreshToken({jwt_token : token})).then(tokenResponse=>{
-        if(tokenResponse) this.router.navigate(['../tags'])
-      }   )          
+              
   }
 
 
