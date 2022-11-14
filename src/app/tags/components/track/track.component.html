@@ -9,12 +9,16 @@
     <h1>
         {{tagtrack.track.title}}
     </h1>
+    <h3>
+      {{tagtrack.track.artistName}}
+  </h3>
     <h4>
         {{tagtrack.track.albumTitle}}
     </h4>
-    <h3>
-        {{tagtrack.track.artistName}}
-    </h3>
+    <h4>
+     {{tagtrack.track.releaseDate | date: 'longDate' : '' : 'fr-FR'}}
+  </h4>
+    
     <mat-chip-list  #chipList [multiple]="true" [selectable]="true">
         <mat-chip 
         #chip="matChip"

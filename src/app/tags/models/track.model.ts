@@ -12,13 +12,15 @@ export interface Track {
 
     artists : string[]
 
-   
+    releaseDate : Date;
+
     title : string;
 
-   
     image : string;
 
     duration : number;
+
+    popularity : number;
 
 
 }

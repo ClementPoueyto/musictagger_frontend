@@ -1,13 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { firstValueFrom, map, Observable, of, tap,BehaviorSubject } from 'rxjs';
+import { Inject, Injectable } from '@angular/core';
+import { firstValueFrom, Observable, tap,BehaviorSubject, EMPTY } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CheckTokenRequest, CheckTokenResponse, LoginRequest, LoginResponse, RefreshTokenRequest, RefreshTokenResponse, RegisterRequest, RegisterResponse } from './auth-interfaces';
 import { catchError } from 'rxjs/operators';
-import { API_URL } from 'src/app/constants';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { Router } from '@angular/router';
+import { CommonService } from 'src/app/core/services/rest/common.service';
 
 export enum AuthStatus{
   LOGIN, LOGOUT
@@ -19,17 +18,17 @@ export enum AuthStatus{
 
 
 
-export class AuthService {
+export class AuthService extends CommonService{
 
   private currentAuthStatusSubject: BehaviorSubject<AuthStatus>;
     public currentAuthStatus: Observable<AuthStatus>;
 
   constructor(
-    private http: HttpClient,
-    private snackbar: MatSnackBar,
+    protected override http: HttpClient,
     private jwtService: JwtHelperService,
     private router : Router
   ) {
+    super(http)
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
     if(token){
       this.currentAuthStatusSubject = new BehaviorSubject<AuthStatus>(AuthStatus.LOGIN);
@@ -51,15 +50,8 @@ export class AuthService {
   */
   login(loginRequest: LoginRequest): Observable<LoginResponse> {
 
-    return this.http.post<LoginResponse>(API_URL + 'auth', loginRequest).pipe(
-      catchError(() => {
-        this.snackbar.open('Login failure', 'Close', {
-          duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-        });
-        return of()
-      }),
+    return this.http.post<LoginResponse>(this.apiConfiguration.api_url + 'auth', loginRequest).pipe(
       tap((res)=> {this.loginSuccess(res.jwt_token)})
-
     );
   }
 
@@ -74,9 +66,6 @@ export class AuthService {
     if(!await this.jwtService.isTokenExpired(token)){
       await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
       this.currentAuthStatusSubject.next(AuthStatus.LOGIN);
-      this.snackbar.open('Login Successfull', 'Close', {
-        duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-      });
       this.router.navigate(['tags']);
 
     }
@@ -86,18 +75,7 @@ export class AuthService {
    The `..of()..` can be removed if you have a real backend, at the moment, this is just a faked response
   */
   register(registerRequest: RegisterRequest): Observable<RegisterResponse> {
-
-    return this.http.post<RegisterResponse>(API_URL + 'users', registerRequest).pipe(
-      catchError(() => {
-        this.snackbar.open('create user failure', 'Close', {
-          duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-        });
-        return of()
-      }),
-      tap((res: RegisterResponse) => this.snackbar.open(`User created successfully`, 'Close', {
-        duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-      }))
-    )
+    return this.http.post<RegisterResponse>(this.apiConfiguration.api_url + 'users', registerRequest)
   }
 
   /*
@@ -113,13 +91,7 @@ export class AuthService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${refreshTokenRequest.jwt_token}`
     })
-    return this.http.get<RefreshTokenResponse>(API_URL + 'auth/refresh-token', { headers: headers }).pipe(
-      catchError(() => {
-        this.snackbar.open('invalid jwt token', 'Close', {
-          duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-        });
-        return of()
-      }),
+    return this.http.get<RefreshTokenResponse>(this.apiConfiguration.api_url + 'auth/refresh-token', { headers: headers }).pipe(
       tap((token) => localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token.jwt_token)
       ))
   }

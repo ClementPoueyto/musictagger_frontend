@@ -3,13 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { TagsRoutingModule } from './tags-routing.module';
 import { SearchComponent } from './components/search/search.component';
-import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { SpotifyModule } from '../spotify/spotify.module';
-import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { LoaderComponent } from './components/loader/loader.component';
 
 import {
-  HTTP_INTERCEPTORS,
   HttpClientModule,
 } from '@angular/common/http';
 import { LoaderInterceptor } from './interceptor/loader.interceptor';
@@ -18,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { FilterDialogComponent } from './components/search/filter-dialog/filter-dialog.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DialogModule } from '@angular/cdk/dialog';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -33,23 +31,17 @@ import { DialogModule } from '@angular/cdk/dialog';
     BrowserAnimationsModule,
     CommonModule,
     TagsRoutingModule,
-    AngularMaterialModule,
     SpotifyModule,
     HttpClientModule,
     FormsModule,
     MatDialogModule,
+    SharedModule
   ],
-  exports : [LoaderComponent,
+  exports: [LoaderComponent,
   ],
-  providers: [ 
-   {
-       provide: HTTP_INTERCEPTORS,
-       useClass: LoaderInterceptor,
-       multi: true,
-    },
- ],
- 
-  
-  
+
+
+
+
 })
 export class TagsModule { }

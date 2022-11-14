@@ -1,20 +1,26 @@
-import { NgModule,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularMaterialModule } from './angular-material/angular-material.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { TagsModule } from './tags/tags.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { PlaylistModule } from './playlist/playlist.module';
 import { ProfileModule } from './profile/profile.module';
-import { HashLocationStrategy, LocationStrategy  } from '@angular/common';
+import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr'
+import localeFrExtra from '@angular/common/locales/extra/fr'
+import { environment } from 'src/environments/environment';
+import { SharedModule } from './shared/shared.module';
+import { CoreModule } from './core/core.module';
+import { LoaderInterceptor } from './tags/interceptor/loader.interceptor';
 // specify the key where the token is stored in the local storage
-export const LOCALSTORAGE_TOKEN_KEY = 'angular_material_login_and_register_example';
+export const LOCALSTORAGE_TOKEN_KEY = 'local_musictagger_ui';
+registerLocaleData(localeFr, 'fr-FR', localeFrExtra)
 
 // specify tokenGetter for the angular jwt package
 export function tokenGetter() {
@@ -27,17 +33,18 @@ export function tokenGetter() {
     NavbarComponent,
 
   ],
-  exports : [AppComponent],
+  exports: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    AngularMaterialModule,
+    SharedModule,
     HttpClientModule,
     AuthenticationModule,
     TagsModule,
     PlaylistModule,
     ProfileModule,
+    CoreModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -46,10 +53,14 @@ export function tokenGetter() {
     })
   ],
   providers: [
-    {provide : LocationStrategy , useClass: HashLocationStrategy}
-
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
-  schemas : []
+  schemas: []
 })
 export class AppModule { }

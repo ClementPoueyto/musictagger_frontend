@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PlaylistRoutingModule } from './playlist-routing.module';
-import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlaylistComponent } from './components/playlist/playlist.component';
 import { EditPlaylistComponent } from './components/edit-playlist/edit-playlist.component';
 import { DeletePlaylistComponent } from './components/delete-playlist/delete-playlist.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -26,7 +26,6 @@ import { DeletePlaylistComponent } from './components/delete-playlist/delete-pla
   imports: [
     CommonModule,
     PlaylistRoutingModule,
-    AngularMaterialModule,
     BrowserModule,
     BrowserAnimationsModule,
     CommonModule,
@@ -35,14 +34,15 @@ import { DeletePlaylistComponent } from './components/delete-playlist/delete-pla
     MatDialogModule,
     ReactiveFormsModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    SharedModule
   ],
-  providers: [ 
+  providers: [
     {
-        provide: HTTP_INTERCEPTORS,
-        useClass: LoaderInterceptor,
-        multi: true,
-     },
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true,
+    },
   ],
 })
 export class PlaylistModule { }

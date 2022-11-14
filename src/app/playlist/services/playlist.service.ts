@@ -1,9 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, firstValueFrom, Observable, of } from 'rxjs';
-import { AuthService } from 'src/app/authentication/services/auth.service';
-import { API_URL } from 'src/app/constants';
+import { HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { firstValueFrom} from 'rxjs';
+import { CommonAuthService } from 'src/app/core/services/rest/common-auth.service';
 import { Playlist } from '../models/playlist.model';
 import { AddPlaylistBodyRequest, AddPlaylistsRequest, DeletePlaylistsRequest, GetPlaylistByIdRequest, GetPlaylistsRequest, GetPlaylistTracksByIdRequest, GetPlaylistTracksByIdResponse, UpdatePlaylistsRequest } from './playlist.interface';
 
@@ -11,10 +9,8 @@ import { AddPlaylistBodyRequest, AddPlaylistsRequest, DeletePlaylistsRequest, Ge
 @Injectable({
   providedIn: 'root'
 })
-export class PlaylistService {
+export class PlaylistService extends CommonAuthService {
 
-  constructor(private readonly authService: AuthService, private http: HttpClient,
-    private snackbar: MatSnackBar,) { }
 
   async getPlaylists(playlistRequest: GetPlaylistsRequest): Promise<Playlist[]> {
     const request = await this.authService.checkToken({ jwt_token: playlistRequest.jwt_token })
@@ -22,16 +18,9 @@ export class PlaylistService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${request.token}`
     })
-    const res = await firstValueFrom(this.http.get<Playlist[]>(API_URL + 'playlists?userId=' + request.decoded.userId,
+    const res = await firstValueFrom(this.http.get<Playlist[]>(this.apiConfiguration.api_url + 'playlists?userId=' + request.decoded.userId,
      
-      { headers: headers }).pipe(
-        catchError(() => {
-          this.snackbar.open('get playlists fail', 'Close', {
-            duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-          });
-          return of();
-        }),),
-
+      { headers: headers })
     );
     return res;
   }
@@ -42,15 +31,9 @@ export class PlaylistService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${request.token}`
     })
-    const res = await firstValueFrom(this.http.get<Playlist>(API_URL + 'playlists/'+playlistRequest.playlist_id+'?userId=' + request.decoded.userId,
+    const res = await firstValueFrom(this.http.get<Playlist>(this.apiConfiguration.api_url + 'playlists/'+playlistRequest.playlist_id+'?userId=' + request.decoded.userId,
      
-      { headers: headers }).pipe(
-        catchError(() => {
-          this.snackbar.open('get playlists fail', 'Close', {
-            duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-          });
-          return of();
-        }),),
+      { headers: headers })
 
     );
     return res;
@@ -62,16 +45,10 @@ export class PlaylistService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${request.token}`
     })
-    const res = await firstValueFrom(this.http.get<GetPlaylistTracksByIdResponse>(API_URL + 'playlists/'+playlistRequest.playlist_id+'/tracks?userId=' + request.decoded.userId
+    const res = await firstValueFrom(this.http.get<GetPlaylistTracksByIdResponse>(this.apiConfiguration.api_url + 'playlists/'+playlistRequest.playlist_id+'/tracks?userId=' + request.decoded.userId
     +"&size="+playlistRequest.limit+"&page="+playlistRequest.page,
      
-      { headers: headers }).pipe(
-        catchError(() => {
-          this.snackbar.open('get playlists fail', 'Close', {
-            duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-          });
-          return of();
-        }),),
+      { headers: headers })
 
     );
     return res;
@@ -93,15 +70,9 @@ export class PlaylistService {
         },
         tags : playlistFormRequest.tags
     }
-    const res = await firstValueFrom(this.http.post<Playlist>(API_URL + 'playlists?userId=' + request.decoded.userId,
+    const res = await firstValueFrom(this.http.post<Playlist>(this.apiConfiguration.api_url + 'playlists?userId=' + request.decoded.userId,
      body,
-      { headers: headers }).pipe(
-        catchError(() => {
-          this.snackbar.open('add playlist fail', 'Close', {
-            duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-          });
-          return of();
-        }),),
+      { headers: headers })
 
     );
     return res;
@@ -123,16 +94,9 @@ export class PlaylistService {
         },
         tags : playlistFormRequest.tags
     }
-    const res = await firstValueFrom(this.http.put<Playlist>(API_URL + 'playlists/'+playlistFormRequest.playlist_id+'?userId=' + request.decoded.userId,
+    const res = await firstValueFrom(this.http.put<Playlist>(this.apiConfiguration.api_url + 'playlists/'+playlistFormRequest.playlist_id+'?userId=' + request.decoded.userId,
      body,
-      { headers: headers }).pipe(
-        catchError((err) => {
-          this.snackbar.open('update playlist fail | '+err.error.message, 'Close', {
-            duration: 5000, horizontalPosition: 'right', verticalPosition: 'top'
-          });
-          return of();
-        }),),
-
+      { headers: headers })
     );
     return res;
   }
@@ -144,14 +108,8 @@ export class PlaylistService {
       'Authorization': `Bearer ${request.token}`
     })
 
-    const res = await firstValueFrom(this.http.delete(API_URL + 'playlists/'+deletePlaylistRequest.playlist_id+'?userId=' + request.decoded.userId,
-      { headers: headers }).pipe(
-        catchError((err) => {
-          this.snackbar.open('delete playlist fail | '+err.error.message, 'Close', {
-            duration: 5000, horizontalPosition: 'right', verticalPosition: 'top'
-          });
-          return of();
-        }),),
+    const res = await firstValueFrom(this.http.delete(this.apiConfiguration.api_url + 'playlists/'+deletePlaylistRequest.playlist_id+'?userId=' + request.decoded.userId,
+      { headers: headers })
 
     );
   }

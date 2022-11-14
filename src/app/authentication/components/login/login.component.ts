@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -6,9 +6,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { JwtHelperService } from '@auth0/angular-jwt';
 import {Subscription, firstValueFrom} from 'rxjs';
-import { API_URL } from 'src/app/constants';
+import { environment } from 'src/environments/environment';
 
 
 const googleLogoURL = 
@@ -21,7 +20,7 @@ const googleLogoURL =
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  api_url_login_google = API_URL+"google";
+  api_url_login_google = environment.API_URL+"google";
 
 
   loginForm: FormGroup = new FormGroup({
@@ -38,7 +37,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     private domSanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
-    private jwtService: JwtHelperService,
 
   ) { 
     this.matIconRegistry.addSvgIcon(

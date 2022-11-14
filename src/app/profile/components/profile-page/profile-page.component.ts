@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { User } from 'src/app/tags/models/user.model';
 import { UserService } from 'src/app/tags/services/user.service';
@@ -7,7 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { AuthService } from 'src/app/authentication/services/auth.service';
 import { Router } from '@angular/router';
-import { API_URL } from 'src/app/constants';
+import { environment } from 'src/environments/environment';
 const spotifyLogoURL = 
 "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg";
 
@@ -17,7 +17,7 @@ const spotifyLogoURL =
   styleUrls: ['./profile-page.component.scss']
 })
 export class ProfilePageComponent implements OnInit {
-  api_url_login_spotify = API_URL+"auth/spotify/login";
+  api_url_login_spotify = environment.API_URL+"auth/spotify/login";
   constructor(private router: Router,private readonly userService : UserService, private readonly authService : AuthService, private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,) { 
     this.matIconRegistry.addSvgIcon(
