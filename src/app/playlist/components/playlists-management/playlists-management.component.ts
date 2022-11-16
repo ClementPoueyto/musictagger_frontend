@@ -4,10 +4,10 @@ import { Playlist } from '../../models/playlist.model';
 import { ReplaySubject, Observable, Subscription } from 'rxjs'
 import { PlaylistService } from '../../services/playlist.service';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
-import { UserService } from 'src/app/tags/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { EditPlaylistComponent } from '../edit-playlist/edit-playlist.component';
+import { UserService } from 'src/app/shared/services/user.service';
 @Component({
   selector: 'app-playlists-management',
   templateUrl: './playlists-management.component.html',
@@ -28,7 +28,7 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
   displayLoader : boolean = true;
 
   constructor(private readonly playlistService: PlaylistService
-    , private readonly userService: UserService , 
+    , private readonly userService: UserService, 
     public dialog : MatDialog,
     private router : Router) { }
 

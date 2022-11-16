@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { TagsModule } from './tags/tags.module';
@@ -14,10 +14,8 @@ import { ProfileModule } from './profile/profile.module';
 import { HashLocationStrategy, LocationStrategy, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr'
 import localeFrExtra from '@angular/common/locales/extra/fr'
-import { environment } from 'src/environments/environment';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
-import { LoaderInterceptor } from './tags/interceptor/loader.interceptor';
 // specify the key where the token is stored in the local storage
 export const LOCALSTORAGE_TOKEN_KEY = 'local_musictagger_ui';
 registerLocaleData(localeFr, 'fr-FR', localeFrExtra)
@@ -54,11 +52,7 @@ export function tokenGetter() {
   ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoaderInterceptor,
-      multi: true,
-    },
+   
   ],
   bootstrap: [AppComponent],
   schemas: []

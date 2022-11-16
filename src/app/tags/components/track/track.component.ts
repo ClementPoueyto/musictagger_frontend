@@ -54,7 +54,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   goBack(){
-    this.router.navigate(["../tags"])
+    this.router.navigate(["/tags"])
   }
 
   ngOnDestroy(): void {
@@ -62,7 +62,6 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   onChipChange(value : any){
-    console.log(value)
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
     if(token&&this.tagtrack?.track){
       if(!this.tagtrack?.tags.includes(value)){

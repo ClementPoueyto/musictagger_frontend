@@ -7,7 +7,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { PlaylistsManagementComponent } from './components/playlists-management/playlists-management.component';
 import { TagsModule } from '../tags/tags.module';
-import { LoaderInterceptor } from '../tags/interceptor/loader.interceptor';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlaylistComponent } from './components/playlist/playlist.component';
@@ -38,11 +37,7 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule
   ],
   providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoaderInterceptor,
-      multi: true,
-    },
+
   ],
 })
 export class PlaylistModule { }

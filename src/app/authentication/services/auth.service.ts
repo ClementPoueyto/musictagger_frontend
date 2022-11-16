@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
-import { firstValueFrom, Observable, tap,BehaviorSubject, EMPTY } from 'rxjs';
+import { Injectable } from '@angular/core';
+import {  Observable, tap,BehaviorSubject, of } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { CheckTokenRequest, CheckTokenResponse, LoginRequest, LoginResponse, RefreshTokenRequest, RefreshTokenResponse, RegisterRequest, RegisterResponse } from './auth-interfaces';
-import { catchError } from 'rxjs/operators';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
+import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, Token } from './auth-interfaces';
+import { LOCALSTORAGE_TOKEN_KEY, tokenGetter } from 'src/app/app.module';
 import { Router } from '@angular/router';
-import { CommonService } from 'src/app/core/services/rest/common.service';
+import { CommonService } from 'src/app/shared/services/rest/common.service';
+import { UserService } from 'src/app/shared/services/user.service';
+
 
 export enum AuthStatus{
   LOGIN, LOGOUT
@@ -21,18 +22,17 @@ export enum AuthStatus{
 export class AuthService extends CommonService{
 
   private currentAuthStatusSubject: BehaviorSubject<AuthStatus>;
-    public currentAuthStatus: Observable<AuthStatus>;
+  public currentAuthStatus: Observable<AuthStatus>;
 
   constructor(
     protected override http: HttpClient,
-    private jwtService: JwtHelperService,
+    protected jwtService: JwtHelperService,
     private router : Router
-  ) {
-    super(http)
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+      ) {
+    super(http);
+    const token = tokenGetter()
     if(token){
       this.currentAuthStatusSubject = new BehaviorSubject<AuthStatus>(AuthStatus.LOGIN);
-
     }
     else{
       this.currentAuthStatusSubject = new BehaviorSubject<AuthStatus>(AuthStatus.LOGOUT);
@@ -64,7 +64,7 @@ export class AuthService extends CommonService{
 
   async loginSuccess(token : string) : Promise<void> {
     if(!await this.jwtService.isTokenExpired(token)){
-      await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
+      await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token);
       this.currentAuthStatusSubject.next(AuthStatus.LOGIN);
       this.router.navigate(['tags']);
 
@@ -86,30 +86,26 @@ export class AuthService extends CommonService{
     return decodedToken.user;
   }
 
-  refreshToken(refreshTokenRequest: RefreshTokenRequest): Observable<RefreshTokenResponse> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${refreshTokenRequest.jwt_token}`
-    })
-    return this.http.get<RefreshTokenResponse>(this.apiConfiguration.api_url + 'auth/refresh-token', { headers: headers }).pipe(
+  refreshToken(): Observable<Token> {
+    return this.http.get<Token>(this.apiConfiguration.api_url + 'auth/refresh-token',).pipe(
       tap((token) => localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token.jwt_token)
       ))
   }
 
-  async checkToken(checkTokenRequest: CheckTokenRequest): Promise<CheckTokenResponse> {
+  checkToken(checkTokenRequest: Token): Observable<Token> {
     if (this.jwtService.isTokenExpired(checkTokenRequest.jwt_token)) {
-      const new_token = await firstValueFrom(this.refreshToken({ jwt_token: checkTokenRequest.jwt_token }))
-      return {
-        token: new_token.jwt_token,
-        decoded: this.jwtService.decodeToken(new_token.jwt_token)
-      }
+      return this.refreshToken();
     }
     else {
-      return {
-        token: checkTokenRequest.jwt_token,
-        decoded: this.jwtService.decodeToken(checkTokenRequest.jwt_token)
-      }
+      return of({ jwt_token : checkTokenRequest.jwt_token });
     }
+  }
 
+  getToken() : Observable<Token>  {
+    const currentToken = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+    if(currentToken){
+      return this.checkToken({jwt_token : currentToken});
+    }
+    return of({jwt_token : ""});
   }
 }

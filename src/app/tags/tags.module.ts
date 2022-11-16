@@ -5,12 +5,10 @@ import { TagsRoutingModule } from './tags-routing.module';
 import { SearchComponent } from './components/search/search.component';
 import { SpotifyModule } from '../spotify/spotify.module';
 import { MatDialogModule } from '@angular/material/dialog';
-import { LoaderComponent } from './components/loader/loader.component';
 
 import {
   HttpClientModule,
 } from '@angular/common/http';
-import { LoaderInterceptor } from './interceptor/loader.interceptor';
 import { TrackComponent } from './components/track/track.component';
 import { FormsModule } from '@angular/forms';
 import { FilterDialogComponent } from './components/search/filter-dialog/filter-dialog.component';
@@ -22,7 +20,6 @@ import { SharedModule } from '../shared/shared.module';
 @NgModule({
   declarations: [
     SearchComponent,
-    LoaderComponent,
     TrackComponent,
     FilterDialogComponent
   ],
@@ -37,8 +34,7 @@ import { SharedModule } from '../shared/shared.module';
     MatDialogModule,
     SharedModule
   ],
-  exports: [LoaderComponent,
-  ],
+
 
 
 

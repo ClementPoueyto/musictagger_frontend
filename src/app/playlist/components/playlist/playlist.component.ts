@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
-import { User } from 'src/app/tags/models/user.model';
+import { User } from 'src/app/shared/models/user.model';
 import { Playlist } from '../../models/playlist.model';
 import { PlaylistService } from '../../services/playlist.service';
 import { Observable, ReplaySubject, Subscription } from 'rxjs'
@@ -22,36 +22,36 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class PlaylistComponent implements OnInit {
 
-  playlist : Playlist | null = null;
+  playlist: Playlist | null = null;
 
   @Input()
-  user : User| null = null;
+  user: User | null = null;
 
-  routeSub : Subscription = new Subscription();
+  routeSub: Subscription = new Subscription();
 
   editForm: FormGroup = new FormGroup({
     title: new FormControl("", [Validators.required]),
     description: new FormControl("",),
   });
-  nbTagsToDisplay : number = 50;
-  displayedColumns: string[] = ['photo', 'title' , 'artist', 'album'];
+  nbTagsToDisplay: number = 50;
+  displayedColumns: string[] = ['photo', 'title', 'artist', 'album'];
   dataToDisplay = [];
-  metadata : Metadata = {total : 0, page : 0, limit : 50}
+  metadata: Metadata = { total: 0, page: 0, limit: 50 }
   dataSource = new PlaylistTracksDataSource(this.dataToDisplay);
 
-  displayLoader : boolean = true;
+  displayLoader: boolean = true;
 
-  constructor(private playlistService : PlaylistService, private route : ActivatedRoute, private router : Router,private dialog : MatDialog) { 
-    this.routeSub = this.route.url.subscribe(url=>{
-      const id : number = Number(url[0].path)
-      if(id){
+  constructor(private playlistService: PlaylistService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {
+    this.routeSub = this.route.url.subscribe(url => {
+      const id: number = Number(url[0].path)
+      if (id) {
         const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-        if(token){
-          this.playlistService.getPlaylistById({jwt_token : token, playlist_id : id}).then(
+        if (token) {
+          this.playlistService.getPlaylistById({ jwt_token: token, playlist_id: id }).then(
             playlist => {
-              if(playlist){
+              if (playlist) {
                 this.playlist = playlist
-              } 
+              }
               this.getTracksData()
             }
           )
@@ -59,83 +59,83 @@ export class PlaylistComponent implements OnInit {
         }
       }
     })
-    
+
   }
 
   ngOnInit(): void {
-    
+
   }
 
-  getTracksData(){
+  getTracksData() {
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-    if(this.playlist&&token){
-    this.playlistService.getPlaylistTracksById({jwt_token : token, playlist_id : Number(this.playlist.id), page : this.metadata.page, limit : this.metadata.limit }).then(tracks=>{
-      if(tracks){
-        this.dataSource.setData(tracks.data);
-        this.metadata = tracks.metadata
-      }
-    })
+    if (this.playlist && token) {
+      this.playlistService.getPlaylistTracksById({ jwt_token: token, playlist_id: Number(this.playlist.id), page: this.metadata.page, limit: this.metadata.limit }).then(tracks => {
+        if (tracks) {
+          this.dataSource.setData(tracks.data);
+          this.metadata = tracks.metadata
+        }
+      })
+    }
   }
-}
 
-handlePaginatorEvent($event: PageEvent){
-  this.metadata = { limit : $event.pageSize, total : this.metadata.total, page : $event.pageIndex}
-    this.getTracksData( )
+  handlePaginatorEvent($event: PageEvent) {
+    this.metadata = { limit: $event.pageSize, total: this.metadata.total, page: $event.pageIndex }
+    this.getTracksData()
 
 
-}
-  editDialog(){
-    if(this.playlist){
-      const editDialog = this.dialog.open(EditPlaylistComponent,{
+  }
+  editDialog() {
+    if (this.playlist) {
+      const editDialog = this.dialog.open(EditPlaylistComponent, {
         minWidth: '300px',
-        disableClose : true,
+        disableClose: true,
         data: {
-          mode : 'edit',
+          mode: 'edit',
           selected: this.playlist.tags,
-          title : this.playlist.name,
-          description : this.playlist.description,
-          id : this.playlist.id
-      }
-       });
-       editDialog.afterOpened().subscribe(()=>{
+          title: this.playlist.name,
+          description: this.playlist.description,
+          id: this.playlist.id
+        }
+      });
+      editDialog.afterOpened().subscribe(() => {
         this.displayLoader = false;
       })
-       editDialog.afterClosed().subscribe(result => {
+      editDialog.afterClosed().subscribe(result => {
         this.displayLoader = true;
-        if(result=='refresh'){
+        if (result == 'refresh') {
           const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-        if(token&&this.playlist){
-          this.playlistService.getPlaylistById({jwt_token : token, playlist_id : Number(this.playlist.id)}).then(
-            playlist => {if(playlist) this.playlist = playlist}
-          )
+          if (token && this.playlist) {
+            this.playlistService.getPlaylistById({ jwt_token: token, playlist_id: Number(this.playlist.id) }).then(
+              playlist => { if (playlist) this.playlist = playlist }
+            )
 
+          }
         }
-        }
-        
+
       });
     }
-    
+
   }
 
-  goBack(){
+  goBack() {
     this.router.navigate(["../export"])
   }
 
-  deleteDialog(){
-    const deleteDialog = this.dialog.open(DeletePlaylistComponent,{
+  deleteDialog() {
+    const deleteDialog = this.dialog.open(DeletePlaylistComponent, {
       minWidth: '300px',
-  })
-  deleteDialog.afterClosed().subscribe(res=>{
-    if(res=='confirm'){
-      const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-        if(this.playlist&&token){
-          this.playlistService.deletePlaylist({jwt_token : token, playlist_id : Number(this.playlist!.id)}).then(()=>{
+    })
+    deleteDialog.afterClosed().subscribe(res => {
+      if (res == 'confirm') {
+        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
+        if (this.playlist && token) {
+          this.playlistService.deletePlaylist({ jwt_token: token, playlist_id: Number(this.playlist!.id) }).then(() => {
             this.router.navigate(["../export"])
           })
         }
-    }
-  })
-}
+      }
+    })
+  }
 
 
 }

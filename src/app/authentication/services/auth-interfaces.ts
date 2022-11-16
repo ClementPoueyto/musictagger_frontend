@@ -44,19 +44,6 @@ export interface RefreshToken {
     message: string;
   }
 
-  export interface RefreshTokenRequest{
+  export interface Token{
     jwt_token : string
-  }
-
-  export interface RefreshTokenResponse{
-    jwt_token : string
-  }
-
-  export interface CheckTokenRequest{
-    jwt_token : string
-  }
-
-  export interface CheckTokenResponse{
-    token : string,
-    decoded : any
   }

@@ -1,9 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { AuthService, AuthStatus } from '../authentication/services/auth.service';
 import { Subscription } from 'rxjs';
-import { UserService } from '../tags/services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +14,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   authSub : Subscription = new Subscription();
 
-  constructor(private router: Router,private readonly authService : AuthService, private readonly userService : UserService) { 
+  constructor(private router: Router,private readonly authService : AuthService) { 
     
   }
   ngOnDestroy(): void {

@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { DataSource } from '@angular/cdk/collections';
 import { TaggedTrack } from '../../models/tagged-track.model';
 import {Observable, ReplaySubject, Subject,Subscription} from 'rxjs';
-import { TagService } from '../../services/tag.service';
-import { UserService } from '../../services/user.service';
 import { LikeTaggedTrackRequest, SearchTaggedTrackRequest } from '../../services/tag.interface';
 import { Metadata } from '../../models/metadata.model';
 import { PageEvent } from '@angular/material/paginator';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TagService } from '../../services/tag.service';
+import { UserService } from 'src/app/shared/services/user.service';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',

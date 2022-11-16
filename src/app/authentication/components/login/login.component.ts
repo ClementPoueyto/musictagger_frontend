@@ -52,8 +52,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe(async params => {
         const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
         if(token){
-          firstValueFrom(this.authService.refreshToken({jwt_token : token})).then(tokenResponse=>{
-            if(tokenResponse) this.router.navigate(['../tags'])
+          firstValueFrom(this.authService.refreshToken()).then(tokenResponse=>{
+            if(tokenResponse){
+              this.router.navigate(['../tags']);
+            } 
           }   )  
         }
         else{
@@ -70,14 +72,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         
       } 
     );
-  }
-
-  isAlreadylogged(){
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-    if(!token){
-      return;
-    }
-              
   }
 
 
