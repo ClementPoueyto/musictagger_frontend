@@ -14,8 +14,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
 
     intercept(httpRequest: HttpRequest<any>, httpHandler: HttpHandler,): Observable<HttpEvent<any>> {
         this.loaderService.show();
-        console.log(httpRequest);
-        if(!httpRequest.url.includes(environment.API_URL)){
+        console.log(httpRequest)
+        if(!httpRequest.url.includes(environment.API_URL) || httpRequest.url.includes('refresh-token')){
             return this.requestHandler(httpRequest, httpHandler);
         }
         return this.authService.getToken().pipe(mergeMap(

@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, firstValueFrom } from 'rxjs';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
+import { Subscription } from 'rxjs';
 import { TaggedTrack } from '../../models/tagged-track.model';
 import { TagService } from '../../services/tag.service';
 
@@ -26,6 +24,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   tagtrack : TaggedTrack | null = null;
 
 
+  
   tagNames : string[] = []
 
   ngOnInit(): void {
@@ -33,10 +32,8 @@ export class TrackComponent implements OnInit, OnDestroy {
     .subscribe(async url => { 
       const id : number = Number(url[1].path)
       if(id){
-        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-        if(token){
-           this.tagtrack = await this.tagService.getTaggedTrackByTrackId({jwt_token : token, trackId : id})
-        }
+           this.tagtrack = await this.tagService.getTaggedTrackByTrackId( {trackId : id})
+        
       }
       else{
         this.snackbar.open('get TaggedTrack fail', 'Close', {
@@ -45,12 +42,11 @@ export class TrackComponent implements OnInit, OnDestroy {
       }
       
     });
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-    if(token){
-      this.tagService.getTagNames({jwt_token :token }).then(tags=>{
+      this.tagService.getTagNames().then(tags=>{
         this.tagNames = tags.tagNames;
       });
-    }
+    
+
   }
 
   goBack(){
@@ -62,13 +58,12 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   onChipChange(value : any){
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-    if(token&&this.tagtrack?.track){
+    if(this.tagtrack?.track){
       if(!this.tagtrack?.tags.includes(value)){
-        this.tagService.addTag({jwt_token : token, body:  {tag : value, trackId : this.tagtrack.track.id}})
+        this.tagService.addTag({ body:  {tag : value, trackId : this.tagtrack.track.id}})
       }
       else{
-        this.tagService.deleteTag({jwt_token : token, body:  {tag : value, trackId : this.tagtrack.track.id}})
+        this.tagService.deleteTag({ body:  {tag : value, trackId : this.tagtrack.track.id}})
       }
     }
   }

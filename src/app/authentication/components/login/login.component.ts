@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
+import { tokenGetter } from 'src/app/app.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {Subscription, firstValueFrom} from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.routeSub = this.route.queryParams
       .subscribe(async params => {
-        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+        const token = tokenGetter();
         if(token){
           firstValueFrom(this.authService.refreshToken()).then(tokenResponse=>{
             if(tokenResponse){

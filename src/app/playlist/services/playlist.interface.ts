@@ -1,23 +1,17 @@
 import { Track } from "src/app/tags/models/track.model";
 
-export interface GetPlaylistsRequest{
-    jwt_token : string
-}
 
 export interface DeletePlaylistsRequest{
-    jwt_token : string;
 
     playlist_id : number;
 }
 
 export interface GetPlaylistByIdRequest{
-    jwt_token : string;
 
     playlist_id : number
 }
 
 export interface GetPlaylistTracksByIdRequest{
-    jwt_token : string;
 
     playlist_id : number;
 
@@ -40,7 +34,6 @@ export interface Metadata{
 }
 
 export interface AddPlaylistsRequest{
-    jwt_token : string;
 
     name :string;
 
@@ -52,8 +45,6 @@ export interface AddPlaylistsRequest{
 export interface UpdatePlaylistsRequest{
 
     playlist_id : number;
-
-    jwt_token : string;
 
     name :string;
 

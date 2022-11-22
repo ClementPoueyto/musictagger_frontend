@@ -3,7 +3,6 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Playlist } from '../../models/playlist.model';
 import { ReplaySubject, Observable, Subscription } from 'rxjs'
 import { PlaylistService } from '../../services/playlist.service';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { EditPlaylistComponent } from '../edit-playlist/edit-playlist.component';
@@ -56,7 +55,8 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
     const addDialog = this.dialog.open(EditPlaylistComponent, {
       minWidth: '300px',
       disableClose : true,
-      data : {
+      height : '90%'
+,      data : {
         mode : 'create'
       }
       });
@@ -73,14 +73,11 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
   }
 
   getData(){
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-    if (token) {
-      this.playlistService.getPlaylists({ jwt_token: token }).then(res=>{
+      this.playlistService.getPlaylists().then(res=>{
         this.dataSource.setData(res)
         this.nbElements = res.length
       }
       );
-    }
   }
 
   @HostListener('window:resize', ['$event'])

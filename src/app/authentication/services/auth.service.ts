@@ -102,7 +102,7 @@ export class AuthService extends CommonService{
   }
 
   getToken() : Observable<Token>  {
-    const currentToken = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+    const currentToken = tokenGetter();
     if(currentToken){
       return this.checkToken({jwt_token : currentToken});
     }

@@ -13,11 +13,9 @@
       {{tagtrack.track.artistName}}
   </h3>
     <h4>
-        {{tagtrack.track.albumTitle}}
+        {{tagtrack.track.albumTitle}} - {{tagtrack.track.releaseDate | date: 'longDate' : '' : 'fr-FR'}}
     </h4>
-    <h4>
-     {{tagtrack.track.releaseDate | date: 'longDate' : '' : 'fr-FR'}}
-  </h4>
+
     
     <mat-chip-list  #chipList [multiple]="true" [selectable]="true">
         <mat-chip 

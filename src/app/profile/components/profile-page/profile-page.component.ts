@@ -1,5 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
+import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/shared/models/user.model';
 import { Subscription } from 'rxjs'
 import { DomSanitizer } from '@angular/platform-browser';
@@ -38,18 +37,17 @@ export class ProfilePageComponent implements OnInit {
   }
 
   logoutSpotify() {
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-    if (token) {
-      this.userService.logoutSpotifyUser({ userId: token }).then(res => {
-        if (res) {
-          this.userService.getUser({ userId: res.jwt_token }).then(profile => {
-            if (profile) {
-              this.router.navigate(["../"])
-            }
-          })
-        }
-      })
-    }
+
+    this.userService.logoutSpotifyUser().then(res => {
+      if (res) {
+        this.userService.getUser({ userId: res.jwt_token }).then(profile => {
+          if (profile) {
+            this.router.navigate(["../"])
+          }
+        })
+      }
+    })
+
   }
 
 

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject, firstValueFrom, Observable, tap } from 'rxjs';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
+import { tokenGetter } from 'src/app/app.module';
 import { User } from '../models/user.model';
 import { CommonService } from './rest/common.service';
 import { SpotifyUserLoginRequest, SpotifyUserLogResponse, UserRequest } from './user-interface';
@@ -20,7 +20,7 @@ export class UserService extends CommonService {
   constructor(protected override http: HttpClient, private jwtService : JwtHelperService
   ) {
     super(http);
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
+    const token = tokenGetter();
     if(token){
       const decoded = this.jwtService.decodeToken(token);
       this.userId = decoded.userId;
@@ -68,7 +68,7 @@ export class UserService extends CommonService {
     return res;
   }
 
-  async logoutSpotifyUser(spotifyUserRequest: UserRequest): Promise<SpotifyUserLogResponse> {
+  async logoutSpotifyUser(): Promise<SpotifyUserLogResponse> {
 
     const res = await firstValueFrom(this.http.delete<SpotifyUserLogResponse>(this.apiConfiguration.api_url + 'users/' + this.userId + "/spotify",)
     );

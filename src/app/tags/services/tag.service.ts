@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Metadata } from '../models/metadata.model';
 import { TaggedTrack } from '../models/tagged-track.model';
-import { GetTaggedTrackByTrackIdRequest, GetTagNamesRequest, GetTagNamesResponse, LikeTaggedTrackRequest, LikeTaggedTrackResponse, SearchTaggedTrackRequest, SearchTaggedTrackResponse } from './tag.interface';
+import { GetTaggedTrackByTrackIdRequest, GetTagNamesResponse, LikeTaggedTrackRequest, LikeTaggedTrackResponse, SearchTaggedTrackRequest, SearchTaggedTrackResponse } from './tag.interface';
 import { TagRequest } from '../../shared/services/user-interface';
 import { CommonService } from 'src/app/shared/services/rest/common.service';
 import { UserService } from 'src/app/shared/services/user.service';
@@ -19,6 +19,8 @@ export class TagService extends CommonService {
 
   tags: string[] = [];
   selectedChip: 'like' | 'tags' = 'like'
+
+  public offsetScroll: number = 0;
 
   constructor(protected override http : HttpClient,private userService : UserService){
     super(http);
@@ -61,7 +63,7 @@ export class TagService extends CommonService {
     return res;
   }
 
-  async getTagNames(getTagNamesRequest: GetTagNamesRequest): Promise<GetTagNamesResponse> {
+  async getTagNames(): Promise<GetTagNamesResponse> {
 
     const res = await firstValueFrom(this.http.get<Array<string>>(this.apiConfiguration.api_url + 'tags/names?userId=' + this.userService.getUserId()
     )

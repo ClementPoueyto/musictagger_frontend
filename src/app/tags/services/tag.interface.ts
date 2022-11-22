@@ -3,8 +3,6 @@ import { TaggedTrack } from "../models/tagged-track.model";
 
 export interface SearchTaggedTrackRequest{
 
-    jwt_token : string;
-
     page : number;
 
     limit : number;
@@ -23,8 +21,6 @@ export interface SearchTaggedTrackResponse{
 }
 
 export interface LikeTaggedTrackRequest{
-    jwt_token : string;
-
     page : number;
 
     limit : number;
@@ -37,13 +33,8 @@ export interface LikeTaggedTrackResponse{
 
 export interface GetTaggedTrackByTrackIdRequest{
     trackId : number;
-
-    jwt_token : string;
 }
 
-export interface GetTagNamesRequest{
-    jwt_token : string;
-}
 
 export interface GetTagNamesResponse{
     tagNames : string[];

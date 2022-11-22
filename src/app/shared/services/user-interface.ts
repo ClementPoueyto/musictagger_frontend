@@ -8,7 +8,6 @@ export interface UserRequest {
 }
 
 export interface SpotifyUserLoginRequest {
-  jwt_token: string,
   spotifyUser: SpotifyUser
 }
 
@@ -17,6 +16,5 @@ export interface SpotifyUserLogResponse {
 }
 
 export interface TagRequest {
-  jwt_token: string,
   body: { trackId: number, tag: string }
 }

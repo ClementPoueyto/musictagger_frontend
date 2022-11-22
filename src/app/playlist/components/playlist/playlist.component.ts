@@ -1,12 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { User } from 'src/app/shared/models/user.model';
 import { Playlist } from '../../models/playlist.model';
 import { PlaylistService } from '../../services/playlist.service';
 import { Observable, ReplaySubject, Subscription } from 'rxjs'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Dialog } from '@angular/cdk/dialog';
 import { EditPlaylistComponent } from '../edit-playlist/edit-playlist.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DeletePlaylistComponent } from '../delete-playlist/delete-playlist.component';
@@ -45,9 +43,8 @@ export class PlaylistComponent implements OnInit {
     this.routeSub = this.route.url.subscribe(url => {
       const id: number = Number(url[0].path)
       if (id) {
-        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-        if (token) {
-          this.playlistService.getPlaylistById({ jwt_token: token, playlist_id: id }).then(
+   
+          this.playlistService.getPlaylistById({ playlist_id: id }).then(
             playlist => {
               if (playlist) {
                 this.playlist = playlist
@@ -56,7 +53,7 @@ export class PlaylistComponent implements OnInit {
             }
           )
 
-        }
+        
       }
     })
 
@@ -67,9 +64,8 @@ export class PlaylistComponent implements OnInit {
   }
 
   getTracksData() {
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-    if (this.playlist && token) {
-      this.playlistService.getPlaylistTracksById({ jwt_token: token, playlist_id: Number(this.playlist.id), page: this.metadata.page, limit: this.metadata.limit }).then(tracks => {
+    if (this.playlist) {
+      this.playlistService.getPlaylistTracksById({ playlist_id: Number(this.playlist.id), page: this.metadata.page, limit: this.metadata.limit }).then(tracks => {
         if (tracks) {
           this.dataSource.setData(tracks.data);
           this.metadata = tracks.metadata
@@ -88,6 +84,7 @@ export class PlaylistComponent implements OnInit {
     if (this.playlist) {
       const editDialog = this.dialog.open(EditPlaylistComponent, {
         minWidth: '300px',
+        height : '90%',
         disableClose: true,
         data: {
           mode: 'edit',
@@ -103,9 +100,8 @@ export class PlaylistComponent implements OnInit {
       editDialog.afterClosed().subscribe(result => {
         this.displayLoader = true;
         if (result == 'refresh') {
-          const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-          if (token && this.playlist) {
-            this.playlistService.getPlaylistById({ jwt_token: token, playlist_id: Number(this.playlist.id) }).then(
+          if (this.playlist) {
+            this.playlistService.getPlaylistById({ playlist_id: Number(this.playlist.id) }).then(
               playlist => { if (playlist) this.playlist = playlist }
             )
 
@@ -127,9 +123,8 @@ export class PlaylistComponent implements OnInit {
     })
     deleteDialog.afterClosed().subscribe(res => {
       if (res == 'confirm') {
-        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-        if (this.playlist && token) {
-          this.playlistService.deletePlaylist({ jwt_token: token, playlist_id: Number(this.playlist!.id) }).then(() => {
+        if (this.playlist) {
+          this.playlistService.deletePlaylist({ playlist_id: Number(this.playlist!.id) }).then(() => {
             this.router.navigate(["../export"])
           })
         }

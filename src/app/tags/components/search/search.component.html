@@ -1,6 +1,6 @@
 <app-loader></app-loader>
 
-<div class="categories">
+<div class="categories" track-scroll>
 <mat-chip-list  aria-label="Fish selection" (change)="onChipChange($event)">
   <mat-chip 
     #chipRef="matChip"
@@ -41,6 +41,7 @@
         <!-- Array -->
 
     <mat-paginator [length]="this.metadata.total"
+              [pageIndex]="this.metadata.page"
               [pageSize]="this.metadata.limit"
               [pageSizeOptions]="[20,50]"
               (page)="handlePaginatorEvent($event)"

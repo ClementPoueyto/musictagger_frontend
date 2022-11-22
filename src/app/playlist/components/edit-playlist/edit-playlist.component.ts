@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { LOCALSTORAGE_TOKEN_KEY } from 'src/app/app.module';
 import { TagService } from 'src/app/tags/services/tag.service';
 import { PlaylistService } from '../../services/playlist.service';
 
@@ -31,7 +30,7 @@ export class EditPlaylistComponent implements OnInit {
     private readonly tagService: TagService, private readonly playlistService: PlaylistService) {
     this.mode = this.data.mode
 
-    if (this.mode == 'edit') {
+    if (this.mode === 'edit') {
       this.selected = [...this.data.selected]
       this.playlistId = this.data.id;
       this.playlistForm.setValue({
@@ -44,22 +43,17 @@ export class EditPlaylistComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-    if (token) {
-      this.tagService.getTagNames({ jwt_token: token }).then(tags => {
+      this.tagService.getTagNames().then(tags => {
         this.tagNames = tags.tagNames;
       });
-    }
     this.updateAvailableTracks()
 
   }
 
   editPlaylist() {
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-    if (this.playlistForm.get('title')?.value && this.selected.length > 0 && token) {
+    if (this.playlistForm.get('title')?.value && this.selected.length > 0) {
       if (this.mode == 'create') {
         this.playlistService.addPlaylist({
-          jwt_token: token,
           name: this.playlistForm.get('title')!.value as string,
           description: this.playlistForm.get('description')!.value as string,
           tags: this.selected
@@ -69,7 +63,7 @@ export class EditPlaylistComponent implements OnInit {
       }
       if (this.mode == 'edit') {
         this.playlistService.updatePlaylist({
-          jwt_token: token, playlist_id: this.playlistId as number,
+          playlist_id: this.playlistId as number,
           name: this.playlistForm.get('title')!.value as string,
           description: this.playlistForm.get('description')!.value as string,
           tags: this.selected
@@ -82,16 +76,14 @@ export class EditPlaylistComponent implements OnInit {
   }
 
   updateAvailableTracks(){
-    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-    if(token){
-      this.tagService.searchTaggedTrack({jwt_token : token, page : 0, limit : 0, tags : this.selected, query : "", onlyMetadata : true}).then(
+      this.tagService.searchTaggedTrack({ page : 0, limit : 0, tags : this.selected, query : "", onlyMetadata : true}).then(
         res=>{
           if(res){
             this.availableTracks = res.metadata.total
           }
         }
       )
-    }
+    
   }
 
 

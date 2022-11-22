@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/shared/services/rest/common.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { Playlist } from '../models/playlist.model';
-import { AddPlaylistBodyRequest, AddPlaylistsRequest, DeletePlaylistsRequest, GetPlaylistByIdRequest, GetPlaylistsRequest, GetPlaylistTracksByIdRequest, GetPlaylistTracksByIdResponse, UpdatePlaylistsRequest } from './playlist.interface';
+import { AddPlaylistBodyRequest, AddPlaylistsRequest, DeletePlaylistsRequest, GetPlaylistByIdRequest, GetPlaylistTracksByIdRequest, GetPlaylistTracksByIdResponse, UpdatePlaylistsRequest } from './playlist.interface';
 
 
 @Injectable({
@@ -16,7 +16,7 @@ export class PlaylistService extends CommonService {
     super(http);
   }
 
-  async getPlaylists(playlistRequest: GetPlaylistsRequest): Promise<Playlist[]> {
+  async getPlaylists(): Promise<Playlist[]> {
     const res = await firstValueFrom(this.http.get<Playlist[]>(this.apiConfiguration.api_url + 'playlists?userId=' + this.userService.getUserId()));
     return res;
   }

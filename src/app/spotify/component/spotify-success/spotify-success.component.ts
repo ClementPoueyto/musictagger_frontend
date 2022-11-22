@@ -29,9 +29,8 @@ export class SpotifySuccessComponent implements OnInit, OnDestroy {
           spotifyRefreshToken: params["spotifyRefreshToken"],
           expiresIn: params["expiresIn"],
         }
-        const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY);
-        if (token) {
-          const new_token = await this.userService.logInSpotifyUser({ jwt_token: token, spotifyUser: spotifyUser });
+
+          const new_token = await this.userService.logInSpotifyUser({ spotifyUser: spotifyUser });
           await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, new_token.jwt_token);
           if (new_token) {
             this.snackbar.open('Spotify Login Success', 'Close', {
@@ -46,7 +45,7 @@ export class SpotifySuccessComponent implements OnInit, OnDestroy {
 
 
           }
-        }
+        
 
 
       }
