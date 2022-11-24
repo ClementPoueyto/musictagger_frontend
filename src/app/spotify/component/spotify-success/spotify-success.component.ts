@@ -30,22 +30,22 @@ export class SpotifySuccessComponent implements OnInit, OnDestroy {
           expiresIn: params["expiresIn"],
         }
 
-          const new_token = await this.userService.logInSpotifyUser({ spotifyUser: spotifyUser });
-          await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, new_token.jwt_token);
-          if (new_token) {
-            this.snackbar.open('Spotify Login Success', 'Close', {
-              duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
-            });
-            this.userService.getUser({ userId: "" }).then(res => {
-              if (res) {
-                this.router.navigate(['../tags']);
-              }
+        const new_token = await this.userService.logInSpotifyUser({ spotifyUser: spotifyUser });
+        await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, new_token.jwt_token);
+        if (new_token) {
+          this.snackbar.open('Spotify Login Success', 'Close', {
+            duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
+          });
+          this.userService.getUser().then(res => {
+            if (res) {
+              this.router.navigate(['../tags']);
             }
-            )
-
-
           }
-        
+          )
+
+
+        }
+
 
 
       }

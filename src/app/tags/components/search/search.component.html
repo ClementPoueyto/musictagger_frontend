@@ -1,6 +1,6 @@
-<app-loader></app-loader>
+<app-loader [isLoading]=true></app-loader>
 
-<div class="categories" track-scroll>
+<div class="categories">
 <mat-chip-list  aria-label="Fish selection" (change)="onChipChange($event)">
   <mat-chip 
     #chipRef="matChip"
@@ -86,5 +86,5 @@
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr class="clickable" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClickRow(row)"></tr>
+    <tr class="clickable" id="{{row.track.id}}" mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onClickRow(row)"></tr>
   </table>

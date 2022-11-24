@@ -12,7 +12,7 @@ import { AddPlaylistBodyRequest, AddPlaylistsRequest, DeletePlaylistsRequest, Ge
 })
 export class PlaylistService extends CommonService {
 
-  constructor(protected override http : HttpClient,private userService : UserService){
+  constructor(protected override http: HttpClient, private userService: UserService) {
     super(http);
   }
 
@@ -79,7 +79,7 @@ export class PlaylistService extends CommonService {
 
   async deletePlaylist(deletePlaylistRequest: DeletePlaylistsRequest) {
 
-    const res = await firstValueFrom(this.http.delete(this.apiConfiguration.api_url + 'playlists/' + deletePlaylistRequest.playlist_id + '?userId=' + this.userService.getUserId(),
+    await firstValueFrom(this.http.delete(this.apiConfiguration.api_url + 'playlists/' + deletePlaylistRequest.playlist_id + '?userId=' + this.userService.getUserId(),
     )
 
     );

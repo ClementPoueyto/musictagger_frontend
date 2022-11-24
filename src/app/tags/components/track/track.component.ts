@@ -30,7 +30,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routeSub = this.route.url
     .subscribe(async url => { 
-      const id : number = Number(url[1].path)
+      const id  = Number(url[1].path)
       if(id){
            this.tagtrack = await this.tagService.getTaggedTrackByTrackId( {trackId : id})
         

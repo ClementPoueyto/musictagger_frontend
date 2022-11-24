@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {  Observable, tap,BehaviorSubject, of } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -6,7 +6,6 @@ import { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, Token }
 import { LOCALSTORAGE_TOKEN_KEY, tokenGetter } from 'src/app/app.module';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/shared/services/rest/common.service';
-import { UserService } from 'src/app/shared/services/user.service';
 
 
 export enum AuthStatus{
@@ -67,7 +66,6 @@ export class AuthService extends CommonService{
       await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token);
       this.currentAuthStatusSubject.next(AuthStatus.LOGIN);
       this.router.navigate(['tags']);
-
     }
   }
 

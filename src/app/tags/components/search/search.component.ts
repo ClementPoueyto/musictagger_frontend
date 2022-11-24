@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy, AfterViewChecked } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataSource } from '@angular/cdk/collections';
 import { TaggedTrack } from '../../models/tagged-track.model';
@@ -6,7 +6,7 @@ import { Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { LikeTaggedTrackRequest, SearchTaggedTrackRequest } from '../../services/tag.interface';
 import { Metadata } from '../../models/metadata.model';
 import { PageEvent } from '@angular/material/paginator';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TagService } from '../../services/tag.service';
@@ -16,7 +16,7 @@ import { UserService } from 'src/app/shared/services/user.service';
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit, OnDestroy {
+export class SearchComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   displayedColumns: string[] = ['photo', 'title', 'artist', 'album', 'tags'];
   dataToDisplay = [];
@@ -25,8 +25,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   nbTagsToDisplay = 0;
   selectedChip: 'like' | 'tags' = 'like'
 
-  query: string = "";
-
+  query = "";
+  allowScrolling  = false;
   tags: string[] = [];
   metadata: Metadata = { total: 0, page: 0, limit: 50 }
   availableChips = [
@@ -45,15 +45,19 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.metadata = tagService.metadata;
     this.selectedChip = tagService.selectedChip;
     this.tags = tagService.tags;
-    if (tagService.selectedChip == 'tags') this.availableChips = [
+    if (tagService.selectedChip === 'tags') this.availableChips = [
       { name: 'like', display: "Spotify Likes", selected: false },
       { name: 'tags', display: "Tags", selected: true },
 
     ];
+  }
 
-
-
-
+  ngAfterViewChecked(): void {
+    if(this.allowScrolling){
+      const element = document.getElementById(this.tagService.lastIdTrackSelected);
+      element?.scrollIntoView({block : 'center'});
+      this.allowScrolling = false;
+    }
   }
 
   ngOnInit(): void {
@@ -65,16 +69,19 @@ export class SearchComponent implements OnInit, OnDestroy {
         this.getData({ key: this.selectedChip, request: { page: this.metadata.page, limit: this.metadata.limit, query: this.query, tags: this.tags } });
       });
 
-    this.userSub = this.userService.currentUser.subscribe(
-      async user => {
-        if (user && user.spotifyUser) {
-          this.getData({ key: this.selectedChip, request: { page: this.metadata.page, limit: this.metadata.limit, query: this.query, tags: this.tags } }).then(
-            () => window.scroll(0, this.tagService.offsetScroll)
-          )
+      this.userSub = this.userService.currentUser.subscribe(
+        async user => {
+          if (user && user.spotifyUser) {
+            this.getData({ key: this.selectedChip, request: { page: this.metadata.page, limit: this.metadata.limit, query: this.query, tags: this.tags } }).then(
+              () => { this.allowScrolling = true; 
+                }
+            )
+          }
         }
-      }
-    )
+      )
   }
+
+  
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
@@ -124,7 +131,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   getData(param: { key: "tags" | "like", request: { page: number; limit: number, query?: string, tags?: string[] } }) {
 
 
-    if (param.key == 'tags') {
+    if (param.key === 'tags') {
       return this.tagService.searchTaggedTrack(param.request as SearchTaggedTrackRequest).then(
         res => {
           this.dataSource.setData(res.data);
@@ -132,7 +139,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         }
       );
     }
-    if (param.key == 'like') {
+    if (param.key === 'like') {
 
       return this.tagService.getLikeTaggedTrack(param.request as LikeTaggedTrackRequest).then(
         res => {
@@ -153,6 +160,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onClickRow(row: TaggedTrack) {
+    this.tagService.lastIdTrackSelected = row.track.id.toString();
     this.router.navigate(['tags/tracks/' + row.track.id]);
   }
   applySearch(event: Event) {
@@ -209,7 +217,7 @@ class TrackDataSource extends DataSource<TaggedTrack> {
     return this._dataStream;
   }
 
-  disconnect() { }
+  disconnect() { this._dataStream.complete(); }
 
   setData(data: TaggedTrack[]) {
     this._dataStream.next(data);

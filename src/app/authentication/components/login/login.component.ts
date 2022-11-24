@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -6,12 +6,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { tokenGetter } from 'src/app/app.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {Subscription, firstValueFrom} from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { Subscription, firstValueFrom } from 'rxjs';
+import { apiUrlLoginGoogle, googleLogoURL } from 'src/app/constants';
 
 
-const googleLogoURL = 
-"https://raw.githubusercontent.com/fireflysemantics/logo/master/Google.svg";
+
 
 @Component({
   selector: 'app-login',
@@ -20,15 +19,14 @@ const googleLogoURL =
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
-  api_url_login_google = environment.API_URL+"google";
-
+  api_url_login_google = apiUrlLoginGoogle;
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
     password: new FormControl(null, [Validators.required]),
   });
 
-  routeSub : Subscription = new Subscription();
+  routeSub: Subscription = new Subscription();
 
   constructor(
     private authService: AuthService,
@@ -37,12 +35,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     private domSanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
-
-  ) { 
+  ) {
     this.matIconRegistry.addSvgIcon(
       "google-logo",
       this.domSanitizer.bypassSecurityTrustResourceUrl(googleLogoURL));
-      
+
   }
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
@@ -51,27 +48,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.routeSub = this.route.queryParams
       .subscribe(async params => {
         const token = tokenGetter();
-        if(token){
-          firstValueFrom(this.authService.refreshToken()).then(tokenResponse=>{
-            if(tokenResponse){
+        if (token) {
+          firstValueFrom(this.authService.getToken()).then(tokenResponse => {
+            if (tokenResponse) {
               this.router.navigate(['../tags']);
-            } 
-          }   )  
+            }
+          })
         }
-        else{
-          if(params["jwt"]){
-            this.authService.loginSuccess(params["jwt"]);
+        else {
+          if (params["jwt"]) {
+            await this.authService.loginSuccess(params["jwt"]);
           }
-          else if(params["failure"]){
-            this.snackbar.open('Login failure : '+params["message"], 'Close', {
+          else if (params["failure"]) {
+            this.snackbar.open('Login failure : ' + params["message"], 'Close', {
               duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
             });
           }
-        }        
-       
-        
-      } 
-    );
+        }
+      }
+      );
   }
 
 

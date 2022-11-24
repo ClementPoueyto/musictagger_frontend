@@ -24,7 +24,7 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
   userSub: Subscription = new Subscription();
   playlistsSub: Subscription = new Subscription();
 
-  displayLoader : boolean = true;
+  displayLoader  = true;
 
   constructor(private readonly playlistService: PlaylistService
     , private readonly userService: UserService, 
@@ -83,11 +83,10 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
     
-    this.onWindowSizeChanging(window.innerWidth,
-      window.innerHeight);
+    this.onWindowSizeChanging(window.innerWidth);
   }
 
-  onWindowSizeChanging(width : number, height : number){
+  onWindowSizeChanging(width : number){
     if(width>=700){
       this.displayedColumns = ['title' , 'description', 'tags'];
       this.nbTagsToDisplay = 20;
@@ -121,7 +120,7 @@ class PlaylistDataSource extends DataSource<Playlist> {
     return this._dataStream;
   }
 
-  disconnect() { }
+  disconnect() { this._dataStream.complete(); }
 
   setData(data: Playlist[]) {
     this._dataStream.next(data);

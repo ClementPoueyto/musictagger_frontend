@@ -18,7 +18,7 @@ import { PageEvent } from '@angular/material/paginator';
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss']
 })
-export class PlaylistComponent implements OnInit {
+export class PlaylistComponent {
 
   playlist: Playlist | null = null;
 
@@ -31,17 +31,17 @@ export class PlaylistComponent implements OnInit {
     title: new FormControl("", [Validators.required]),
     description: new FormControl("",),
   });
-  nbTagsToDisplay: number = 50;
+  nbTagsToDisplay = 50;
   displayedColumns: string[] = ['photo', 'title', 'artist', 'album'];
   dataToDisplay = [];
   metadata: Metadata = { total: 0, page: 0, limit: 50 }
   dataSource = new PlaylistTracksDataSource(this.dataToDisplay);
 
-  displayLoader: boolean = true;
+  displayLoader = true;
 
   constructor(private playlistService: PlaylistService, private route: ActivatedRoute, private router: Router, private dialog: MatDialog) {
     this.routeSub = this.route.url.subscribe(url => {
-      const id: number = Number(url[0].path)
+      const id = Number(url[0].path)
       if (id) {
    
           this.playlistService.getPlaylistById({ playlist_id: id }).then(
@@ -56,10 +56,6 @@ export class PlaylistComponent implements OnInit {
         
       }
     })
-
-  }
-
-  ngOnInit(): void {
 
   }
 
@@ -147,7 +143,9 @@ class PlaylistTracksDataSource extends DataSource<Track> {
     return this._dataStream;
   }
 
-  disconnect() { }
+  disconnect() { 
+    this._dataStream.complete();
+  }
 
   setData(data: Track[]) {
     this._dataStream.next(data);

@@ -4,12 +4,12 @@
             <mat-icon>menu</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item routerLink="/../tags">Tags</button>
+            <button mat-menu-item routerLink="/../tags" (click)="onTagsClick()">Tags</button>
             <button mat-menu-item routerLink="../export">Export</button>
 
         </mat-menu>
             <div fxHide.xs fxShow>
-                <a mat-button routerLink="/../tags">Tags</a>
+                <a mat-button routerLink="/../tags" (click)="onTagsClick()">Tags</a>
                 <a mat-button routerLink="../export">Export</a>
 
 

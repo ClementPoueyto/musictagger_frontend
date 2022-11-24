@@ -22,7 +22,7 @@ export class EditPlaylistComponent implements OnInit {
   playlistId: number | null = null;
   mode: 'edit' | 'create' = 'create';
 
-  availableTracks  :number = 0;
+  availableTracks   = 0;
 
   constructor(
     public dialogRef: MatDialogRef<EditPlaylistComponent>,
@@ -54,8 +54,8 @@ export class EditPlaylistComponent implements OnInit {
     if (this.playlistForm.get('title')?.value && this.selected.length > 0) {
       if (this.mode == 'create') {
         this.playlistService.addPlaylist({
-          name: this.playlistForm.get('title')!.value as string,
-          description: this.playlistForm.get('description')!.value as string,
+          name: this.playlistForm.get('title')?.value as string,
+          description: this.playlistForm.get('description')?.value as string,
           tags: this.selected
         }).then(res => {
           this.dialogRef.close('refresh')
@@ -64,10 +64,10 @@ export class EditPlaylistComponent implements OnInit {
       if (this.mode == 'edit') {
         this.playlistService.updatePlaylist({
           playlist_id: this.playlistId as number,
-          name: this.playlistForm.get('title')!.value as string,
-          description: this.playlistForm.get('description')!.value as string,
+          name: this.playlistForm.get('title')?.value as string,
+          description: this.playlistForm.get('description')?.value as string,
           tags: this.selected
-        }).then(res => {
+        }).then(() => {
           this.dialogRef.close('refresh')
         })
       }

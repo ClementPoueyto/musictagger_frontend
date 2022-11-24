@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, AuthStatus } from '../authentication/services/auth.service';
 import { Subscription } from 'rxjs';
+import { TagService } from '../tags/services/tag.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,11 +11,11 @@ import { Subscription } from 'rxjs';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
 
-  showNavbar : boolean = false;
+  showNavbar  = false;
 
   authSub : Subscription = new Subscription();
 
-  constructor(private router: Router,private readonly authService : AuthService) { 
+  constructor(private router: Router,private readonly authService : AuthService, private readonly tagService : TagService) { 
     
   }
   ngOnDestroy(): void {
@@ -24,13 +25,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authService.currentAuthStatus.subscribe(status=>{
-      if(status == AuthStatus.LOGIN){
+      if(status === AuthStatus.LOGIN){
         this.showNavbar = true;
       }
-      if(status == AuthStatus.LOGOUT){
+      if(status === AuthStatus.LOGOUT){
         this.showNavbar = false;
       }
     });
+  }
+
+  onTagsClick(){
+    this.tagService.lastIdTrackSelected = ''
   }
 
  

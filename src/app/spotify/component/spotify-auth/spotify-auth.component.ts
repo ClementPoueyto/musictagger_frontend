@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { environment } from 'src/environments/environment';
+import { apiUrlLoginSpotify } from 'src/app/constants';
 
 const spotifyLogoURL = 
 "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg";
@@ -13,9 +13,9 @@ const spotifyLogoURL =
 })
 
 
-export class SpotifyAuthComponent implements OnInit {
+export class SpotifyAuthComponent{
 
-  api_url_login_spotify = environment.API_URL+"auth/spotify/login";
+  api_url_login_spotify = apiUrlLoginSpotify;
 
 
   constructor(private matIconRegistry: MatIconRegistry,
@@ -24,8 +24,5 @@ export class SpotifyAuthComponent implements OnInit {
       "spotify-logo",
       this.domSanitizer.bypassSecurityTrustResourceUrl(spotifyLogoURL));
    }
-
-  ngOnInit(): void {
-  }
 
 }

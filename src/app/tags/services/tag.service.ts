@@ -15,12 +15,12 @@ export class TagService extends CommonService {
 
   metadata: Metadata = { total: 0, page: 0, limit: 50 }
 
-  query: string = "";
+  query = "";
 
   tags: string[] = [];
   selectedChip: 'like' | 'tags' = 'like'
 
-  public offsetScroll: number = 0;
+  public lastIdTrackSelected = '';
 
   constructor(protected override http : HttpClient,private userService : UserService){
     super(http);

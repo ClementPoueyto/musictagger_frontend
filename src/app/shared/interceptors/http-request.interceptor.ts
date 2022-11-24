@@ -1,16 +1,17 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { catchError, finalize, firstValueFrom, mergeMap, Observable, of } from "rxjs";
+import { catchError, finalize, mergeMap, Observable } from "rxjs";
 import { Token } from "src/app/authentication/services/auth-interfaces";
 import { AuthService } from "src/app/authentication/services/auth.service";
 import { environment } from "src/environments/environment";
 import { LoaderService } from "../services/loader.service";
+import { UserService } from "../services/user.service";
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
 
-    constructor(private snackbar: MatSnackBar, private readonly authService: AuthService, private loaderService : LoaderService) { }
+    constructor(private snackbar: MatSnackBar, private readonly authService: AuthService, private readonly userService: UserService, private loaderService : LoaderService) { }
 
     intercept(httpRequest: HttpRequest<any>, httpHandler: HttpHandler,): Observable<HttpEvent<any>> {
         this.loaderService.show();
@@ -38,6 +39,11 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     }
 
     private handleError(httpErrorResponse: HttpErrorResponse, httpRequest: HttpRequest<any>) {
+        console.log(httpErrorResponse)
+        if(httpErrorResponse.status === 401){
+            this.userService.logout();
+            this.authService.logout();
+        }
         this.snackbar.open(httpErrorResponse.error.message, 'Close', {
             duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
         });

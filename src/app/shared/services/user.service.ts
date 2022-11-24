@@ -20,11 +20,6 @@ export class UserService extends CommonService {
   constructor(protected override http: HttpClient, private jwtService : JwtHelperService
   ) {
     super(http);
-    const token = tokenGetter();
-    if(token){
-      const decoded = this.jwtService.decodeToken(token);
-      this.userId = decoded.userId;
-    }
     this.$currentUserSubject = new BehaviorSubject<User | null>(null);
     this.currentUser = this.$currentUserSubject.asObservable();
     this.currentUser.subscribe(
@@ -47,7 +42,6 @@ export class UserService extends CommonService {
     const res = await firstValueFrom(this.http.get<User>(this.apiConfiguration.api_url + 'users/' + userId).pipe(
       tap((res) => this.$currentUserSubject.next(res))
     ),)
-    console.log(res)
     return res;
   }
 
@@ -57,6 +51,7 @@ export class UserService extends CommonService {
 
   logout() {
     this.$currentUserSubject.next(null);
+    this.userId = null;
   }
 
   async logInSpotifyUser(spotifyUserRequest: SpotifyUserLoginRequest): Promise<SpotifyUserLogResponse> {
@@ -73,6 +68,18 @@ export class UserService extends CommonService {
     const res = await firstValueFrom(this.http.delete<SpotifyUserLogResponse>(this.apiConfiguration.api_url + 'users/' + this.userId + "/spotify",)
     );
     return res;
+  }
+
+  updateUserId(){
+    const token = tokenGetter();
+    if(token){
+      const decoded = this.jwtService.decodeToken(token);
+      this.userId = decoded.userId;
+    }
+    else{
+      this.userId = null;
+    }
+    return this.userId;
   }
 
 }
