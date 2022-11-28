@@ -53,9 +53,9 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
 
   openAddPlaylistDialog(){
     const addDialog = this.dialog.open(EditPlaylistComponent, {
-      minWidth: '300px',
+      minWidth: '95%',
       disableClose : true,
-      height : '90%'
+      height : '95%'
 ,      data : {
         mode : 'create'
       }

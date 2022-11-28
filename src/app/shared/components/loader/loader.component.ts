@@ -16,12 +16,11 @@ export class LoaderComponent implements AfterViewInit{
   destroyed$ = new Subject();
 
   constructor(private loaderService: LoaderService, private ref: ChangeDetectorRef) {
-    
   }
 
 
   ngAfterViewInit(): void {
-    this.loaderService.loadingEvent.pipe(takeUntil(this.destroyed$)).subscribe((res)=>{
+    this.loaderService.loadingEvent.asObservable().pipe(takeUntil(this.destroyed$)).subscribe((res)=>{
       this.isLoading = res;
       this.ref.detectChanges();
     });

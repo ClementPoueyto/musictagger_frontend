@@ -79,8 +79,8 @@ export class PlaylistComponent {
   editDialog() {
     if (this.playlist) {
       const editDialog = this.dialog.open(EditPlaylistComponent, {
-        minWidth: '300px',
-        height : '90%',
+        minWidth: '95%',
+        height : '95%',
         disableClose: true,
         data: {
           mode: 'edit',

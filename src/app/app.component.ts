@@ -33,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     })
     this.authSub = this.authService.currentAuthStatus.subscribe(status => {
-      if (status == AuthStatus.LOGIN) {
+      if (status === AuthStatus.LOGIN) {
         this.userService.updateUserId();
         this.userService.getUser();
       }

@@ -1,5 +1,5 @@
 <app-loader></app-loader>
-<div>
+<div *ngIf="!isLoading">
   <a [routerLink]="['../register']">Go to Register</a>
   <mat-card>
     <mat-card-title>Login</mat-card-title>

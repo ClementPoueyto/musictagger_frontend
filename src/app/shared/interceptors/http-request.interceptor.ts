@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { catchError, finalize, mergeMap, Observable } from "rxjs";
@@ -14,9 +14,11 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     constructor(private snackbar: MatSnackBar, private readonly authService: AuthService, private readonly userService: UserService, private loaderService : LoaderService) { }
 
     intercept(httpRequest: HttpRequest<any>, httpHandler: HttpHandler,): Observable<HttpEvent<any>> {
+        if(!httpRequest.url.includes(environment.API_URL)){
+            return this.requestHandler(httpRequest, httpHandler);
+        }
         this.loaderService.show();
-        console.log(httpRequest)
-        if(!httpRequest.url.includes(environment.API_URL) || httpRequest.url.includes('refresh-token')){
+        if(httpRequest.url.includes('refresh-token')){
             return this.requestHandler(httpRequest, httpHandler);
         }
         return this.authService.getToken().pipe(mergeMap(
@@ -39,11 +41,14 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     }
 
     private handleError(httpErrorResponse: HttpErrorResponse, httpRequest: HttpRequest<any>) {
-        console.log(httpErrorResponse)
-        if(httpErrorResponse.status === 401){
+        if(httpErrorResponse.status === HttpStatusCode.Unauthorized){
             this.userService.logout();
             this.authService.logout();
         }
+        if(httpErrorResponse.status === 0){
+            httpErrorResponse.error.message = 'Connection Refused'
+        }
+        console.log(httpErrorResponse)
         this.snackbar.open(httpErrorResponse.error.message, 'Close', {
             duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
         });
@@ -54,7 +59,11 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             catchError((httpErrorResponse: HttpErrorResponse) => {
                 this.handleError(httpErrorResponse, httpRequest);
                 throw httpErrorResponse;
-            }), finalize(()=> this.loaderService.hide()));
+            }), finalize(()=> {
+                if(httpRequest.url.includes(environment.API_URL)){
+                    this.loaderService.hide();
+                }
+            }));
     }
 
 }

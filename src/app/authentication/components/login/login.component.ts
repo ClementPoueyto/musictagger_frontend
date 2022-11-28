@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -8,6 +8,7 @@ import { tokenGetter } from 'src/app/app.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { apiUrlLoginGoogle, googleLogoURL } from 'src/app/constants';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 
 
 
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   routeSub: Subscription = new Subscription();
-
+  isLoading = true;
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -35,16 +36,23 @@ export class LoginComponent implements OnInit, OnDestroy {
     private domSanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
+    private loaderService: LoaderService,
+    private ref: ChangeDetectorRef
   ) {
     this.matIconRegistry.addSvgIcon(
       "google-logo",
       this.domSanitizer.bypassSecurityTrustResourceUrl(googleLogoURL));
+      
 
   }
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
   }
   async ngOnInit(): Promise<void> {
+    this.loaderService.loadingEvent.asObservable().subscribe(res=>{
+      this.isLoading = res;
+      this.ref.detectChanges();
+    });
     this.routeSub = this.route.queryParams
       .subscribe(async params => {
         const token = tokenGetter();
@@ -77,6 +85,5 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
     firstValueFrom(this.authService.login(this.loginForm.value));
   }
-
 
 }

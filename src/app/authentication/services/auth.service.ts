@@ -30,7 +30,7 @@ export class AuthService extends CommonService{
       ) {
     super(http);
     const token = tokenGetter()
-    if(token){
+    if(token && !this.jwtService.isTokenExpired(token)){
       this.currentAuthStatusSubject = new BehaviorSubject<AuthStatus>(AuthStatus.LOGIN);
     }
     else{
@@ -38,7 +38,6 @@ export class AuthService extends CommonService{
 
     }
     this.currentAuthStatus = this.currentAuthStatusSubject.asObservable();
-        
    }
 
   /*
@@ -48,9 +47,8 @@ export class AuthService extends CommonService{
    The `..of()..` can be removed if you have a real backend, at the moment, this is just a faked response
   */
   login(loginRequest: LoginRequest): Observable<LoginResponse> {
-
     return this.http.post<LoginResponse>(this.apiConfiguration.api_url + 'auth', loginRequest).pipe(
-      tap((res)=> {this.loginSuccess(res.jwt_token)})
+      tap((res)=> {this.loginSuccess(res.jwt_token)}),
     );
   }
 
@@ -86,8 +84,8 @@ export class AuthService extends CommonService{
 
   refreshToken(): Observable<Token> {
     return this.http.get<Token>(this.apiConfiguration.api_url + 'auth/refresh-token',).pipe(
-      tap((token) => localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token.jwt_token)
-      ))
+      tap((token) => localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token.jwt_token)),
+    )
   }
 
   checkToken(checkTokenRequest: Token): Observable<Token> {

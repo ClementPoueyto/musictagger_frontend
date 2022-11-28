@@ -1,5 +1,5 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { tap, firstValueFrom} from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -10,7 +10,7 @@ import { CustomValidators } from '../../validators/custom-validator';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
 
   registerForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
