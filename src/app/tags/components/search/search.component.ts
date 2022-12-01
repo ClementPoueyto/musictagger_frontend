@@ -130,7 +130,6 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   getData(param: { key: "tags" | "like", request: { page: number; limit: number, query?: string, tags?: string[] } }) {
 
-
     if (param.key === 'tags') {
       return this.tagService.searchTaggedTrack(param.request as SearchTaggedTrackRequest).then(
         res => {
@@ -161,7 +160,7 @@ export class SearchComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   onClickRow(row: TaggedTrack) {
     this.tagService.lastIdTrackSelected = row.track.id.toString();
-    this.router.navigate(['tags/tracks/' + row.track.id]);
+    this.router.navigate(['/tracks/' + row.track.id]);
   }
   applySearch(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

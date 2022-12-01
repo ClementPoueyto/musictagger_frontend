@@ -28,6 +28,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
 
   routeSub: Subscription = new Subscription();
+  loadingSub: Subscription = new Subscription();
+
   isLoading = true;
   constructor(
     private authService: AuthService,
@@ -47,9 +49,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
+    this.loadingSub.unsubscribe();
   }
-  async ngOnInit(): Promise<void> {
-    this.loaderService.loadingEvent.asObservable().subscribe(res=>{
+  ngOnInit(): void {
+    this.loadingSub = this.loaderService.loadingEvent.asObservable().subscribe(res=>{
       this.isLoading = res;
       this.ref.detectChanges();
     });
@@ -59,7 +62,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (token) {
           firstValueFrom(this.authService.getToken()).then(tokenResponse => {
             if (tokenResponse) {
-              this.router.navigate(['../tags']);
+              this.router.navigate(['/']);
             }
           })
         }

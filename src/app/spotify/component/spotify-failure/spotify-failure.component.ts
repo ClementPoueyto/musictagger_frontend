@@ -16,7 +16,7 @@ export class SpotifyFailureComponent implements OnInit {
     this.snackbar.open('Spotify Login Failure', 'Close', {
       duration: 2000, horizontalPosition: 'right', verticalPosition: 'top'
     });
-    this.router.navigate(['../tags']);
+    this.router.navigate(['/']);
    
   }
 

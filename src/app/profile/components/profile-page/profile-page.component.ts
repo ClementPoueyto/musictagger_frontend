@@ -41,7 +41,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       if (res) {
         this.userService.getUser().then(profile => {
           if (profile) {
-            this.router.navigate(["../"])
+            this.router.navigate(["../"]);
           }
         })
       }
@@ -56,7 +56,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.router.navigate(["../"])
+    this.router.navigate(["../"]);
   }
 
   ngOnDestroy(): void {

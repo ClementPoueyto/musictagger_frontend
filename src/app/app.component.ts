@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.openStreamingAuthDialog();
         }
         else {
-          this.dialog.closeAll()
+          this.dialog.closeAll();
         }
       }
     })
@@ -37,7 +37,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.userService.updateUserId();
         this.userService.getUser();
       }
-
     })
   }
 
@@ -51,7 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userSub.unsubscribe();
-    this.authSub.unsubscribe()
+    this.authSub.unsubscribe();
 
   }
 }

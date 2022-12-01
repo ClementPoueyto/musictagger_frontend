@@ -28,7 +28,7 @@ export class UserService extends CommonService {
           this.userId = user.id
         }
       }
-    )
+    );
   
   }
 

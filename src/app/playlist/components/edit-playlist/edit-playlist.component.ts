@@ -31,7 +31,7 @@ export class EditPlaylistComponent implements OnInit {
     this.mode = this.data.mode
 
     if (this.mode === 'edit') {
-      this.selected = [...this.data.selected]
+      this.selected = [...this.data.selected];
       this.playlistId = this.data.id;
       this.playlistForm.setValue({
         title: this.data.title,
@@ -46,7 +46,7 @@ export class EditPlaylistComponent implements OnInit {
       this.tagService.getTagNames().then(tags => {
         this.tagNames = tags.tagNames;
       });
-    this.updateAvailableTracks()
+    this.updateAvailableTracks();
 
   }
 

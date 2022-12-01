@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest
 import { Injectable } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { catchError, finalize, mergeMap, Observable } from "rxjs";
+import { tokenGetter } from "src/app/app.module";
 import { Token } from "src/app/authentication/services/auth-interfaces";
 import { AuthService } from "src/app/authentication/services/auth.service";
 import { environment } from "src/environments/environment";
@@ -19,7 +20,17 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         }
         this.loaderService.show();
         if(httpRequest.url.includes('refresh-token')){
-            return this.requestHandler(httpRequest, httpHandler);
+            const jwt_token: string | null = tokenGetter();
+            if(jwt_token){
+                httpRequest = httpRequest.clone({
+                    setHeaders: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwt_token}`
+                    }
+                });
+                return this.requestHandler(httpRequest, httpHandler);
+            }
+            
         }
         return this.authService.getToken().pipe(mergeMap(
             (token: Token) => {

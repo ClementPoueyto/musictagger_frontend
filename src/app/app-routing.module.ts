@@ -8,7 +8,7 @@ import { TagsRoutingModule } from './tags/tags-routing.module';
 const routes: Routes = [
 
   {
-    path: 'tags',
+    path: '',
     loadChildren: () => TagsRoutingModule,
   },
   {
@@ -20,11 +20,9 @@ const routes: Routes = [
     loadChildren: () => PlaylistRoutingModule,
   },
   {
-    path: '',
+    path: 'auth',
     loadChildren: () => AuthenticationRoutingModule,
   },
-
-  { path: '*', redirectTo: '', pathMatch: 'full' },
   {
     path: '**',
     redirectTo: '',

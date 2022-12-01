@@ -50,7 +50,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   goBack(){
-    this.router.navigate(["/tags"])
+    this.router.navigate(["/"])
   }
 
   ngOnDestroy(): void {

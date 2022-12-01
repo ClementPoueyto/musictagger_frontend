@@ -29,8 +29,8 @@ export class AuthService extends CommonService{
     private router : Router
       ) {
     super(http);
-    const token = tokenGetter()
-    if(token && !this.jwtService.isTokenExpired(token)){
+    const token = tokenGetter();
+    if(token ){
       this.currentAuthStatusSubject = new BehaviorSubject<AuthStatus>(AuthStatus.LOGIN);
     }
     else{
@@ -53,9 +53,10 @@ export class AuthService extends CommonService{
   }
 
   async logout(): Promise<void> {
+    console.log("logout")
     localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY);
     this.currentAuthStatusSubject.next(AuthStatus.LOGOUT)
-    this.router.navigate(['../']);
+    this.router.navigate(['/auth/login']);
 
   }
 
@@ -63,7 +64,7 @@ export class AuthService extends CommonService{
     if(!await this.jwtService.isTokenExpired(token)){
       await localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token);
       this.currentAuthStatusSubject.next(AuthStatus.LOGIN);
-      this.router.navigate(['tags']);
+      this.router.navigate(['/']);
     }
   }
 

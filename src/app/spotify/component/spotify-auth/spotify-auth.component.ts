@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { apiUrlLoginSpotify } from 'src/app/constants';
+import { apiUrlLoginSpotify, spotifyLogoURL } from 'src/app/constants';
 
-const spotifyLogoURL = 
-"https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg";
 
 @Component({
   selector: 'app-spotify-auth',
