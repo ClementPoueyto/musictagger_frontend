@@ -78,7 +78,7 @@ export class EditPlaylistComponent implements OnInit {
   updateAvailableTracks(){
       this.tagService.searchTaggedTrack({ page : 0, limit : 0, tags : this.selected, query : "", onlyMetadata : true}).then(
         res=>{
-          if(res){
+          if(res && res.metadata.total){
             this.availableTracks = res.metadata.total
           }
         }

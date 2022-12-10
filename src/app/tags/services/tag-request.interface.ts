@@ -32,7 +32,7 @@ export interface LikeTaggedTrackResponse{
 }
 
 export interface GetTaggedTrackByTrackIdRequest{
-    trackId : number;
+    trackId : string;
 }
 
 

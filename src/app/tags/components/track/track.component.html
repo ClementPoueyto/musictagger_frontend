@@ -1,44 +1,74 @@
 <div *ngIf="tagtrack" class="track-page">
-  <mat-toolbar>
-    <button mat-icon-button (click)="goBack()">
-     <mat-icon>arrow_back</mat-icon>
-   </button>
-  </mat-toolbar>
-    <img [src]="tagtrack.track.image" />
 
-    <h1>
-        {{tagtrack.track.title}}
-    </h1>
-    <h3>
-      {{tagtrack.track.artistName}}
-  </h3>
-    <h4>
-        {{tagtrack.track.albumTitle}} - {{tagtrack.track.releaseDate | date: 'longDate' : '' : 'fr-FR'}}
-    </h4>
+  <mat-card class="full center">
+    <mat-card-content class="row">
+      <img [src]="tagtrack.track.image" />
+      <div class="col center">
+        <h1>
+          {{ tagtrack.track.title }}
+        </h1>
+        <h3>
+          {{ tagtrack.track.artistName }}
+        </h3>
+        <h4>
+          {{ tagtrack.track.albumTitle }}
+        </h4>
+      </div>
+    </mat-card-content>
+  </mat-card>
 
-    
-    <mat-chip-list  #chipList [multiple]="true" [selectable]="true">
-        <mat-chip 
-        #chip="matChip"
+  <div class="center col full">
+    <mat-form-field class="example-form-field full" appearance="fill">
+      <mat-chip-list class="center" #chipList [multiple]="true" [selectable]="true">
+        <mat-chip
           *ngFor="let tag of tagNames"
           [value]="tag"
           [selected]="tagtrack.tags.includes(tag)"
           [selectable]="true"
-          (click)="chip.toggleSelected(); onChipChange(tag)"
-          >
-          {{tag}}
+          (click)="onChipChange(tag)"
+        >
+          {{ tag }}
         </mat-chip>
       </mat-chip-list>
-      <div class="input">
-      <mat-form-field class="example-form-field" appearance="fill">
+    </mat-form-field>
+
+    <div class="input">
+      <mat-form-field class="example-form-field row" appearance="fill">
         <mat-label>Add Tag</mat-label>
-        <input matInput type="text" [(ngModel)]="value" [value]="value" (keyup.enter)="addTag()">
-        <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="value"
+          [value]="value"
+          (keyup.enter)="addTag()"
+        />
+        <button
+          *ngIf="value"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="value = ''"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
-        <button mat-mini-fab color="primary" (click)="addTag()">
-          <mat-icon>add</mat-icon>
-        </button>
-      </div>
+
+      <button mat-mini-fab color="primary" (click)="addTag()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <div>Suggestions</div>
+    <mat-chip-list class="center" #chipList [multiple]="true" [selectable]="true">
+      <mat-chip
+        color="accent"
+        *ngFor="let tag of suggestionTags"
+        [value]="tag"
+        [selected]="tagtrack.tags.includes(tag)"
+        [selectable]="true"
+        (click)="onSuggestionChipChange(tag)"
+      >
+        {{ tag }}
+      </mat-chip>
+    </mat-chip-list>
+  </div>
 </div>

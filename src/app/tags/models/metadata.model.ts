@@ -1,5 +1,5 @@
 export interface Metadata{
-    total : number;
+    total? : number;
 
     page  : number;
 

@@ -1,6 +1,7 @@
 img {
     border-radius: 50%;
     width : 150px;
+    height: 150px;
     margin: 10px;
   }
 
@@ -13,10 +14,6 @@ img {
   }
   mat-chip-list{
     margin : 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
       }
 
   mat-form-field{
@@ -30,3 +27,36 @@ img {
     align-items: center;
   flex-direction: row; 
 }
+
+.row{
+  display: flex;
+  flex-direction: row;
+}
+
+.col{
+  display: flex;
+  flex-direction: column;
+}
+
+.center{
+  display:flex;
+  justify-content: center;
+}
+
+.full{
+  width: 100%
+}
+
+mat-card{
+  margin-top:10px;
+  padding:0px
+}
+
+mat-form-field{
+  padding-right:0px;
+  padding-left:0px;
+  margin-right:0px;
+  margin-left:0px
+
+}
+

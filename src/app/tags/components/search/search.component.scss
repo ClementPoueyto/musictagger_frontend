@@ -1,9 +1,6 @@
   img{
     width: 50px;
     height: 50px;
-    display: flex;
-    justify-content: center;
-    margin : 3px
 
   }
 
@@ -21,13 +18,11 @@
    table{
     width: 100%;
    }
-  .mat-cell {
-    padding: 0px 8px 0 8px;
+
+   .mat-cell {
+    padding: 0px 5px 0 5px;
   }
 
-   .tags {
-    margin: 3px;
-  }
 
   .categories{
     margin : 10px
@@ -38,8 +33,9 @@
   }
 
   mat-chip-list {
-    margin : 10px
+    margin : 5px
   }
+
 
   .clickable{
     cursor: pointer;

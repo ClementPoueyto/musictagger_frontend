@@ -18,3 +18,7 @@ export interface SpotifyUserLogResponse {
 export interface TagRequest {
   body: { trackId: number, tag: string }
 }
+
+export interface SuggestionRequest {
+  trackId: string
+}
