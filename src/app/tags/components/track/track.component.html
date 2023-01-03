@@ -1,8 +1,10 @@
 <div *ngIf="tagtrack" class="track-page">
-
-  <mat-card class="full center">
-    <mat-card-content class="row">
+  <mat-card class="full center" >
+    <mat-card-content class="row bandeau">
+      <app-spotify-redirection-buttton fxHide.xs fxShow [spotifyLink]="spotifyRedirection"></app-spotify-redirection-buttton>
+      <a href="{{spotifyRedirection}}" target="_blank" matTooltip="Open with Spotify">
       <img [src]="tagtrack.track.image" />
+      </a>
       <div class="col center">
         <h1>
           {{ tagtrack.track.title }}
@@ -16,6 +18,7 @@
       </div>
     </mat-card-content>
   </mat-card>
+  <app-spotify-redirection-buttton fxShow.xs fxHide [spotifyLink]="spotifyRedirection"></app-spotify-redirection-buttton>
 
   <div class="center col full">
     <mat-form-field class="example-form-field full" appearance="fill">

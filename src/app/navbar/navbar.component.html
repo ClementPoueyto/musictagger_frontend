@@ -5,17 +5,19 @@
         </button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item routerLink="/" (click)="onTagsClick()">Tags</button>
-            <button mat-menu-item routerLink="/export">Export</button>
+            <button mat-menu-item routerLink="/playlists">Playlists</button>
 
         </mat-menu>
-            <div fxHide.xs fxShow>
-                <a mat-button routerLink="/tags" (click)="onTagsClick()">Tags</a>
-                <a mat-button routerLink="/export">Export</a>
-
-
-            </div>
-            <span class="example-spacer"></span>
-            <app-profile-page></app-profile-page>
-
+        <div fxHide.xs fxShow>
+            <a mat-button routerLink="/" (click)="onTagsClick()">Tags</a>
+            <a mat-button routerLink="/playlists">Playlists</a>
+        </div>
+        <span class="example-spacer"></span>
+        <a href="https://open.spotify.com" target="_blank">
+            <mat-icon id = "spotify-svg"
+            svgIcon="spotify-logo"></mat-icon>
+        </a>
+        <app-profile-page></app-profile-page>
+        
     </mat-toolbar-row>
 </mat-toolbar>

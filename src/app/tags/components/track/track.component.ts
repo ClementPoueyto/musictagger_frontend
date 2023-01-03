@@ -12,7 +12,7 @@ import { TagService } from '../../services/tag.service';
 })
 export class TrackComponent implements OnInit, OnDestroy {
   routeSub: Subscription = new Subscription();
-
+  spotifyRedirection = 'https://open.spotify.com/track/';
   value = '';
 
   constructor(
@@ -43,6 +43,7 @@ export class TrackComponent implements OnInit, OnDestroy {
         this.tagtrack = await this.tagService.getTaggedTrackByTrackId({
           trackId: id,
         });
+        this.spotifyRedirection += this.tagtrack.track.spotifyTrack.spotifyId;
       } else {
         this.snackbar.open('get TaggedTrack fail', 'Close', {
           duration: 2000,

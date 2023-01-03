@@ -38,6 +38,7 @@
           {{tag}}
         </mat-chip>
       </mat-chip-list>
+      <app-spotify-redirection-buttton fxHide.xs fxShow [spotifyLink]="spotifyRedirection"></app-spotify-redirection-buttton>
 
       <mat-paginator [length]="this.metadata.total"
               [pageSize]="this.metadata.limit"

@@ -35,7 +35,7 @@ export class PlaylistComponent {
   dataToDisplay = [];
   metadata: Metadata = { total: 0, page: 0, limit: 50 };
   dataSource = new PlaylistTracksDataSource(this.dataToDisplay);
-
+  spotifyRedirection = 'https://open.spotify.com/playlist/';
   displayLoader = true;
 
   constructor(
@@ -52,6 +52,8 @@ export class PlaylistComponent {
           .then((playlist) => {
             if (playlist) {
               this.playlist = playlist;
+              this.spotifyRedirection +=
+                playlist.spotifyPlaylist.spotifyPlaylistId;
             }
             this.getTracksData();
           });
@@ -117,7 +119,7 @@ export class PlaylistComponent {
   }
 
   goBack() {
-    this.router.navigate(['/export']);
+    this.router.navigate(['/playlists']);
   }
 
   deleteDialog() {
@@ -130,7 +132,7 @@ export class PlaylistComponent {
           this.playlistService
             .deletePlaylist({ playlist_id: Number(this.playlist?.id) })
             .then(() => {
-              this.router.navigate(['/export']);
+              this.router.navigate(['/playlists']);
             });
         }
       }

@@ -47,7 +47,7 @@ export class PlaylistsManagementComponent implements OnInit, OnDestroy {
   }
 
   onClickRow(row: Playlist) {
-    this.router.navigate(['/export/'+row.id]);
+    this.router.navigate(['/playlists/'+row.id]);
 
   }
 

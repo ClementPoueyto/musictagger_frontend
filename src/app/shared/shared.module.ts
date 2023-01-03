@@ -6,11 +6,12 @@ import { CommonService } from './services/rest/common.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpRequestInterceptor } from './interceptors/http-request.interceptor';
 import { LoaderComponent } from './components/loader/loader.component';
+import { SpotifyRedirectionButttonComponent } from './components/spotify-redirection-buttton/spotify-redirection-buttton.component';
 
 
 
 @NgModule({
-  declarations: [LoaderComponent],
+  declarations: [LoaderComponent, SpotifyRedirectionButttonComponent],
   imports: [
     CommonModule,
     AngularMaterialModule
@@ -27,7 +28,8 @@ import { LoaderComponent } from './components/loader/loader.component';
   ],
   exports: [
     AngularMaterialModule,
-    LoaderComponent
+    LoaderComponent,
+    SpotifyRedirectionButttonComponent
   ]
 })
 export class SharedModule { }
