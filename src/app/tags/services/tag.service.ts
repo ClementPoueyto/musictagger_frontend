@@ -56,12 +56,13 @@ export class TagService extends CommonService {
           (searchTaggedTrackRequest.query
             ? '&query=' + searchTaggedTrackRequest.query
             : '') +
+          (searchTaggedTrackRequest.strict === false ? '&operand=or' : '') +
           (searchTaggedTrackRequest.onlyMetadata
             ? '&onlyMetadata=' + searchTaggedTrackRequest.onlyMetadata
             : '')
       )
     );
-    if(!searchTaggedTrackRequest.onlyMetadata){
+    if (!searchTaggedTrackRequest.onlyMetadata) {
       this.metadata = res.metadata;
       this.query = searchTaggedTrackRequest.query;
       this.selectedChip = 'tags';

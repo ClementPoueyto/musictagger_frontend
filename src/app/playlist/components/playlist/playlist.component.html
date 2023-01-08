@@ -26,6 +26,8 @@
     <h4>
         {{playlist.description}}
     </h4>
+
+    <h5>{{playlist.strict ? 'All tracks with tags :': 'All tracks with at least one tag :'}}</h5>
     <mat-chip-list  class="tags" #chipList [multiple]="true" [selectable]="false">
         <mat-chip 
         #chip="matChip"

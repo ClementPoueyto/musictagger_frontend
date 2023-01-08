@@ -1,15 +1,17 @@
-import { SpotifyPlaylist } from "./spotify-playlist.model";
+import { SpotifyPlaylist } from './spotify-playlist.model';
 
-export interface Playlist{
-    id: string;
+export interface Playlist {
+  id: string;
 
-    userId : string
+  userId: string;
 
-    name : string
+  name: string;
 
-    description : string
+  description: string;
 
-    spotifyPlaylist : SpotifyPlaylist;
+  spotifyPlaylist: SpotifyPlaylist;
 
-    tags : string[]
+  tags: string[];
+
+  strict: boolean;
 }

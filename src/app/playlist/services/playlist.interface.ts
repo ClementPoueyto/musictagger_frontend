@@ -1,64 +1,63 @@
-import { Track } from "src/app/tags/models/track.model";
+import { Track } from 'src/app/tags/models/track.model';
 
-
-export interface DeletePlaylistsRequest{
-
-    playlist_id : number;
+export interface DeletePlaylistsRequest {
+  playlist_id: number;
 }
 
-export interface GetPlaylistByIdRequest{
-
-    playlist_id : number
+export interface GetPlaylistByIdRequest {
+  playlist_id: number;
 }
 
-export interface GetPlaylistTracksByIdRequest{
+export interface GetPlaylistTracksByIdRequest {
+  playlist_id: number;
 
-    playlist_id : number;
+  page: number;
 
-    page : number;
-
-    limit : number;
+  limit: number;
 }
 
-export interface GetPlaylistTracksByIdResponse{
-    data : Track[];
-    metadata : Metadata;
+export interface GetPlaylistTracksByIdResponse {
+  data: Track[];
+  metadata: Metadata;
 }
 
-export interface Metadata{
-    total : number;
+export interface Metadata {
+  total: number;
 
-    page  : number;
+  page: number;
 
-    limit : number;
+  limit: number;
 }
 
-export interface AddPlaylistsRequest{
+export interface AddPlaylistsRequest {
+  name: string;
 
-    name :string;
+  description: string;
 
-    description : string;
+  tags: string[];
 
-    tags : string[];
+  strict: boolean;
 }
 
-export interface UpdatePlaylistsRequest{
+export interface UpdatePlaylistsRequest {
+  playlist_id: number;
 
-    playlist_id : number;
+  name: string;
 
-    name :string;
+  description: string;
 
-    description : string;
+  tags: string[];
 
-    tags : string[];
+  strict: boolean;
 }
 
-export interface AddPlaylistBodyRequest{
-    playlist:{
-        name : string,
-        description : string,
-        public : boolean,
-        collaborative : boolean
-        },
-        tags: string[]
+export interface AddPlaylistBodyRequest {
+  playlist: {
+    name: string;
+    description: string;
+    public: boolean;
+    collaborative: boolean;
+  };
+  strict: boolean;
+  tags: string[];
 }

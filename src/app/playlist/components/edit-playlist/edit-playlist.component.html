@@ -29,6 +29,9 @@
           {{tag}}
         </mat-chip>
       </mat-chip-list>
+      <mat-slide-toggle (toggleChange)="onToggle()"
+      [checked]="strict">{{strict ? 'Tracks contain all selected tags': 'Tracks contain at least one of the selected tags'}}</mat-slide-toggle>
+
       <h3>{{availableTracks}} music{{availableTracks>1?'s':''}} available</h3>
       <div class="button">        
         <button type="submit" mat-button  (click)="close()">Close</button>

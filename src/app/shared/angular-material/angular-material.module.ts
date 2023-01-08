@@ -33,6 +33,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 const materialModules = [
@@ -69,7 +70,7 @@ const materialModules = [
   MatDatepickerModule,
   MatTooltipModule,
   FlexLayoutModule,
-
+  MatSlideToggleModule
 ];
 
 @NgModule({

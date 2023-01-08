@@ -98,6 +98,7 @@ export class PlaylistComponent {
           title: this.playlist.name,
           description: this.playlist.description,
           id: this.playlist.id,
+          strict: this.playlist.strict
         },
       });
       editDialog.afterOpened().subscribe(() => {
